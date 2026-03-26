@@ -1,9 +1,9 @@
-[Hux Blog](https://huangxuan.me)
+[Corey Blog](https://langkemaoxin.github.io)
 ================================
 
 > I never expected this to become popular.
 
-![](http://huangxuan.me/img/blog-desktop.jpg)
+![](http://langkemaoxin.github.io/img/blog-desktop.jpg)
 
 
 [User Manual 👉](_doc/Manual.md)
