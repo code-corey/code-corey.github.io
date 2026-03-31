@@ -89,6 +89,21 @@ git pull
 # Already up to date.
 ```
 
+
+### 如果需要移除  设置的全局 Git HTTP 代理，你可以使用 --unset 命令
+```
+git config --global --unset http.proxy
+git config --global --unset https.proxy
+```
+
+如何验证是否移除成功？
+你可以运行以下命令来查看当前的全局配置列表。如果输出中不再出现 http.proxy 或 https.proxy 相关行，说明已成功移除：
+```
+git config --global --list
+```
+
+
+
 ## 技术知识点
 
 ### TUN 模式 vs 代理模式
