@@ -4,7 +4,7 @@
 {% include head.html %}
 
 <!-- hack iOS CSS :active style -->
-<body ontouchstart="">
+<body ontouchstart="" class="layout-{{ page.layout | default: 'default' }}{% if page.post_style %} post-style-{{ page.post_style | slugify }}{% endif %}">
 
     {% include nav.html %}
     {% include search.html %}

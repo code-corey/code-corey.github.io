@@ -10,7 +10,7 @@ layout: default
 {% include intro-header.html type='post' %}
 
 <!-- Post Content -->
-<article>
+<article class="post-view{% if page.post_style %} post-view-{{ page.post_style | slugify }}{% endif %}">
     <div class="container">
         <div class="row">
 

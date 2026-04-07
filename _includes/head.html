@@ -49,6 +49,10 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ " /css/hux-blog.min.css" | prepend: site.baseurl }}">
 
+    {% if page.post_style %}
+    <link rel="stylesheet" href="{{ '/css/post-styles/' | append: page.post_style | append: '.css' | prepend: site.baseurl }}">
+    {% endif %}
+
     <!-- Custom Fonts -->
     <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
     <!-- Hux change font-awesome CDN to qiniu -->

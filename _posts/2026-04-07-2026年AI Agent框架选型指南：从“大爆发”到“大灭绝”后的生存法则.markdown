@@ -1,6 +1,7 @@
 ---
 title: "2026年AI Agent框架选型指南：从“大爆发”到“大灭绝”后的生存法则"
 date: 2026-04-07
+post_style: blogbox
 tags: [2026年AI Agent框架选型指南：从“大爆发”到“大灭绝”后的生存法则]
 ---
 
