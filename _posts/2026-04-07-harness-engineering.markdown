@@ -6,4 +6,4 @@ tags: [harness-engineering]
 
 > https://martinfowler.com/articles/harness-engineering.html
 
-![image-20260407134306555](/_posts/assets/image-20260407134306555.png)
+![image-20260407160506358](https://storage-corey-1303844387.cos.ap-guangzhou.myqcloud.com/image-20260407160506358.png?imageSlim)
