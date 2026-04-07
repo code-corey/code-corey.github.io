@@ -4,4 +4,8 @@ date: 2026-04-07
 tags: [harness-engineering]
 ---
 
-![image-20260407105313458](/img/2026-04-07-harness-engineering.assets/image-20260407105313458.png)
+> https://martinfowler.com/articles/harness-engineering.html
+
+
+
+![image-20260407133943611](assets/image-20260407133943611.png)
