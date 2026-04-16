@@ -2,6 +2,7 @@
 title: "什么是One-hot编码"
 date: 2026-04-16 11:27
 tags: [one-hot编码]
+mathjax: true
 ---
 ## 第一章：【破冰层】非此即彼的艺术——为什么机器看不懂“苹果”？
 

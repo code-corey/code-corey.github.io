@@ -13,6 +13,10 @@
 
     {% include footer.html %}
 
+    {% if site.mathjax or site.page-mathjax or page.mathjax %}
+    {% include mathjax_support.html %}
+    {% endif %}
+
 
 <!-- Image to hack wechat -->
 <img src="/img/icon_wechat.png" width="0" height="0" />
