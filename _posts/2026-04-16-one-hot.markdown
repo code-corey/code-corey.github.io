@@ -310,7 +310,7 @@ FUNCTION Safe_OneHot_Transform(Input_Category):
 
 在神经网络架构中，One-Hot 向量通常作为输入层，随后连接一个全连接层（Dense Layer）。
 
-$$Y = \sigma(W \cdot X + b)$$
+$Y = \sigma(W \cdot X + b)$
 
 当 $X$ 是一个 1,000 万维的 One-Hot 向量时，$W$ 矩阵的参数量将达到恐怖的量级。更讽刺的是，由于 $X$ 中 99.9999% 的位都是 0，**CPU/GPU 在做矩阵乘法时，99.9999% 的计算都在做“乘以 0”的废操作**。这不仅浪费了计算资源，更导致了极高的推理延迟。
 
