@@ -1,3 +1,10 @@
+---
+title: "yt-dlp的使用记录"
+date: 2026-04-10
+tags: [yt-dlp]
+---
+
+
 # Windows 环境安装 `yt-dlp` 实战记录：替代 `you-get` 下载 YouTube 的一次排障
 
 最近在 Windows 上尝试用 `you-get` 下载 YouTube 视频，结果命令可以执行，但实际解析视频时直接报错。最后我没有继续死磕 `you-get`，而是切换到了维护更积极的 `yt-dlp`。这篇文章把整个安装过程、踩坑点和注意事项整理一下，后面自己复用也更方便。

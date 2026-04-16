@@ -1,3 +1,10 @@
+---
+title: "学习HAMi的路线图"
+date: 2026-04-15
+tags: [HAMi]
+---
+
+
 学习 HAMi 需要掌握一套完整的技术栈，从容器和 Kubernetes 基础，到底层的 CUDA 编程。我把这些技术分成了四个层级，你可以按顺序来学习：
 
 ```mermaid
