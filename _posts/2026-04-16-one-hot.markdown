@@ -135,7 +135,7 @@ $\vec{v}_1 \cdot \vec{v}_2 = (1 \times 0) + (0 \times 1) + (0 \times 0) = 0$
 graph LR
     A[输入原始特征] --> B{查表检索}
     B -- 命中索引 i --> C[初始化全0向量 V]
-    C --> D[将 V[i] 置为 1]
+    C --> D["将 V[i] 置为 1"]
     D --> E[输出 One-Hot 向量]
     B -- 未命中 --> F[处理 Unknown 情况]
 ```
