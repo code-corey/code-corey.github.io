@@ -1,178 +1,528 @@
 ---
-title: "从“能写代码”到“能操作网页”：Playwright CLI + Skills，打造真正的 AI 程序员"
+title: 告别重复劳动：Playwright CLI + Skills 实战案例大全
 date: 2026-04-26 19:35
 tags: [Playwright CLI,Skills]
-description: "从“能写代码”到“能操作网页”：Playwright CLI + Skills，打造真正的 AI 程序员"
+description: 告别重复劳动：Playwright CLI + Skills 实战案例大全
 ---
 
-
-
-# 从“能写代码”到“能操作网页”：Playwright CLI + Skills，打造真正的 AI 程序员
+# 告别重复劳动：Playwright CLI + Skills 实战案例大全
 
 如果你还在让 AI 帮你写自动化脚本，那你还停留在 AI 编程的 1.0 时代。
 
-真正的 2.0 时代，是你告诉 AI：“去把这个网页的登录流程测一下，有问题就截个图发给我”，然后 AI 自己打开浏览器、点击、输入、校验、生成报告。
+真正的 2.0 时代，是你说一句话，AI 自己打开浏览器、点击、输入、抓取数据、生成报告——全过程零人工干预。
 
-这不是科幻。这是 `playwright-cli` + **Skills** 架构正在做的事情。
+这不是科幻。这是 **Playwright CLI + Skills** 正在做的事情。
 
-本文将深入讲解这套技术栈如何让 AI 从“代码生成器”进化为“真正的智能体”。
+本文将用 **5 个完整的实战案例**，并附带**详细的 Skills 安装教程**，展示这套组合拳如何解决真实世界的重复性任务，让 AI 真正成为你的数字员工。
 
 
-## 一、痛点：为什么 AI 写的自动化脚本总是不靠谱？
+## 第一部分：快速安装与配置
 
-在接触 Skills 之前，大多数开发者尝试 AI 生成自动化脚本的体验是这样的：
+在开始案例之前，我们先完成 Playwright CLI 和 Skills 的安装。这部分大约需要 5-10 分钟。
 
-1.  **幻觉选择器（Hallucinated Locators）**：AI 凭“记忆”编造了一个 CSS 选择器 `div.container > ul > li:nth-child(3) > a`，但页面的实际结构早就变了 。
-2.  **脱离架构（Convention Ignorance）**：生成的代码全是 `page.click()` 的硬编码，完全没有遵循你们团队的 Page Object Model（POM）架构，导致代码无法维护 。
-3.  **脆弱的修复（Fragile Output）**：脚本一跑就挂，AI 只会盲目重试，而不是分析原因。
+### 1.1 前置要求
 
-**核心问题在于**：传统的 AI 编程助手没有“视觉”，也不懂“规矩”。它只能基于训练数据给建议，无法基于你的**真实运行环境**和**团队规范**去行动。
+| 要求项 | 最低版本 | 验证命令 |
+|:---|:---|:---|
+| Node.js | v18.0+ | `node -v` |
+| npm | v8.0+ | `npm -v` |
+| 操作系统 | Windows 10+ / macOS 11+ / Linux | — |
 
-## 二、核心武器：Playwright CLI 与 Skills
+如果 `node -v` 低于 v18，请先前往 [nodejs.org](https://nodejs.org) 下载 LTS 版本安装。
 
-为了解决上述问题，我们需要引入两样利器。
-
-### 1. Playwright CLI：AI 的手和眼
-
-你可能熟悉 Playwright 这个自动化框架，但 `@playwright/cli` 是一个全新的物种。它不是一个写脚本的库，而是一个**专为 AI 智能体设计的浏览器操作命令行接口（CLI）**。
-
-它允许 AI 像使用 Linux 命令一样操作浏览器：
+### 1.2 安装 Playwright CLI
 
 ```bash
-playwright-cli open https://example.com
-playwright-cli snapshot        # 获取页面可访问性树，找到元素引用
-playwright-cli click @e12      # 点击编号为 e12 的元素
-playwright-cli type "Hello"    # 输入文本
-playwright-cli screenshot      # 截图保存
-```
-
-**为什么不用 MCP (Model Context Protocol)？** 官方的文档指出，CLI 方案相比 MCP 更节省 Token 。CLI 将快照和截图保存在磁盘文件上，只返回文件路径给 AI，而不是把庞大的图片 Base64 数据或复杂的 DOM 树塞进上下文。这让 AI 能腾出空间去思考更复杂的逻辑。
-
-### 2. Skills：AI 的大脑和规矩
-
-如果说 CLI 是 AI 的“手”，那么 **Skills** 就是 AI 的“大脑”和“企业章程”。
-
-Skills 是 Anthropic 开源的一种技术规范。它本质上是一个 **Markdown 文件**（如 `SKILL.md`），存放在你的项目目录中 。这个文件不是给程序员看的文档，而是给 AI  Agent 执行的**指令集**和**约束集**。
-
-一个标准的 Playwright Skill 包含：
-- **方法论（Methodology）**：必须使用三层 POM 结构、命名规范。
-- **参考范例（Examples）**：完美的 Page Object 代码样本。
-- **验证清单（Checklist）**：生成的代码必须通过的自检规则（如：不能出现硬编码 URL、必须包含截图步骤）。
-
-## 三、实战演练：Agent 驱动的测试全流程
-
-我们以 **“测试 TodoMVC 的添加功能”** 为例，看看 AI Agent是如何工作的。
-
-### Step 1: 注入技能
-
-首先你需要安装 CLI 并把 Skill 植入到你的 AI 环境中。
-
-```bash
-# 安装 CLI
+# 步骤 1：全局安装 Playwright CLI
 npm install -g @playwright/cli@latest
 
-# 为 Claude Code 安装 Skill (这会告诉 Claude 如何写代码)
-playwright-cli install --skills
-# 或者手动克隆官方技能库
-git clone https://github.com/LambdaTest/agent-skills.git
-cp -r agent-skills/playwright-skill .claude/skills/ 
+# 步骤 2：验证安装是否成功
+playwright-cli --version
+# 预期输出：1.46.0 或更高版本
+
+# 步骤 3：安装 Playwright 浏览器（约 200MB，需要 1-2 分钟）
+npx playwright install
 ```
 
-现在，你的 AI 就已经具备了“高级自动化工程师”的知识储备。
+**可能遇到的问题：**
 
-### Step 2: Recon（侦察）—— 拒绝幻觉
+| 错误信息 | 解决方法 |
+|:---|:---|
+| `command not found: playwright-cli` | npm 全局安装路径未加入 PATH，尝试 `npx playwright-cli` 替代 |
+| `EACCES: permission denied` | macOS/Linux 需要 `sudo npm install -g @playwright/cli@latest` |
+| 下载浏览器缓慢 | 设置环境变量 `PLAYWRIGHT_DOWNLOAD_HOST="https://npmmirror.com/mirrors/playwright/"` |
 
-你发出指令：“使用 playwright 技能，测试 https://demo.playwright.dev/todomvc/ 的新增待办功能。”
+### 1.3 安装 Skills（核心步骤）
 
-AI 的第一步不是写代码，而是**侦察（Recon）**：
-1.  AI 在终端执行：`playwright-cli open https://demo.playwright.dev/todomvc/ --headed`（打开浏览器）。
-2.  AI 执行：`playwright-cli snapshot`。
-3.  系统返回一个 `.yml` 文件，内容类似：
-    ```yaml
-    - textbox "New Todo" [ref=e1]
-    - button "" [ref=e2] (作用：新增)
-    ```
-4.  AI 读取了这个快照，它**看到了**真实的页面结构，知道了输入框的引用是 `e1`，按钮的引用是 `e2` 。
+Skills 是让 AI 知道“如何正确操作”的关键。有两种安装方式：
 
-**关键点**：AI 没有编造选择器，它是通过 CLI 实时抓取到的。
+**方式一：通过 CLI 自动安装（推荐）**
 
-### Step 3: Generate（生成）—— 注入规范
+```bash
+# 在项目根目录执行
+playwright-cli install --skills
 
-AI 开始写代码。因为 Skill 的存在，它不会生成原始的 `page.fill`，而是生成符合你团队规范的代码：
+# 输出示例：
+# ✓ Skills installed to .playwright/skills/
+# ✓ Ready for Claude Code, Copilot, and other coding agents
+```
 
-```javascript
-// 注意：AI 严格按照 Skill 中的命名规范和 POM 结构生成代码
-class TodoPage {
-    constructor(page) { this.page = page; }
-    async addTodo(text) {
-        await this.page.getByPlaceholder('New Todo').fill(text);
-        await this.page.keyboard.press('Enter');
-        // 根据 Skill 规则，这里必须包含截图
-        await this.page.screenshot({ path: 'add_todo.png' });
-    }
+这会自动创建以下目录结构：
+
+```
+你的项目/
+└── .playwright/
+    └── skills/
+        └── playwright-cli/
+            ├── SKILL.md          # AI 技能定义文件
+            ├── examples/         # 代码示例
+            └── scripts/          # 辅助脚本
+```
+
+**方式二：手动克隆官方仓库**
+
+```bash
+# 克隆 LambdaTest 维护的官方技能库
+git clone https://github.com/LambdaTest/agent-skills.git
+
+# 复制到 AI 能识别的位置
+cp -r agent-skills/playwright-skill .claude/skills/
+
+# 或者如果你使用 Cursor
+cp -r agent-skills/playwright-skill .cursor/skills/
+
+# 或者如果你使用 Copilot
+cp -r agent-skills/playwright-skill .github/skills/
+```
+
+**方式三：针对特定 AI 工具的配置**
+
+**Claude Code 用户（最推荐）**：
+
+```bash
+# 使用 MCP 协议添加 playwright 能力
+claude mcp add playwright npx @playwright/mcp@latest
+
+# 验证是否添加成功
+claude mcp list
+# 应该看到 playwright 在列表中
+```
+
+**Cursor 用户**：
+
+在项目根目录创建 `.cursor/skills/playwright/SKILL.md`，内容可以从官方仓库复制。
+
+### 1.4 验证安装是否成功
+
+```bash
+# 测试 1：CLI 能否打开浏览器
+playwright-cli open https://example.com --headed
+# 应该弹出一个浏览器窗口，显示 example.com
+
+# 测试 2：CLI 能否获取快照
+playwright-cli snapshot
+# 应该输出 YAML 格式的页面元素列表，类似：
+# - link "More information..." [ref=e5]
+# - heading "Example Domain" [ref=e6]
+
+# 测试 3：确认 Skills 文件存在
+ls .playwright/skills/playwright-cli/SKILL.md
+# 或者
+ls .claude/skills/playwright-skill/SKILL.md
+
+# 测试 4：在 Claude Code 中验证 Skills 加载
+claude
+# 然后在对话框中输入：/skills
+# 应该能看到 playwright 相关的 skill 已加载
+```
+
+### 1.5 创建你的第一个 Skill 文件
+
+如果你想让 AI 遵循你的项目规范，需要创建自定义 Skill：
+
+```bash
+# 创建技能目录
+mkdir -p .claude/skills/my-project
+
+# 创建 SKILL.md 文件
+cat > .claude/skills/my-project/SKILL.md << 'EOF'
+# 我的项目 Playwright 规范
+
+## 项目信息
+- 测试域名：https://staging.myapp.com
+- 默认测试账号：test@example.com / Test123456
+
+## 操作规范（必须遵守）
+1. **定位器优先级**：getByRole > getByText > getByTestId > 禁止使用 CSS 选择器
+2. **每次操作后等待 500ms**：确保页面响应
+3. **测试失败必须截图**：便于排查问题
+4. **保持登录状态**：使用 `--persistent` 参数
+
+## 禁止事项
+- 禁止使用 `page.waitForTimeout()` 硬等待
+- 禁止使用 `data-testid` 以外的自定义属性
+- 禁止在生产环境运行自动化脚本
+
+## 示例代码
+```typescript
+// 正确的页面对象写法
+class LoginPage {
+  constructor(private page: Page) {}
+  
+  async login(email: string, password: string) {
+    await this.page.getByRole('textbox', { name: /email/i }).fill(email);
+    await this.page.getByRole('textbox', { name: /password/i }).fill(password);
+    await this.page.getByRole('button', { name: /sign in/i }).click();
+  }
 }
 ```
+EOF
 
-### Step 4: Run & Heal（运行与自愈）
+# 验证文件创建成功
+cat .claude/skills/my-project/SKILL.md
+```
 
-AI 运行测试。如果失败了（例如页面加载慢了，或者弹出了广告遮挡），AI 不会只是报错。
-它会进入**自愈循环（Heal Loop）** ：
+### 1.6 安装检查清单
 
-1.  捕获错误：`TimeoutError: waiting for selector "text=New Todo" failed`。
-2.  重新侦察：再次运行 `playwright-cli snapshot`，发现输入框其实存在，只是页面焦点没在输入框上。
-3.  执行修复：AI 修改代码，在 `fill` 之前增加一步 `click` 操作来聚焦。
-4.  重试：运行修复后的代码，直到通过。
+完成以上步骤后，请逐项确认：
 
-## 四、1+1>2：为什么这套架构是未来的趋势？
+| 检查项 | 状态 | 验证方法 |
+|:---|:---|:---|
+| ✅ Playwright CLI 已安装 | ☐ | `playwright-cli --version` |
+| ✅ 浏览器已安装 | ☐ | `npx playwright install` |
+| ✅ Skills 已安装 | ☐ | `playwright-cli install --skills` |
+| ✅ 能打开浏览器 | ☐ | `playwright-cli open https://example.com --headed` |
+| ✅ 能获取快照 | ☐ | `playwright-cli snapshot` 输出 YAML |
+| ✅ Skill 文件存在 | ☐ | `ls .playwright/skills/` |
+| ✅ Claude Code 能识别 | ☐ | 在 claude 中运行 `/skills` |
 
-通过上面的案例，你可以看到 **CLI + Skills** 的组合解决了 AI 自动化中的三大核心矛盾：
+如果全部通过，恭喜！你的环境已经完全就绪。
 
-1.  **准确性与幻觉的矛盾**：
-    -   **Before**：AI 凭记忆写 `#app > div > h1`。
-    -   **After**：AI 通过 `snapshot` 拿真实的 `ref=e1`。
-    -   准确性从 60% 提升至 99% 。
 
-2.  **通用性与规范的矛盾**：
-    -   **Before**：每个 AI 生成的代码风格都不一样，难以维护。
-    -   **After**：Skill 就像一本员工手册，AI 必须遵守。只要更新 `SKILL.md` 文件，所有后续生成的代码都会自动符合新规范 。
+## 第二部分：什么是 Playwright CLI + Skills？
 
-3.  **Token 消耗与性能的矛盾**：
-    -   **Before**：MCP 协议可能会把整个页面的可访问性树（非常大）塞进上下文，消耗大量 Token。
-    -   **After**：CLI 将结果存为文件，AI 只操作文件路径，极大降低了成本 。
+### 2.1 Playwright CLI：AI 的手和脚
 
-## 五、进阶：从单一任务到复杂工作流
+Playwright CLI 是微软在 2026 年初开源的全新浏览器自动化工具。它允许 AI 像使用 Linux 命令一样操作浏览器：
 
-当你的 AI 掌握了这套能力，它能做的事情就远远不止跑测试了。你可以构建跨系统的**智能体工作流**：
+```bash
+playwright-cli open https://example.com --headed   # 打开浏览器
+playwright-cli snapshot                            # 获取页面元素引用
+playwright-cli click @e12                          # 点击元素
+playwright-cli type "Hello"                        # 输入文本
+playwright-cli screenshot                          # 截图保存
+```
 
-1.  **工作流定义**：创建一个 `SKILL.md`，定义“早报新闻采集流程”。
-2.  **Agent 执行**：
-    -   Agent 调用 CLI 打开新闻网站。
-    -   Agent 提取头条标题和链接。
-    -   Agent 调用大模型 API 总结内容。
-    -   Agent 再次调用 CLI，打开公司内部 CMS 系统，自动登录并发布这篇文章 。
+**为什么比 MCP 更省 Token？**
 
-这种 **RPA（机器人流程自动化）+ AI** 的模式，让 AI 变成了真正的数字员工。
+根据官方基准测试，Playwright CLI 相比 MCP 方案可以减少约 **4 倍的 Token 消耗**。秘密在于：
+- MCP 会把整个页面的 DOM 结构塞进上下文
+- CLI 只返回简洁的快照文件路径，AI **按需读取**
 
-## 六、如何开始搭建？
+### 2.2 Skills：AI 的大脑和说明书
 
-你可以参考以下路径快速落地这套技术栈：
+Skills 是 Anthropic 开源的技术规范——一个 Markdown 文件，放在项目目录里，告诉 AI 该如何做事。
 
-1.  **环境准备**：确保 Node.js 18+，安装 `@playwright/cli` 和 `playwright` 浏览器。
-2.  **选择智能体**：
-    -   如果你使用 `Claude Code`：直接运行 `claude mcp add playwright npx @playwright/mcp@latest` 来获得浏览器控制能力 。
-    -   社区方案：也可以使用开源的 `ClawBot Plus` 等方案，它们内置了完整的 Computer Agent 能力 。
-3.  **植入 Skills**：
-    -   克隆官方的 `agent-skills` 仓库。
-    -   将 `playwright-skill` 复制到你的项目目录（如 `.claude/skills/` 或 `.cursor/skills/`）。
-4.  **试行**：
-    -   尝试对你的 AI 说：“使用 Playwright 打开百度，搜索今天的新闻，并把第一条结果截图给我。”
+一个完整的 Playwright Skill 包含：
+- **方法论**：用什么架构、什么命名规范
+- **参考范例**：完美的代码模板
+- **验证清单**：代码必须满足的规则
 
-## 结语
+简单说：**CLI 给 AI 手脚，Skills 给 AI 大脑**。
 
-如果说去年我们还在教 AI “如何写代码”，那么今年我们正在教 AI “如何像人一样使用电脑”。
+### 2.3 为什么需要 Skills？
 
-**Playwright CLI** 给了 AI 操作浏览器的手脚，而 **Skills** 给了 AI 遵循企业规范的大脑。
+**没有 Skills 时**：每次给 AI 下指令都要写长篇 Prompt，AI 发挥不稳定，不同会话生成的代码风格不一致。
 
-这套组合拳正在让“提示词工程师”这个岗位变得过时，取而代之的是 **“AI 工作流设计师”**。你的任务不再是写胶水代码，而是写 `SKILL.md`——即教 AI 如何思考的说明书。
+**有了 Skills 后**：Skills 像一本员工手册，所有规则固化在 `SKILL.md` 中。更新一次 Skill，以后所有生成的代码都自动符合规范。
 
-现在就开始吧，让你的 AI 从对话框里走出来，真正地去浏览网页、点击按钮、完成任务。
+
+## 第三部分：五个实战案例
+
+### 案例一：电商网站评论采集（0 Token 自动化）
+
+**痛点**：需要定期采集某电商平台商品的前 100 条评论，手工复制粘贴效率太低。
+
+**解决方案**：让 AI 摸索一次流程，沉淀成 Skill，再固化成脚本，最终实现 0 Token 全自动运行。
+
+#### 执行过程
+
+**第一步：让 AI 自己摸索**
+
+在 Claude Code 中输入：
+
+```
+使用 playwright-cli 查看这个商品前 100 条评论，保存到 CSV 文件
+```
+
+AI 会自己打开浏览器、找到评论区、滚动加载、抓取数据。第一次运行消耗了约 **41% 的上下文窗口**。
+
+**第二步：沉淀成 Skill**
+
+```
+创建一个新的 skill，把刚才的全过程和遇到的坑都提炼出来
+```
+
+AI 把可复用的内容固化到了 `save-mall-comments` Skill 中：
+- 主流程方法论
+- 天猫页面的特殊处理（如评论弹层 vs 页面跳转）
+- 可直接复用的滚动脚本
+
+**第三步：用 Skill 指导执行**
+
+让 AI 再次执行相同任务。有了 Skill 指导后，上下文消耗降到了 **5%**。
+
+**第四步：固化成独立脚本**
+
+```
+把刚才所有的 playwright-cli 命令汇总成一个脚本
+```
+
+AI 生成了一个 PowerShell 脚本。以后直接在终端执行，**0 Token，0 AI 参与**，完成评论采集。
+
+#### 成果
+
+| 阶段 | Token 消耗 | 耗时 |
+|:---|:---|:---|
+| 第一次摸索 | 41% 上下文 | ~5 分钟 |
+| Skill 指导 | 5% 上下文 | ~1 分钟 |
+| 固化脚本 | **0** | **~10 秒** |
+
+**核心规律**：让 AI 替你踩坑，把经验固化成代码，以后就能零成本重复使用。
+
+
+### 案例二：自动发布文章到 X（复杂流程自动化）
+
+**痛点**：X 的发文流程非常繁琐——Markdown 格式不支持、图片不能批量粘贴、需要一个个手动替换占位符。
+
+**解决方案**：用 Playwright CLI 模拟人工操作，实现一键发布。
+
+#### 执行过程
+
+**第一步：预处理文章**
+
+```
+帮我编写一个 Python 脚本，把文章里的图片下载到本地，转成只使用本地图片的 Markdown，再用 pandoc 转成 HTML
+```
+
+AI 生成了转换脚本，把 Markdown 文章变成了 HTML 格式。
+
+**第二步：AI 执行发文**
+
+```
+使用 playwright-cli，打开 X 创建新文章，把 HTML 粘贴进去，
+找到所有照相机占位符，逐个删除，再从本地复制图片粘贴替换
+```
+
+AI 打开浏览器，模拟人工操作：
+1. 登录 X
+2. 点击创建新文章
+3. 粘贴 HTML 内容
+4. 识别所有图片占位符
+5. 逐个删除占位符，从本地复制图片粘贴
+
+**第三步：沉淀成 Skill**
+
+整个过程固化成了 `x-publisher` Skill。以后只要一句话：
+
+```
+使用 x-publisher 发布这篇文章
+```
+
+AI 就会自动完成全部流程。
+
+#### 成果
+
+- 原本需要 10-15 分钟的手工操作
+- 变成了一个命令 + 等待 30 秒
+
+
+### 案例三：仪表盘 E2E 自动化测试
+
+**痛点**：微服务仪表盘有 5 个图表组件，每次发布前需要验证筛选、排序、数据刷新等功能，手工测试耗时且容易遗漏。
+
+**解决方案**：用 Playwright CLI + Skills 生成测试代码，CI 自动执行，双报告输出。
+
+#### 系统架构
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  1. 本地：AI 生成测试用例                                         │
+│                                                                 │
+│  "验证延迟图表按服务筛选功能"                                     │
+│       ↓                                                         │
+│  playwright-cli open http://localhost:5173                      │
+│  playwright-cli snapshot          (获取元素引用 e42, e56)        │
+│  playwright-cli click e42         (输出 TypeScript 代码)         │
+│       ↓                                                         │
+│  playwright/tests/charts.spec.ts  (提交到 Git)                  │
+└─────────────────────────────────────────────────────────────────┘
+                             ↓
+┌─────────────────────────────────────────────────────────────────┐
+│  2. CI：自动化执行                                                │
+│                                                                 │
+│  GitHub Actions → npm ci → playwright install → 运行测试        │
+│  8 个测试，约 2.5 秒，失败重试 2 次                               │
+└─────────────────────────────────────────────────────────────────┘
+                             ↓
+┌─────────────────────────────────────────────────────────────────┐
+│  3. 双报告层                                                      │
+│                                                                 │
+│  HTML 报告 (Playwright)     +    Allure 报告 (历史趋势)          │
+│  - 交互式追踪查看器                - 通过率趋势图                  │
+│  - 失败截图                       - 按史诗/功能/严重度分组        │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+#### 关键设计
+
+**确定性 Mock 数据**：仪表盘的数据层使用种子随机数生成器，每次运行产生相同的图表数据，测试完全不依赖网络 Mock。
+
+**AI 生成测试**：用自然语言描述流程，AI 通过 CLI 实时抓取元素引用，生成的代码使用 `getByRole` 等可靠定位器，不会产生幻觉选择器。
+
+**双报告输出**：
+- HTML 报告：本地调试、追踪查看
+- Allure 报告：发布到 GitHub Pages，累计历史趋势图
+
+#### 成果
+
+- 测试代码编写时间从 2 小时 → **10 分钟**（自然语言描述）
+- 每次 PR 自动执行，无需人工干预
+- 历史趋势图让团队清楚看到测试稳定性
+
+
+### 案例四：零 Token 网页数据采集
+
+**核心理念**：很多固定流程其实不需要 AI 参与，只需要让 AI **帮你写一次脚本**。
+
+#### 应用场景
+
+- 定期爬取某网站的价格信息
+- 每天检查某个页面的更新
+- 批量下载某个专栏的文章
+
+#### 工作流
+
+```
+Step 1: 让 AI 用 Playwright CLI 手动执行一次
+        ↓
+Step 2: AI 摸索出最佳路径，遇到坑自己解决
+        ↓
+Step 3: 把整个过程固化成 Skill
+        ↓
+Step 4: 让 AI 把 Skill 转写成独立脚本（Bash/Python/PS）
+        ↓
+Step 5: 脚本可以在任何环境执行，0 Token
+```
+
+#### 示例：定时抓取某宝每日好店
+
+AI 生成的脚本结构：
+
+```bash
+# 由 AI 根据摸索经验生成的 PowerShell 脚本
+playwright-cli open https://taobao.com --headed --persistent
+playwright-cli type "每日好店"
+playwright-cli press Enter
+# 等待 3 秒加载
+Start-Sleep -Seconds 3
+playwright-cli snapshot > snapshot.yml
+# 提取店铺信息
+playwright-cli eval "document.querySelectorAll('.shop-name').map(e => e.innerText)" > shops.json
+playwright-cli close
+```
+
+设置 Windows 任务计划或 Linux cron，每天自动运行，**完全不需要 AI**。
+
+
+### 案例五：跨系统工作流自动化
+
+**场景**：从 A 系统读取数据 → 处理后 → 写入 B 系统
+
+**示例**：从内部 CRM 导出客户列表，在 Excel 中处理，然后上传到营销系统。
+
+#### 执行流程
+
+```
+自然语言指令：
+"从 CRM 导出昨天的客户列表，筛选出活跃用户，上传到营销系统"
+
+AI 执行：
+1. playwright-cli open crm.company.com --persistent（保持登录）
+2. playwright-cli click @date-picker
+3. playwright-cli fill @date-input "2025-01-15"
+4. playwright-cli click @export-btn
+5. playwright-cli eval "processExportData()" > active_users.csv
+6. playwright-cli open marketing.com/upload --persistent
+7. playwright-cli upload active_users.csv
+8. playwright-cli click @submit
+```
+
+整个过程无需人工参与，AI 在 Skills 指导下自动完成跨系统操作。
+
+
+## 第四部分：核心概念深入
+
+### 4.1 Recon（侦察） vs Heal（自愈）
+
+**Recon 侦察**：执行任何操作前，先 `snapshot` 获取当前页面的真实元素引用，不靠记忆。
+
+**Heal 自愈**：测试失败时，AI 不会盲目重试，而是：
+
+1. 分类错误（超时 / 严格模式冲突 / 断言不匹配）
+2. 应用对应修复（更新定位器 / 加 `.first()` / 调整预期值）
+3. 重新运行，最多 2 个循环
+
+超过 2 次仍失败 → 说明 Skill 需要更新，不是 AI 的问题。
+
+### 4.2 Session 与会话管理
+
+Playwright CLI 支持**命名会话**，不同项目可以使用独立的浏览器实例：
+
+```bash
+# 启动项目 A 的会话
+playwright-cli -s=projectA open https://app-a.com --persistent
+
+# 启动项目 B 的会话
+playwright-cli -s=projectB open https://app-b.com --persistent
+
+# 查看所有会话
+playwright-cli list
+```
+
+`--persistent` 参数将 Cookie 和登录状态保存到磁盘，下次使用不需要重新登录。
+
+### 4.3 监控仪表盘
+
+`playwright-cli show` 打开可视化仪表板，可以实时观察所有运行中的浏览器会话，每个会话都有实时截屏预览。
+
+
+## 第五部分：常见问题与故障排除
+
+| 问题 | 原因 | 解决方法 |
+|:---|:---|:---|
+| `command not found: playwright-cli` | CLI 未全局安装 | 执行 `npm install -g @playwright/cli@latest` |
+| `Error: browserType.launch: Executable doesn't exist` | 浏览器未安装 | 执行 `npx playwright install` |
+| 快照返回空结果 | 页面需要登录 | 先用 `playwright-cli click` 完成登录流程 |
+| AI 找不到 Skill | Skill 放错了目录 | 确保在 `.claude/skills/` 下，不是 `.claude/skill/` |
+| Skills 安装后 AI 仍不遵循规范 | Skill 文件格式错误 | 检查 `SKILL.md` 是否符合 Markdown 格式 |
+| Windows 上执行缓慢 | 杀毒软件干扰 | 将项目目录加入杀毒软件排除列表 |
+| 同时运行多个会话冲突 | Session 名称重复 | 使用 `-s` 参数指定不同的会话名称 |
+
+
+## 第六部分：总结
+
+| 对比维度 | 传统方式 | CLI + Skills 方式 |
+|:---|:---|:---|
+| **编写测试** | 手动写代码，查选择器 | 自然语言描述，AI 自动生成 |
+| **定位元素** | 硬编码选择器，容易失效 | 实时快照获取，永远准确 |
+| **失败处理** | 人工排查，手动修复 | AI 自动自愈，2 次重试 |
+| **团队规范** | 代码审查保证 | Skill 固化，自动执行 |
+| **重复任务** | 每次都要人操作 | 固化脚本，0 Token 自动 |
+| **Token 消耗** | MCP 方案消耗高 | CLI 方案省 4 倍 |
+
+**Playwright CLI** 给了 AI 操作浏览器的手脚，**Skills** 给了 AI 遵循规范的大脑，**自愈循环** 给了 AI 适应变化的能力。
+
+这套组合拳正在让“手动测试工程师”和“重复劳动”成为历史。现在就开始，让你的 AI 从对话框里走出来，真正地去浏览网页、点击按钮、完成任务。
+
+---
