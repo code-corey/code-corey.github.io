@@ -1,5 +1,5 @@
 ---
-title: ""
+title: "手把手15练：从零学会Playwright CLI浏览器自动化"
 date: 2026-04-25 20:46
 tags: [Playwright CLI]
 description: "手把手15练：从零学会Playwright CLI浏览器自动化"
