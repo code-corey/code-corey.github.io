@@ -867,8 +867,18 @@ drwxr-xr-x root/root         0 2026-08-25 06:46:58 ./
 
 ```bash
 docker volume create mydata-restored
+# 创建一个空白的命名卷
+
 docker run --rm -v mydata-restored:/data -v /root/backup:/backup busybox tar xvf /backup/mydata.tar -C /data
+# -v mydata-restored:/data	将名为 mydata-restored 的 Docker 卷挂载到容器的 /data 目录
+# -v /root/backup:/backup	将宿主机的 /root/backup 目录挂载到容器的 /backup 目录
+# busybox	使用轻量级的 BusyBox 镜像
+# tar xvf /backup/mydata.tar -C /data	解压 /backup/mydata.tar 文件到 /data 目录
+# 这里是相当于使用宿主机进行了中转
+
+
 docker run --rm -v mydata-restored:/data busybox cat /data/note.txt
+# 启动一个容器，把数据卷挂载在/data下面，然后查看一下 /data下的文件
 ```
 
 ```text
