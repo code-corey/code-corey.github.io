@@ -10,7 +10,7 @@ tag:
   - "密码学"
   - "区块链基础"
   - "对话实录"
-description: 师生对话实录课：0 基础学生与教学大师从「转一个文件为什么会双花」聊到「把账本交给所有人」，本机真跑双花模拟、亲手解码比特币创世块里藏的泰晤士报头条，把 Web3 存在的理由讲成一条直线。
+description: 师生对话实录课：0 基础学生与教学大师从「转一个文件为什么会双花」聊到「把账本交给所有人」，本机真跑双花模拟、亲手解码比特币创世块里藏的泰晤士报头条，并把读者作业真跑了一遍——MetaMask 在 Sepolia 测试网完成第一笔转账，链上坐标人人可查。
 ---
 
 > **Web3 区块链系列 · 阶段 0 · 地基与密码学 · 第 1/57 篇**
@@ -29,7 +29,7 @@ description: 师生对话实录课：0 基础学生与教学大师从「转一�
 
 > ① 双花：数字文件天生能复制 → ② 银行的解法：一个大家都信的人 → ③ 区块链的解法：把账本交给所有人 → ④ 亲眼看见一条真实的链 → ⑤ Web1/2/3 与「钥匙就是一切」 → ⑥ 你的第一笔链上转账
 
-环境：WSL2 Ubuntu-22.04（root）+ Python 3.10；查真实链用公共 API（blockstream.info、ethereum-rpc.publicnode.com，无需注册）。官方背景：[ethereum.org — 什么是区块链](https://ethereum.org/zh/what-is-blockchain/)、[比特币白皮书](https://bitcoin.org/bitcoin.pdf)。
+环境：WSL2 Ubuntu-22.04（root）+ Python 3.10；查真实链用公共 API（blockstream.info、ethereum-rpc.publicnode.com，无需注册）。第 6 课的钱包实验在 Windows 侧进行：Python 3.14 + Playwright 驱动 Chrome 里的 MetaMask 扩展，截图均出自真实操作。官方背景：[ethereum.org — 什么是区块链](https://ethereum.org/zh/what-is-blockchain/)、[比特币白皮书](https://bitcoin.org/bitcoin.pdf)。
 
 ---
 
@@ -297,22 +297,104 @@ Web3 的技术定义就一句话：**用区块链把「所有权」做成协议�
 
 ---
 
-## 第 6 课：你的第一笔链上转账（读者作业）
+## 第 6 课：你的第一笔链上转账（实跑实录）
 
 **🧑‍🏫 老师：**
 
-最后一步必须你亲手做——本课的验收不是「看懂」，是「完成」：
+最后一课的验收不是「看懂」，是「完成」，所以我留的是作业：
 
-1. **装 MetaMask**（浏览器插件）：它会让你写下 12 个单词的助记词——这就是你的钥匙。**用测试网练习，助记词永远不发给任何人**；
-2. **切到 Sepolia 测试网**，从水龙头免费领测试 ETH（搜索 "Sepolia faucet"，用 GitHub 账号等免费领）；
-3. 给自己的另一个地址（或同学的要来的地址）转 0.01 testnet ETH；
-4. 在 Etherscan（切到 Sepolia 网络）粘贴你的地址，找到那笔交易，**记下交易哈希和所在区块高度**。
+1. 装 MetaMask（浏览器插件）：它会让你写下 12 个单词的助记词——这就是你的钥匙。用测试网练习，助记词永远不发给任何人；
+2. 切到 Sepolia 测试网，从水龙头免费领测试 ETH；
+3. 给自己另一个地址转 0.01 testnet ETH；
+4. 在 Etherscan（Sepolia 网络）找到这笔交易，记下交易哈希和所在区块高度。
 
-做完你会发现：第 4 课里那些 JSON 字段（块高、hash），在你自己的交易旁边出现了。整个系列的实验从这一刻开始都是同一条路：**每一笔操作，都能在公开账本上指出它的位置**。
+**🧑‍🎓 学生：** 老师，作业交了，过程还挺曲折——第一次居然发出了一笔 0 元的转账。我把每一步都记了日志，帮我验收？
 
-（诚实说明：这步需要浏览器与领水操作，无法由本文代跑；所有「本机实跑」的输出都来自前几课的命令行实验。）
+**🧑‍🏫 老师：**
 
-> 一句话收口：**学习 Web3 的最小闭环 = 钱包 → 测试网 → 一笔转账 → 区块浏览器上找到它；从今天起，你的每个实验都留下链上坐标。**
+好，一步一步过。先诚实交代实验方式：转账部分由 Playwright 脚本驱动 Chrome 里的 MetaMask 扩展完成；人机验证和最后一次「领取」按钮由人手点。钱包是为这篇作业新建的一次性测试网钱包——里面永远不会有真钱。但操作纪律按真钱练。
+
+### 步骤 1：装钱包、造钥匙
+
+Chrome 商店装 MetaMask → 创建新钱包 → 把 12 个单词的助记词抄在纸上。这一步没有截图，故意的：**助记词不拍照、不进剪贴板、不发任何人**——包括写给读者看的文章。抄完以后再建第二个账户 Account 2 当收款方：
+
+![创建新钱包的欢迎页](/web3区块链/00-foundations/foundations-01-why-blockchain/img-001.png)
+
+![账户列表：Account 1 与 Account 2 就位](/web3区块链/00-foundations/foundations-01-why-blockchain/img-003.png)
+
+然后右上角网络切换到 Show test networks 里的 Sepolia。初始余额：0 SepoliaETH，穷得清清爽爽：
+
+![切到 Sepolia 网络，余额 0](/web3区块链/00-foundations/foundations-01-why-blockchain/img-002.png)
+
+### 步骤 2：领水——先被机器人防线拦下
+
+我一开始想全自动：脚本打开 PoW 水龙头 `https://sepolia-faucet.pk910.de/`，填上 Account 1 的地址 `0xF834807531eb54E6D94808638221daFC22af458f`，结果卡在人机验证：
+
+![自动化浏览器被验证码拦住：INVALID_CAPTCHA](/web3区块链/00-foundations/foundations-01-why-blockchain/img-004.png)
+
+> 报错原文：`[INVALID_CAPTCHA] captcha check failed: captcha token missing`
+
+这个拦我的是什么？想想第 1 课的双花：如果水龙头不要钱随便领，写个循环把测试币薅光，整个测试网就废了。所以水龙头全都要么注册账号、要么过人机验证、要么——像这个站一样——要求你的浏览器先干算力活（PoW 挖矿）攒额度：机器人大军耗不起这个成本。这是共识机制的思路在水龙头上的预演，1.2 篇正式讲。
+
+于是换人肉：自己浏览器打开同一站点，粘贴地址点 Start Mining，挂机挖了一会儿攒到 2.5 SepETH（单次上限）。挖完点了 Stop Mining 我就去干别的了——结果余额迟迟还是 0！回头翻页面才发现：挖矿停了不等于领走，页面停在领取确认框上，绿色的 **Claim Rewards** 必须再点一次才真正上账（Timeout 一栏还在倒计时，超时不领作废）：
+
+![Claim Rewards 确认框：Wallet / 2.5 SepETH / Timeout](/web3区块链/00-foundations/foundations-01-why-blockchain/img-005.png)
+
+点完用第 4 课的老办法直接问链上要答案（公共 RPC，无需注册）：
+
+```bash
+curl -s -X POST https://ethereum-sepolia-rpc.publicnode.com \
+     -H "Content-Type: application/json" \
+     -d '{"jsonrpc":"2.0","method":"eth_getBalance","params":["0xF834807531eb54E6D94808638221daFC22af458f","latest"],"id":1}'
+```
+
+```text
+{"jsonrpc":"2.0","result":"0x22b1c8c1227a0000","id":1}
+```
+
+`0x22b1c8c1227a0000` = 2500000000000000000 wei = 2.5 testnet ETH。wei 是最小单位（10⁻¹⁸ ETH），后面篇章细讲，这里只做十六进制换算：到账确认。
+
+### 步骤 3：转账——先交一笔学费
+
+接着让脚本走 MetaMask 界面发钱。新版流程：主页点「发送」→ 选资产 SepoliaETH → 进入一个「收款人和金额同页」的表单，填入 Account 2 的地址 `0x9df7b36Bc649D50c0F6805e30473339ee93E4191`（可用余额显示 2.49994，已经扣掉了预估 gas）：
+
+![发送页：收款人与金额在同一页](/web3区块链/00-foundations/foundations-01-why-blockchain/img-006.png)
+
+翻车就翻在这里：脚本第一版认得收款人输入框，却没认出新版把金额也放进了同一页，于是跳过金额一路「继续」——它真的广播成功了一笔 **0 ETH 的空转账**。上了链，gas 照扣，转了个寂寞。
+
+第二版学乖了：填入金额 0.01，并且确认前先把页面关键字段读出来校验（金额是 0.01、双方账户都在页面上），对不上就不许点确认：
+
+![填入金额 0.01](/web3区块链/00-foundations/foundations-01-why-blockchain/img-007.png)
+
+![确认页：Account 1 → Account 2，0.01 SepoliaETH](/web3区块链/00-foundations/foundations-01-why-blockchain/img-008.png)
+
+这次提交后，活动列表顶端出现「待处理 -0.01 SepoliaETH」——旁边正躺着上一笔 -0 SepoliaETH 的黑历史，学费明明白白挂在账上：
+
+![提交成功：待处理 -0.01，下方是那笔 -0 的历史记录](/web3区块链/00-foundations/foundations-01-why-blockchain/img-009.png)
+
+等待期间脚本每 15 秒用 `eth_getBalance` 问一次收款地址，几轮之内 0 变成 0.01——Sepolia 出块很快，账不是「即时」的，是「下一个块见」。**老师点评这笔事故：它是本篇最贵的礼物。第一，链不管金额多小都真实结算、真实收费，0 元转账也扣了手续费；第二，界面版本会变，参数校验不能省——人手动操作时同理，点确认前把数字亲眼看一遍。**
+
+### 步骤 4：把坐标刻进公开账本
+
+打开区块浏览器查这笔交易：`https://sepolia.etherscan.io/tx/0xff73338dee6df255cea64437f3469d04dc5932e586beb5788c5c2c0d426b026b`
+
+![Etherscan(Sepolia) 交易详情](/web3区块链/00-foundations/foundations-01-why-blockchain/img-010.png)
+
+作业的两项交付物就从这页读出：
+
+| 字段 | 值 |
+|---|---|
+| Transaction Hash | `0xff73338dee6df255cea64437f3469d04dc5932e586beb5788c5c2c0d426b026b` |
+| Status | Success |
+| **Block Height** | **11574996** |
+| Timestamp | 2026-08-27 02:38:12 UTC |
+| From → To | `0xF834…458f`（Account 1）→ `0x9df7…4191`（Account 2） |
+| Value | 0.01 ETH |
+| 手续费 | 约 0.000054 ETH（gas 用量 21000） |
+
+对比一下第 4 课：那时我们 curl 的是比特币创世块——别人的历史。而现在这条坐标属于你自己：谁都能访问 Etherscan、贴上这串 hash、看到同样的 Success 和块高。不需要登录，不需要求任何数据库管理员——这就是第 3 课说的「把账本交给所有人」，落到你头上的样子。之后每一篇的实验都会这样收尾：**给出 hash 或地址，任何人随时复核。**
+
+> 一句话收口：**学习 Web3 的最小闭环 = 钱包 → 测试网 → 一笔转账 → 区块浏览器上找到它；你在公开账本上有了第一个属于自己的坐标。**
 
 ---
 
@@ -328,11 +410,12 @@ Web3 的技术定义就一句话：**用区块链把「所有权」做成协议�
 6. **真实链**：创世块里的泰晤士报头条、96 万块 17 年不间断、人人可查（第 4 课实查）。
 7. **Web3**：所有权写进协议，Not your keys, not your coins（第 5 课）。
 8. **术语版图**：地基 → 可编程 → 应用 → 扩容（插问 3）。
+9. **首笔转账**：钱包 → 领水（被验证码拦、Claim Rewards 坑、0 ETH 空转账）→ 转账 Success @11574996——自己的链上坐标（第 6 课实跑）。
 
 **验收清单**（做完再进下一篇）：
 
 - [ ] 能用自己的话向别人解释「区块链解决了什么问题」
-- [ ] 完成测试网第一笔转账并能在浏览器上找到它
+- [ ] 完成测试网第一笔转账并能在浏览器上找到它（本篇作者已交作业，坐标见第 6 课；轮到你了）
 
 **思考题**：交易所里的币和自托管钱包里的币，在「谁保管账本」这个维度上分别对应第 2 课还是第 3 课的模型？（提示：交易所冷热钱包、提现审核。）
 
@@ -376,4 +459,5 @@ print(">>> 第二笔花不出去——账本面前，钱只能花一次")
 - [ethereum.org — 什么是区块链](https://ethereum.org/zh/what-is-blockchain/)
 - [比特币白皮书](https://bitcoin.org/bitcoin.pdf)（创世块头条见第 4 课）
 - [blockstream.info API](https://github.com/Blockstream/esplora/blob/master/API.md)（本篇第 4 课所用公共接口）
-- 本机：WSL2 Ubuntu-22.04 + Python 3.10；链上数据 2026-08 实查
+- [MetaMask](https://metamask.io/) · [Sepolia PoW Faucet](https://sepolia-faucet.pk910.de/) · [Etherscan (Sepolia)](https://sepolia.etherscan.io/)（第 6 课所用钱包、水龙头与区块浏览器）
+- 本机：WSL2 Ubuntu-22.04 + Python 3.10；链上数据 2026-08 实查；第 6 课 MetaMask 实验为 Windows + Python 3.14 + Playwright，交易 `0xff73…b026b` @ block 11574996
