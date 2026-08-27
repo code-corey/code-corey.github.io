@@ -336,7 +336,13 @@ Chrome 商店装 MetaMask → 创建新钱包 → 把 12 个单词的助记词�
 
 这个拦我的是什么？想想第 1 课的双花：如果水龙头不要钱随便领，写个循环把测试币薅光，整个测试网就废了。所以水龙头全都要么注册账号、要么过人机验证、要么——像这个站一样——要求你的浏览器先干算力活（PoW 挖矿）攒额度：机器人大军耗不起这个成本。这是共识机制的思路在水龙头上的预演，1.2 篇正式讲。
 
-于是换人肉：自己浏览器打开同一站点，粘贴地址点 Start Mining，挂机挖了一会儿攒到 2.5 SepETH（单次上限）。挖完点了 Stop Mining 我就去干别的了——结果余额迟迟还是 0！回头翻页面才发现：挖矿停了不等于领走，页面停在领取确认框上，绿色的 **Claim Rewards** 必须再点一次才真正上账（Timeout 一栏还在倒计时，超时不领作废）：
+于是换人肉：自己浏览器打开同一站点，粘贴地址点 Start Mining。
+
+![image-20260827112545028](/web3区块链/00-foundations/foundations-01-why-blockchain/image-20260827112545028-1787801157838-1.png)
+
+挂机挖了一会儿攒到 2.5 SepETH（单次上限）。挖完点了 Stop Mining 我就去干别的了——结果余额迟迟还是 0！回头翻页面才发现：挖矿停了不等于领走，页面停在领取确认框上，绿色的 **Claim Rewards** 必须再点一次才真正上账（Timeout 一栏还在倒计时，超时不领作废）：
+
+![image-20260827113703370](/web3区块链/00-foundations/foundations-01-why-blockchain/image-20260827113703370-1787801833856-5-1787801837910-7.png)
 
 ![Claim Rewards 确认框：Wallet / 2.5 SepETH / Timeout](/web3区块链/00-foundations/foundations-01-why-blockchain/img-005.png)
 
@@ -376,7 +382,15 @@ curl -s -X POST https://ethereum-sepolia-rpc.publicnode.com \
 
 ### 步骤 4：把坐标刻进公开账本
 
-打开区块浏览器查这笔交易：`https://sepolia.etherscan.io/tx/0xff73338dee6df255cea64437f3469d04dc5932e586beb5788c5c2c0d426b026b`
+我们点击一下刚刚交易的记录，会跳转到一个页面
+
+![image-20260827115521555](/web3区块链/00-foundations/foundations-01-why-blockchain/image-20260827115521555.png)
+
+打开区块浏览器查这笔交易：
+
+```
+https://sepolia.etherscan.io/tx/0xff73338dee6df255cea64437f3469d04dc5932e586beb5788c5c2c0d426b026b
+```
 
 ![Etherscan(Sepolia) 交易详情](/web3区块链/00-foundations/foundations-01-why-blockchain/img-010.png)
 
