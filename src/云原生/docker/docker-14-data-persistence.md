@@ -955,10 +955,15 @@ var/lib/data/note.txt
 
 ### Image Mount：把另一张镜像只读挂进来
 
-[第 7 篇](/云原生/docker/docker-07-enter-container)排障靠 `docker exec … sh`，但有的镜像故意不带 shell。Image Mount 的思路是：把 busybox 这张镜像的内容**只读盖**进当前容器，原镜像一个字节不动：
+[第 7 篇](/云原生/docker/docker-07-enter-container)排障靠 `docker exec … sh`，但有的镜像故意不带 shell。Image Mount 的思路是：把 busybox 这张镜像的内容**只读盖**进当前容器，原镜像一个字节不动：	
 
 ```bash
 docker run --rm --mount type=image,source=busybox,dst=/dbg alpine ls /dbg/bin | head -6
+
+# --mount type=image,source=busybox,dst=/dbg	将 busybox 镜像 作为数据卷挂载到容器的 /dbg 目录
+# alpine	使用 Alpine Linux 镜像作为运行环境
+# ls /dbg/bin | head -6	列出挂载的 busybox 镜像中的 /bin 目录，只显示前 6 行
+
 ```
 
 ```text
@@ -982,7 +987,61 @@ docker run --rm --mount type=image,source=busybox,dst=/dbg alpine /dbg/bin/echo 
 exec /dbg/bin/echo: no such file or directory
 ```
 
-文件明明在，报的却是「没有这个文件」——musl 系统加载不了 glibc 二进制时的经典症状。换 musl 构建的 busybox 就好：
+文件明明在，报的却是「没有这个文件」——musl 系统加载不了 glibc 二进制时的经典症状。
+
+>  这里插入一个知识点 musl 和 glibc
+
+**musl 和 glibc 都是 C 标准库（libc）的实现**——它们是 Linux 上所有程序运行的基础"工具箱"，提供 `printf()`、`malloc()`、`open()` 等最基础的函数。
+
+| 特性               | **glibc**（老牌霸主）                                 | **musl**（后起之秀）                   |
+| :----------------- | :---------------------------------------------------- | :------------------------------------- |
+| **全称**           | GNU C Library                                         | musl libc                              |
+| **体积**           | ~2-5 MB                                               | ~0.6-1 MB                              |
+| **性能**           | 全面优化，更快                                        | 略慢，但足够用                         |
+| **兼容性**         | 几乎所有 Linux 发行版                                 | 主要 Alpine 和嵌入式系统               |
+| **动态链接器路径** | `/lib/ld-linux.so.2` 或 `/lib64/ld-linux-x86-64.so.2` | `/lib/ld-musl-x86_64.so.1`             |
+| **二进制兼容性**   | 不能直接运行 musl 编译的程序                          | 不能直接运行 glibc 编译的程序          |
+| **主要使用者**     | Ubuntu、Debian、CentOS、Fedora                        | Alpine Linux、OpenWrt（路由器系统）    |
+| **诞生时间**       | 诞生于 1988 年，历史悠久                              | 诞生于 2011 年，追求**简洁**和**轻量** |
+|                    |                                                       |                                        |
+
+所以这里的问题就是：
+
+场景 1：Alpine（musl）执行 Ubuntu 程序（glibc）
+
+```bash
+# Ubuntu 编译的二进制（依赖 glibc）
+docker run --rm ubuntu file /bin/echo
+# 输出: interpreter /lib64/ld-linux-x86-64.so.2
+
+# Alpine 里没有这个文件
+docker run --rm alpine ls /lib64/ld-linux-x86-64.so.2
+# 报错: No such file or directory
+
+# 所以执行失败
+docker run --rm --mount type=image,source=ubuntu,dst=/dbg alpine /dbg/bin/echo hi
+# 报错: no such file or directory
+```
+
+场景 2：反过来（glibc 系统执行 Alpine 程序）
+
+```bash
+# Alpine 编译的二进制（依赖 musl）
+docker run --rm alpine file /bin/echo
+# 输出: interpreter /lib/ld-musl-x86_64.so.1
+
+# Ubuntu 里没有这个文件
+docker run --rm ubuntu ls /lib/ld-musl-x86_64.so.1
+# 报错: No such file or directory
+
+# 同样执行失败
+docker run --rm --mount type=image,source=alpine,dst=/dbg ubuntu /dbg/bin/echo hi
+# 报错: no such file or directory
+```
+
+
+
+换 musl 构建的 busybox 就好：
 
 ```bash
 docker run --rm --mount type=image,source=busybox:musl,dst=/dbg alpine /dbg/bin/echo hello-from-mounted-image
