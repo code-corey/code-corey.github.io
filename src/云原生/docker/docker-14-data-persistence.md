@@ -893,9 +893,24 @@ second-line
 真实容器可能挂了好几个卷，一个个卷名去查很烦。`--volumes-from <容器>` 让新容器**原样继承**目标容器挂着的全部卷和 bind：
 
 ```bash
+# 创建一个容器，挂了一个mydata的卷
 docker run -d --name db-like -v mydata:/var/lib/data busybox sleep infinity
+
+# 新创建一个容器，让新容器原样继承目标容器挂着的全部卷和 bind
 docker run -d --name helper --volumes-from db-like busybox sleep infinity
+
+# 这个命令会输出容器 helper 的所有挂载点，格式为：类型  源路径 -> 目标路径
+# 
+# docker inspect helper：获取容器 helper 的详细信息（JSON 格式）
+# --format：用 Go 模板格式化输出
+# {{range .Mounts}}...{{end}}：遍历所有挂载点
+# {{.Type}}：挂载类型（bind、volume、tmpfs 等）
+# {{.Source}}：宿主机上的源路径
+# {{.Destination}}：容器内的目标路径
+# {{println}}：每条记录后换行
 docker inspect --format '{{range .Mounts}}{{.Type}}  {{.Source}} -> {{.Destination}}{{println}}{{end}}' helper
+
+
 docker exec helper cat /var/lib/data/note.txt
 ```
 
@@ -909,6 +924,12 @@ second-line
 helper 的 `docker run` 里**一个 `-v` 都没写**，挂载却原样跟来了。于是「备份某个容器的全部数据」缩成一行：
 
 ```bash
+
+# docker run --rm	运行一次性容器，退出后自动删除
+# --volumes-from db-like	挂载 db-like 容器的所有卷，让新容器能访问该容器的数据
+# -v /root/backup:/backup	将宿主机 /root/backup 挂载到容器内 /backup（存放备份文件）
+# busybox	使用轻量级镜像，只包含基本工具
+# tar cvf /backup/db-like.tar /var/lib/data	在容器内执行：将 /var/lib/data 打包到 /backup/db-like.tar
 docker run --rm --volumes-from db-like -v /root/backup:/backup busybox tar cvf /backup/db-like.tar /var/lib/data
 ```
 
