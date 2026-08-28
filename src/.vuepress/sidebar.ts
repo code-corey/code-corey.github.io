@@ -576,6 +576,17 @@ export default sidebar({
         "nginx-12-performance-checklist",
       ],
     },
+    {
+      text: "SSH 远程连接",
+      icon: "key",
+      prefix: "ssh/",
+      collapsible: true,
+      children: [
+        "ssh-01-windows-terminal-ssh-key-login",
+        "ssh-02-autodl-vllm-gemma4-deploy",
+        "ssh-03-rclone-mount-remote-root-to-windows",
+      ],
+    },
   ],
   "/云原生/": [
     "",

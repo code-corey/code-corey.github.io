@@ -35,3 +35,7 @@
 - **frontmatter 必填**：title / sidebarGroup / shortTitle / order / date / category / tag / description
 - **每篇文章三处导航独立维护**：头部「第 N/M 篇」计数行、上一篇/下一篇链接、尾部「➡️ 下一篇」预告；批量重排用 `scripts/rebuild-k8s-nav.mjs` 的模式（先建 SEQ 表再全链重建）
 - **改文件名必须同步全仓库引用**（grep slug 全局替换，一次性查表替换防连锁） 
+
+## 三、写博客 Skill
+
+用户说「写一篇博客 / 写一篇博客记录一下 / 记到博客里」时，使用 `.claude/skills/write-blog/SKILL.md` 中的完整流程写文章（选目录 → frontmatter → 系列导航 → `pnpm sidebar:gen` → 本地预览）。
