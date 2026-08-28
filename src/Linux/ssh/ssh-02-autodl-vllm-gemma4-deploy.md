@@ -241,7 +241,7 @@ ModelScope 那行是measurement事故：模型页返回 200 让我以为它收�
 v3（pdl2.sh）要同时解决三件事：
 
 1. **断点续传到分片级**：每个分片从「已落盘字节数」对应的位置续传，已完成的分片秒识别，一点不浪费；
-2. **自动重试**：被掐了就退避重试，单分片最多 300 次， Humans 休息，脚本值班；
+2. **自动重试**：被掐了就退避重试，单分片最多 300 次，人类休息，脚本值班；
 3. **字节级验收**：12 个分片各拿到「期望字节数」才算数，总数对不上绝不拼接。
 
 ```bash
@@ -302,9 +302,11 @@ screen -dmS concat_watch bash -c '\
   cat $(seq -f "$DEST.part%g" 0 11) > $DEST && echo CONCAT_DONE >> /root/model_dl2.log'
 ```
 
+> 这个监视器后来出了岔子，坑在下面插曲三——先埋个伏笔。
+
 v3 上线后：v2 留下的 10 个残缺分片全部原地续传（含两个已 100% 的秒过），重试机制安安静静地填坑。剩下就是时间问题。
 
-### 4.4 两个插曲
+### 4.4 三个插曲
 
 **插曲一：`rm -f` 被安全卫士拦了。** 重启下载前想顺手删掉旧的不完整文件，被本机的安全策略拦下（策略禁止递归/强制删除）。其实这步本来就多余——v3 的分片逻辑对旧文件是「识别 + 续传 + 覆盖」，根本不需要删。结论：清理类操作能不做就不做，50G 的盘还没娇贵到那个份上。下载验收通过后，12 个 `.part` 文件（约 12G）手动删掉即可：
 
@@ -314,6 +316,29 @@ rm /root/autodl-tmp/models/.../model.safetensors.part0   # ...以此类推
 ```
 
 **插曲二：`pkill -f` 又自杀了。** 清理旧下载进程时 `pkill -f 'curl -sL -r'`，SSH 会话跟着断——远程命令字符串里恰好包含同样的文本，pkill 连自己坐着的会话一起匹配了。这正是第 1 篇踩坑速查表的第 5 条，同一把刀捅了自己两次。正确姿势：先 `pgrep` 看 PID，再按 PID 杀。
+
+**插曲三：监视器的 `$DEST` 蒸发了。** 剧本本来很美：v3 下载完 → 日志打上验收标记 → 监视器无缝拼接。结果等到 `ALL_PARTS_VERIFIED` 真的打出来（TOTAL=13028605312 与 EXPECT 分毫不差，全部分片字节级验收通过），`model.safetensors` 却纹丝不动，日志里也没有 `CONCAT_DONE`。
+
+排查发现监视器进程活着，但 `cat` 根本没执行成——原因藏在启动命令里：
+
+```bash
+DEST=/root/autodl-tmp/.../model.safetensors; screen -dmS concat_watch bash -c '... $DEST ...'
+```
+
+`DEST` 只是普通 shell 变量，**没 `export`**。`screen -dmS` 起的是全新会话，新 bash 里 `$DEST` 展开为空，那行命令实际变成了 `cat .part0 .part1 ... > `——重定向目标是空，bash 直接语法错误，而错误输出随 screen 会话消失得无影无踪，静默失败。
+
+修复：不玩变量，绝对路径硬编码重拼，并把退出码写回日志：
+
+```bash
+screen -dmS concat bash -c 'cat \
+  /root/autodl-tmp/models/.../model.safetensors.part0 \
+  /root/autodl-tmp/models/.../model.safetensors.part1 \
+  ...（中间省略）... \
+  > /root/autodl-tmp/models/.../model.safetensors; \
+  echo CAT_EXIT_$? >> /root/model_dl2.log'
+```
+
+45 秒后 `CAT_EXIT_0`，`stat -c%s` 报出 13028605312——和期望值一字不差，12.4G 模型落盘完毕。从开始下载到验收拼接完成，全程约 1.5 小时，大半时间在等 hf-mirror 的限速天花板。
 
 ---
 
@@ -331,8 +356,12 @@ exec vllm serve $MODEL \
   --host 0.0.0.0 \
   --port 8000 \
   --max-model-len 32768 \
-  --gpu-memory-utilization 0.92
+  --gpu-memory-utilization 0.92 \
+  --enable-auto-tool-choice \
+  --tool-call-parser gemma4
 ```
+
+> 最后两个参数不是一开始就有的——被 Pi 上门的 400 炸出来后补的，故事在本节末尾的「补遗」。
 
 逐个说：
 
@@ -352,21 +381,113 @@ screen -dmS vllm bash -c '/root/start_vllm.sh > /root/vllm_server.log 2>&1'
 tail -f /root/vllm_server.log    # 看加载进度，首次会先编译一些kernel，耐心等
 ```
 
-看到这一行就说明起来了：
+看到日志里这几行，就是起来了（摘自真实启动日志）：
 
 ```text
-Started server process [xxxx]
-Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+(APIServer pid=6659) INFO ... [model.py:672] Resolved architecture: Gemma4UnifiedForConditionalGeneration
+(EngineCore pid=7250) INFO ... [default_loader.py:430] Loading weights took 4.08 seconds
+(EngineCore pid=7250) INFO ... [model_runner.py:380] Model loading took 12.75 GiB memory and 7.393888 seconds
+(EngineCore pid=7250) INFO ... [kv_cache_utils.py:1869] GPU KV cache size: 110,457 tokens, \
+    Maximum concurrency for 32,768 tokens per request: 3.37x
+(APIServer pid=6659) INFO:     Started server process [6659]
 ```
+
+三条信息各说了一件事：FP8 权重从盘到卡只用了 4 秒（数据盘读 2.7 GB/s，NVMe RAID 的实力）；权重吃拌 12.75 GiB，和仓库标称的 12.2 GB 对上；剩下的约 10G 显存池换成了 11 万 token 的 KV cache，兼容 32K 长度时能同时伺候 3 路请求。
 
 容器里自测一把：
 
 ```bash
 curl -s http://localhost:8000/v1/models
-# {"object":"list","data":[{"id":"gemma-4-12b",...}]}
 ```
 
+```json
+{"object":"list","data":[{"id":"gemma-4-12b","object":"model",
+  "created":1787931878,"owned_by":"vllm",
+  "root":"/root/autodl-tmp/models/Gemma-4-12B-it-AEON-Abliterated-K4-FP8",
+  "max_model_le...
+```
+
+再补一刀真实的对话推理：
+
+```bash
+curl -s http://localhost:8000/v1/chat/completions \
+  -H 'Content-Type: application/json' \
+  -d '{"model": "gemma-4-12b", "messages": [{"role": "user", "content": "你好，请用一句话介绍你自己"}], "max_tokens": 100}'
+```
+
+```json
+{"choices":[{"message":{"role":"assistant",
+  "content":"我是 Gemma 4，由 Google DeepMind 开发的具有文本和图像理解能力的大型语言模型。"},
+  "finish_reason":"stop"}],
+ "usage":{"prompt_tokens":21,"completion_tokens":23,"total_tokens":44},
+ "service_tier":null, ...}
+```
+
+服务端全通。
+
 顺带一提显存账单：`nvidia-smi` 里 vLLM 起来后占用 ~22G——它启动时就按 `gpu-memory-utilization` 把显存池一次性圈好（PagedAttention 的KV cache 池），不是「按需增长」，这是 vLLM 和 ollama 观感上最大的区别。
+
+### 5.1 补遗：Pi 一连就 400，工具解析没开
+
+服务起来后，本地浏览器里测好好的，结果 Pi（编程智能体）一连上就痵：
+
+```text
+Error: 400: {"message":"\"auto\" tool choice requires --enable-auto-tool-choice
+and --tool-call-parser to be set","type":"BadRequestError"}
+```
+
+原因一句话：**聊天客户端和智能体客户端的差别**。普通聊天只发消息，而 Pi 这类智能体每个请求都带着 `tools`（工具清单）和 `tool_choice: "auto"`（允许模型决定调工具）。vLLM 默认不开工具解析——这算是个安全默认：没配解析器时直接拒绝，免得模型输出的半成品工具调用静默漏给客户端。
+
+解法分三步：
+
+**第一步，看有哪些解析器。** 工具调用本质是「模型输出特殊格式的文本 → 服务端解析回结构化 JSON」，每家模型格式不同，vLLM 为它们各备了一个解析器。直接翻包目录：
+
+```bash
+ls /root/miniconda3/lib/python3.12/site-packages/vllm/tool_parsers/ | head
+```
+
+四十多个解析器一字排开（llama、mistral、hermes、deepseek……），其中赫然有两个候选：`gemma4_engine_tool_parser.py`（Gemma 4 专用）和 `functiongemma_tool_parser.py`。注册名再确认一下：
+
+```bash
+python -c "from vllm.tool_parsers import ToolParserManager as M; \
+  import json; print(json.dumps(sorted(set(M.list_registered()))))" | tr ',' '\n' | grep -i gemma
+```
+
+```text
+ "functiongemma"
+ "gemma4"
+```
+
+Gemma-4-12B-it 对号入座，选 `gemma4`。
+
+**第二步，加参数重启。** 在 `start_vllm.sh` 里补上那两行，然后停旧拉新：
+
+```bash
+screen -S vllm -X stuff '^C'        # Ctrl+C 优雅停机
+screen -dmS vllm bash -c '/root/start_vllm.sh > /root/vllm_server.log 2>&1'
+```
+
+重启后日志的 non-default args 里能看到 `enable_auto_tool_choice: True, tool_call_parser: 'gemma4'`，说明参数吃进去了。
+
+**第三步，用带工具的请求验证。** 光能聊天不算数，得让模型真调一次：
+
+```bash
+curl -s http://localhost:8000/v1/chat/completions -H 'Content-Type: application/json' -d @/tmp/tool_test.json
+```
+
+请求里塞一个 `get_weather` 工具定义（参数 `city`），问「北京天气如何」。真实响应：
+
+```json
+{"choices":[{"message":{"role":"assistant","content":null,
+  "tool_calls":[{"type":"function",
+    "function":{"name":"get_weather","arguments":"{\"city\": \"北京\"}"}}],
+  "finish_reason":"tool_calls"}},
+ "usage":{"prompt_tokens":76,"completion_tokens":15,"total_tokens":91}}
+```
+
+漂亮：模型没瞎编天气，而是正确发起工具调用，参数 `city=北京` 被解析成了规整的 JSON，`finish_reason` 也变成了 `tool_calls`。Pi 再连，一切正常。
+
+> 顺带一提：`--tool-call-parser` 只管「解析模型输出」，不代表模型真的会调——Gemma-4-12B-it 本身训过 function calling（模型卡标签里写着 `function-calling`），两者缺一不可。
 
 ---
 
@@ -411,9 +532,42 @@ print("\n统计: prompt %d tokens, 生成 %d tokens" % (
     resp.usage.prompt_tokens, resp.usage.completion_tokens))
 ```
 
-`api_key="EMPTY"` 是 vLLM 的默认约定——没配 `--api-key` 时随便填。至此，本地写代码、远端 4090 推理，体验与官方 API 无异。AnythingLLM、LobeChat、Dify 等一切支持 OpenAI 兼容接口的工具，把 base_url 填 `http://localhost:8000/v1` 都能直接用。
+`api_key="EMPTY"` 是 vLLM 的默认约定——没配 `--api-key` 时随便填。实际跑一把（真实输出）：
+
+```text
+可用模型: ['gemma-4-12b']
+
+回复: 我是 Gemma 4，由 Google DeepMind 开发的一个能够处理文本和图像以及音频输入
+      和支持视频输入的多模态人工智能助手模型。
+
+统计: prompt 22 tokens, 生成 35 tokens
+```
+
+至此，本地写代码、远端 4090 推理，体验与官方 API 无异。AnythingLLM、LobeChat、Dify 等一切支持 OpenAI 兼容接口的工具，把 base_url 填 `http://localhost:8000/v1` 都能直接用。
 
 不想开 Python 的话，一行 curl 也行（PowerShell 下注意转义，建议还是用上面的脚本）。
+
+服务端的退出与重启也有讲究——不需要的时候别让它白烧卡费：
+
+```bash
+screen -S vllm -X stuff '^C'      # 向 vllm 会话发送 Ctrl+C 优雅停机
+screen -S vllm -X quit            # 然后回收会话
+```
+
+下次要用，一条命令拉起（模型在数据盘上躺着，不用重新下载）：
+
+```bash
+screen -dmS vllm bash -c '/root/start_vllm.sh > /root/vllm_server.log 2>&1'
+```
+
+### 整机关机后的恢复清单（AutoDL 实例重启）
+
+容器磁盘数据都在，流程就四步：
+
+1. **控制台拿新 SSH 指令**——AutoDL 重启后端口/地址可能变化（第 1 篇坑 3），以控制台显示为准
+2. **进容器拉起服务**：上面那条 `screen -dmS vllm ...` 命令，`tail -f /root/vllm_server.log` 看到 `Started server process` 即就绪（编译缓存还在，比首次快）
+3. **改本地 bat 端口**（如果变了），双击 `连接vllm.bat` 重建隧道
+4. **本地验证**：`python test_vllm.py` 出回复即全链路恢复
 
 ---
 
@@ -441,6 +595,8 @@ print("\n统计: prompt %d tokens, 生成 %d tokens" % (
 | 6 | HTTP 错误页被静默追加进分片 | curl 加 `-f`（HTTP ≥400 时不写 body） |
 | 7 | `pkill -f` 杀断自己的 SSH 会话 | 与第 1 篇坑 5 同源：先 `pgrep` 拿 PID 再精确杀 |
 | 8 | 下载完启动报 architecture not supported | 先查 `ModelRegistry.get_supported_archs()`，再决定下哪个版本 |
+| 9 | screen 监视器静默失败，拼接没执行 | `screen -dmS` 新会话继承不到未 `export` 的 shell 变量，`$DEST` 展开为空导致语法错误；用绝对路径或 `export` |
+| 10 | Pi/Claude Code 等智能体一连就 400：`tool choice requires --enable-auto-tool-choice` | 智能体每请求都带工具清单；启动加 `--enable-auto-tool-choice --tool-call-parser gemma4`（解析器按模型选） |
 
 ### 磁盘占用清单
 

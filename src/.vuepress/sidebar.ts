@@ -166,6 +166,7 @@ export default sidebar({
         "2026年AI-Agent框架选型指南：从“大爆发”到“大灭绝”后的生存法则",
         "agent-docker-sandbox-dialogue",
         "agent-tg-remote-control-dialogue",
+        "mypi-build-minimal-agent",
       ],
     },
     {
