@@ -236,8 +236,6 @@ LD_LIBRARY_PATH=/root/cuda-pip/lib64:. ./llama-server \
 
 ```bash
 ssh -f -N -L 18100:localhost:8000 -o ServerAliveInterval=30 -o ServerAliveCountMax=3 -p 17785 root@connect.cqa1.seetacloud.com
-
-
 ```
 
 | 参数                                 | 含义                                                 |
@@ -245,7 +243,7 @@ ssh -f -N -L 18100:localhost:8000 -o ServerAliveInterval=30 -o ServerAliveCountM
 | `ssh`                              | SSH 客户端命令，用于建立安全连接。                                |
 | `-f`                               | **后台运行**（fork），SSH 连接建立后转入后台执行，不占用当前终端。            |
 | `-N`                               | **不执行远程命令**，仅建立端口转发（纯隧道模式），不打开远程 Shell。            |
-| `-L 18100:localhost:8000`           | **本地端口转发**，将本地的 `18100` 端口转发到远程服务器的 `8000` 端口。      |
+| `-L 18100:localhost:8000`          | **本地端口转发**，将本地的 `18100` 端口转发到远程服务器的 `8000` 端口。     |
 | `-o ServerAliveInterval=30`        | **保活探测间隔**，每 30 秒向服务器发送一个空包检测连接是否存活。               |
 | `-o ServerAliveCountMax=3`         | **最大保活失败次数**，连续 3 次探测无响应后断开连接（总超时 90 秒）。           |
 | `-p 17785`                         | SSH 服务端口是 `17785`（非默认的 22 端口）。                     |
@@ -273,14 +271,14 @@ Pi 的 `~/.pi/agent/models.json` 新增 provider：
 
 ## 维护手册
 
-| 操作       | 命令                                                                               |
-| -------- | -------------------------------------------------------------------------------- |
-| 开隧道（本机，自动重连） | 双击 `桌面\qwen-tunnel.bat` |
-| 远程关机后恢复服务 | 双击 `桌面\qwen-remote-restart.bat`（杀旧进程→启模型→20秒→health 检查） |
-| 重启模型服务   | `ssh -p 17785 root@host 'nohup /root/start_server.sh > /root/server.log 2>&1 &'` |
-| 重启隧道（本机） | `bash ~/Desktop/start-qwen-tunnel.sh`（带自动重连）                                     |
-| 看服务日志    | `ssh ... 'tail -20 /root/server.log'`                                            |
-| 重新编译     | `/root/build_llama.sh`（幂等，改代码后重跑）                                                |
+| 操作           | 命令                                                                               |
+| ------------ | -------------------------------------------------------------------------------- |
+| 开隧道（本机，自动重连） | 双击 `桌面\qwen-tunnel.bat`                                                          |
+| 远程关机后恢复服务    | 双击 `桌面\qwen-remote-restart.bat`（杀旧进程→启模型→20秒→health 检查）                          |
+| 重启模型服务       | `ssh -p 17785 root@host 'nohup /root/start_server.sh > /root/server.log 2>&1 &'` |
+| 重启隧道（本机）     | `bash ~/Desktop/start-qwen-tunnel.sh`（带自动重连）                                     |
+| 看服务日志        | `ssh ... 'tail -20 /root/server.log'`                                            |
+| 重新编译         | `/root/build_llama.sh`（幂等，改代码后重跑）                                                |
 
 **AutoDL 关机/重启须知**：关机（非释放）时系统盘和数据盘全部保留——模型、编译产物、CUDA 环境都在；开机后唯一要做的就是重启 llama-server 进程（双击 restart bat 即可），本机隧道 bat 会自动重连。只有「释放实例」才会清空一切。
 
@@ -305,7 +303,30 @@ Pi 的 `~/.pi/agent/models.json` 新增 provider：
 
 > **后续：又撞了一次天花板。** Pi 编程会话跑久了，请求膨胀到 28974 token（日志里 `n_tokens = 28974`），离 32K 只差 4K，叠加生成长度后必然超限，Pi 反复报 "Response was truncated"。最终解法：`-c 65536` 一拉到 64K（显存 23.8/24.5GB，KV 预分配后运行期稳定），Pi 同步 65536。教训：**给编程助手配上下文，别抠门，直接拉满显存能接受的值**。
 
+## 附录：显存账本——只剩 767MiB 为什么敢说稳
+
+把 64K 上下文拉满后，`nvidia-smi` 显示显存 23797 / 24564 MiB，只剩 767MiB 余量。这个数字看着吓人，但拆开账本就知道它在怕什么、不怕什么。
+
+**显存里的三笔账**。把 GPU 显存想象成厨房：
+
+| 开销 | 类比 | 什么时候占用 | 我们的开销 |
+| --- | --- | --- | --- |
+| 模型权重 | 灶具设备，搬进来就不动了 | 启动时一次性加载 | 约 17GB（主模型 16GB + 草稿 1.6GB 量化后） |
+| KV cache | 备菜台，按宴席规模提前摆好 | 启动时按 `-c` 一次性划出 | 随上下文长度增长 |
+| 计算缓冲 | 操作空间，开工前清出来 | 启动时分配 | 也随上下文变长而变大 |
+
+关键规律：**这三笔账都是启动时一次性付清的**。llama.cpp 不是按需增长型——启动那一刻，它就按 `-c 65536` 把整块 KV cache（连续显存）划好，把计算缓冲清好，然后 health check 才变 ok。也就是说，如果显存不够，它当场就启动失败，而不是跑到一半突然爆。
+
+**为什么 16K→32K 只多 1GB，32K→64K 却多 2.2GB？** 因为 KV cache 不只受架构影响：Qwen3.8 是混合注意力架构，大部分层的 KV 随长度几乎不涨（线性注意力），只有少数全注意力层线性增长——这是它 KV 增长慢的原因。但 32K→64K 时，除了 KV 翻倍，计算缓冲（attention 中间结果、掩码等）也要跟着变大，两者叠加就是 2.2GB。总的来说还是远比标准 Transformer 省——同样翻倍，普通 27B 模型可能要多吃 4~6GB。
+
+**那 767MiB 余量到底怕不怕？** 运行期真正需要新显存的场景只剩两个：一是 CUDA 内部缓存碎片的小额波动（几十 MiB 级别），二是多卡/多进程插足（我们单进程独占，不存在）。所以只要启动成功 + 一次真实大请求不报错，就可以判定稳定。
+
+这也是当时的验证路径：先发一个真实大请求（`finish_reason: stop` 正常返回），确认计算缓冲够用，才敢收工。如果当时 OOM 了，备选方案是退到 48K（`-c 49152`），显存余量能回到约 1.8GB——上下文容量和显存安全边际之间的跷跷板，永远是先测再定，不拍脑袋。
+
+顺带解读两个日志字段，下次你自己也能看懂：`n_ctx` 是总座位数（上下文容量），`n_tokens` 是当前请求实际坐了多少个座位。当 `n_tokens` 逼近 `n_ctx`，就是撞天花板的前兆。
+
 **验证**：换端口 + 32K 后，大 prompt（863 token）测试 `finish_reason: stop` 无截断，速度 99.3 tok/s；后续扩 64K 同样通过。
+
 - **性能**：89~99 tok/s · 62.7% 草稿接受率 · 显存 23.8/24.5GB · 64K 上下文
 - **踩坑全景**：conda 超时 → 精简后台化；PyPI 轮子缺 nvcc → NVIDIA redist 直拉；codeload 不支持续传 → git clone 重试循环；crt 头文件缺失 → nvcc redist include；pkill 自杀 ×2 → 精确匹配进程名
 
@@ -318,7 +339,7 @@ Pi 的 `~/.pi/agent/models.json` 新增 provider：
 
 ### qwen-tunnel.bat（本机隧道，断线自动重连 + 健康检测）
 
-```bat
+```bash
 @echo off
 title Qwen3.8 SSH Tunnel - localhost:18100 to AutoDL:8000
 set HOST=connect.cqa1.seetacloud.com
@@ -361,7 +382,7 @@ goto loop
 
 ### qwen-remote-restart.bat（远程关机后一键恢复模型服务）
 
-```bat
+```bash
 @echo off
 title Restart remote llama-server (AutoDL 4090)
 set HOST=connect.cqa1.seetacloud.com
