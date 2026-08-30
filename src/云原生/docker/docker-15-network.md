@@ -224,6 +224,75 @@ de3d35e41f61   host              host      local
 
 `docker network inspect bridge` 能看到它的网段、网关、连了哪些容器——本质上就是把 docker0 的账本翻译给你看。所有**没有指定 `--network` 的容器**，默认都插到这台交换机上，所以它有个正式名字：**默认 bridge 网络**。
 
+```bash
+root@DESKTOP-JGGAK48:~# docker network inspect bridge
+[
+    {
+        "Name": "bridge", ## 网络的名字，就是默认的桥接网络。
+        "Id": "1682452d22ad869f5d47e492c6ec96b03a7d051c4e546b73d829a354cb9d7fff",
+        "Created": "2026-08-29T21:11:17.5356721+08:00",
+        "Scope": "local",
+        "Driver": "bridge", ## 驱动类型。bridge 表示这是一个基于 Linux 内核网桥（docker0）的 NAT 网络。
+        "EnableIPv4": true,
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": null,
+            "Config": [
+                {
+                    "Subnet": "172.17.0.0/16", ## 这是整个 bridge 网络的子网范围，
+                                               ## 意味着可以容纳 65536 个 IP 地址
+										   ## （从 172.17.0.1 到 172.17.255.254）。
+                    "IPRange": "",
+                    "Gateway": "172.17.0.1"    ## 网关地址，也就是宿主机的 docker0 网桥在容器网络中的 IP
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Options": {
+        
+            # 明确这是 Docker 默认的 bridge 网络
+            "com.docker.network.bridge.default_bridge": "true",
+            
+            # ICC (Inter-Container Communication) 为 true，表示允许同一个 bridge 网络下的容器之间互相通信
+            "com.docker.network.bridge.enable_icc": "true",
+            
+            # 启用 IP 伪装（即 NAT），允许容器通过宿主机的 IP 访问外网。这是容器能上网的关键。
+            "com.docker.network.bridge.enable_ip_masquerade": "true",
+            
+            # 默认情况下，容器映射端口（如 -p 80:80）会绑定到宿主机的所有网络接口上。
+            "com.docker.network.bridge.host_binding_ipv4": "0.0.0.0",
+            
+            # 对应宿主机上实际的网桥接口名称。
+            # 你可以在宿主机上执行 ifconfig docker0 或 ip addr show docker0 看到它
+            "com.docker.network.bridge.name": "docker0",
+            "com.docker.network.driver.mtu": "1500"
+        },
+        "Labels": {},
+        "Containers": {},
+        "Status": {
+            "IPAM": {
+                "Subnets": {
+                    "172.17.0.0/16": {
+                        "IPsInUse": 3, ## 当前该网络已被分配了 3 个 IP
+                                       ## 通常是网关 172.17.0.1 和已运行容器占用的 IP 
+                        "DynamicIPsAvailable": 65533 ## 还有 65533 个动态 IP 可供新容器使用
+                    }
+                }
+            }
+        }
+    }
+]
+```
+
+
+
 第二个问题更关键：**veth 是内核层面的实现细节，Docker 故意不把它暴露给你**。Docker 官方文档专门有一句提醒：创建网络、连接容器时，Docker 在底层做的事（加桥设备、配 iptables 规则）都属于实现细节，应该让 Docker 自己管，别手动碰。你在 Docker 命令层操作的是「网络对象」，veth、网桥、iptables 是它替你干活的工具。今天带你下到这一层，是为了排障时你看得懂现场——不是让你绕过 Docker 手工配网。
 
 一句话收口：

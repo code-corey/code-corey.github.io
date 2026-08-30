@@ -153,6 +153,7 @@ export default sidebar({
       children: [
         "ollama-opencode-local-llm",
         "qwen3-5-27b-deep-dive",
+        "qwen3-8-27b-uncensored-deploy",
       ],
     },
     {
@@ -614,6 +615,7 @@ export default sidebar({
         "docker-02-container-vs-vm",
         "docker-a02-containerd",
         "docker-03-engine-platform",
+        "docker-a03-multi-network-gateway",
         "docker-04-install",
         "docker-05-container-and-image",
         "docker-06-container-commands",
