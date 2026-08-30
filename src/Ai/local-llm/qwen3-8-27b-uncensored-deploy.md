@@ -263,7 +263,7 @@ Pi 的 `~/.pi/agent/models.json` 新增 provider：
     "id": "qwen3.8-27b-uncensored",
     "name": "Qwen3.8-27B-Uncensored (AutoDL 4090)",
     "reasoning": true,
-    "contextWindow": 32768,
+    "contextWindow": 65536,
     "maxTokens": 8192
   }]
 }
@@ -303,8 +303,10 @@ Pi 的 `~/.pi/agent/models.json` 新增 provider：
 
 原因有二：一是排障期间隧道本身在抖；二是更隐蔽的——服务端只给了 16K 上下文，而 Pi 编程请求的 system prompt 动辄上万 token，顶到天花板就截断。**解法**：`-c 32768` 重启服务（混合注意力架构 KV cache 小，32K 也只要多占约 1GB 显存），Pi 配置同步 `contextWindow: 32768`。
 
-**验证**：换端口 + 32K 后，大 prompt（863 token）测试 `finish_reason: stop` 无截断，速度 99.3 tok/s。
-- **性能**：89~99 tok/s · 62.7% 草稿接受率 · 显存 20.4/24.5GB · 32K 上下文
+> **后续：又撞了一次天花板。** Pi 编程会话跑久了，请求膨胀到 28974 token（日志里 `n_tokens = 28974`），离 32K 只差 4K，叠加生成长度后必然超限，Pi 反复报 "Response was truncated"。最终解法：`-c 65536` 一拉到 64K（显存 23.8/24.5GB，KV 预分配后运行期稳定），Pi 同步 65536。教训：**给编程助手配上下文，别抠门，直接拉满显存能接受的值**。
+
+**验证**：换端口 + 32K 后，大 prompt（863 token）测试 `finish_reason: stop` 无截断，速度 99.3 tok/s；后续扩 64K 同样通过。
+- **性能**：89~99 tok/s · 62.7% 草稿接受率 · 显存 23.8/24.5GB · 64K 上下文
 - **踩坑全景**：conda 超时 → 精简后台化；PyPI 轮子缺 nvcc → NVIDIA redist 直拉；codeload 不支持续传 → git clone 重试循环；crt 头文件缺失 → nvcc redist include；pkill 自杀 ×2 → 精确匹配进程名
 
 > 全文完 · 部署于 2026-08-30
