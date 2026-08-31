@@ -20,6 +20,7 @@ import MiniProgram from "./sidebar/微信小程序.mjs";
 import Frontend from "./sidebar/前端.mjs";
 import Scale from "./sidebar/亿级规模系统.mjs";
 import Web3 from "./sidebar/web3区块链.mjs";
+import WorkLog from "./sidebar/工作记录.mjs";
 /**
  * @typedef {{ title?: string, icon?: string, order?: number }} FolderMeta
  * @typedef {{ path: string, dir: string }} SidebarModuleConfig
@@ -50,6 +51,7 @@ export const modules = [
   { path: "/前端/", dir: "前端" },
   { path: "/亿级规模系统/", dir: "亿级规模系统" },
   { path: "/web3区块链/", dir: "web3区块链" },
+  { path: "/工作记录/", dir: "工作记录" },
 ];
 
 /**
@@ -95,6 +97,7 @@ export const folders = {
   ...prefix("前端", Frontend),
   ...prefix("亿级规模系统", Scale),
   ...prefix("web3区块链", Web3),
+  ...prefix("工作记录", WorkLog),
 };
 
 /** 未单独配置 icon 时的默认图标 */

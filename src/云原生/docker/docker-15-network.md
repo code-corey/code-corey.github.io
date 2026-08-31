@@ -520,6 +520,8 @@ subnet=172.26.0.0/16 gw=172.26.0.1
 
 （/12、/20 是子网掩码前缀，决定地皮切多细；不深究的话记住结论就够：**池子总共 31 个坑，默认 bridge 开机占走 1 号坑 172.17，留给自定义网络排队的是 30 个**。坑不是买断制——`docker network rm` 删网络会把坑还回池子，后来者可复用；真把坑用光，`docker network create` 会直接报错 `could not find an available, non-overlapping IPv4 address pool`，见到它就该清理旧网络、或去 daemon.json 扩地了。）
 
+（顺带对着官网对个账：官方文档现在把这份出厂配置显式拆成 7 条等价条目呈现——172.17.0.0/16、172.18.0.0/16、172.19.0.0/16、172.20.0.0/14、172.24.0.0/14、172.28.0.0/14 各按 /16 划坑，再加 192.168.0.0/16 按 /20——数一数还是 15 + 16 = 31 个坑，跟上面两块地的算法一字不差地等价。官网另外交代了两件事：分网段时 Docker 会主动避开宿主机上已占用的网段；Docker 29 起 `--subnet` 还支持只写前缀让 Docker 补全（如 `--subnet 0.0.0.0/24`）。）
+
 「排队领号」画成图就是这副样子：
 
 ```mermaid
@@ -670,13 +672,13 @@ flowchart TB
 
 至于「DNS 名册按网络记账」，这是隔离的第三道闸，也值得拆开看。Docker 内置 DNS 的工作模型，三句话：
 
-1. **每个容器的 netns 里住着一个内置 DNS**，固定监听 127.0.0.11——容器里 `/etc/resolv.conf` 的 nameserver 指的就是它（本课后半截有实拍）；
+1. **每个容器的 netns 里都通着一个内置 DNS 的入口**，地址固定是 127.0.0.11——容器里 `/etc/resolv.conf` 的 nameserver 指的就是它（本课后半截有实拍）。较真一点说：解析器本尊跑在 dockerd 进程里，Docker 在每个容器的 netns 里放的是「127.0.0.11 监听入口 + 一组 DNS 转发规则」（官方原话：*iptables rules for DNS are also created in the container's network namespace*）——对容器里的进程来说，效果就是「本机 127.0.0.11 上有个 DNS」；
 2. **名册按网络分组**：容器每接入一个网络，Docker 就把「容器名/别名 → 它在这个网络里的 IP」登记进该网络的名册；
 3. **先翻名册，再问上游**：查询进来，内置 DNS 先翻「这个容器接入的所有网络」的名册，翻到就地回答；翻不到（比如 `baidu.com`）再转发给从宿主机继承的上游 DNS（ExtServers）。
 
 ```mermaid
 flowchart LR
-    Q["容器里：ping n15-web"] -->|"① 查询发给 127.0.0.11"| R["Docker 内置 DNS<br/>（住在容器 netns 里）"]
+    Q["容器里：ping n15-web"] -->|"① 查询发给 127.0.0.11"| R["Docker 内置 DNS<br/>（跑在 dockerd 里，入口 127.0.0.11）"]
     R -->|"② 先翻 n15-net 的名册"| B[("名册<br/>n15-web → 172.26.0.2<br/>n15-box → 172.26.0.3")]
     B -->|"③ 有，就地回答"| Q
     R -.->|"② 名册没有（如 baidu.com）"| U["ExtServers 上游<br/>223.5.5.5 等<br/>（从宿主机继承）"]
@@ -829,6 +831,8 @@ n15-net=172.26.0.3 n15-net2=172.27.0.3
 ```
 
 **一个容器，两张网卡，两个网段各有一个 IP**。这在架构上很有用：比如一台监控探针，接进每个被监控的网络；或者一台前置网关，一边接「前端网络」、一边接「后端网络」，让两个本该隔离的网络只能通过它中转。反向操作 `docker network disconnect` 同样在线可用——而默认 bridge 上的容器想换网络，只能删了重建。
+
+多网归属还牵出一个问题：包要出外网时，默认网关听谁的？Docker 会自己挑一个，而且网络的接入顺序变了它可能跟着变。官网现在给了明确答案：`docker run` 时可以写 `--network name=网络名,gw-priority=1`，`docker network connect` 也有对应的 `gw-priority` 选项——优先级最高的网络出默认网关，想让某张网卡永远当出口，把它的优先级设成 1 就行。
 
 一句话总结本课：
 
@@ -1005,7 +1009,11 @@ docker0 虚拟交换机
 
 ```bash
 docker run -d --name n15-web2 -p 127.0.0.1:8081:80 nginx:alpine
+
+# -p 127.0.0.1:8081:80：宿主端口绑到 IPv4 回环地址，只有本机访问得到
 ```
+
+官网在这条上还有个容易被漏掉的提醒：想做到「只有本机能访问」，IPv6 这头也要按住，完整写法是两条一起上：`-p 127.0.0.1:8081:80 -p '[::1]:8081:80'`。再补一句给老版本读者的脚注：Docker Engine 28.0.0 之前，同一二层网段的主机（比如插在同一台交换机上）**能摸到**绑了 localhost 的发布端口（[moby#45610](https://github.com/moby/moby/issues/45610)），28 起才修掉，官方说明在 [Port publishing and mapping](https://docs.docker.com/engine/network/port-publishing/)——本篇环境 29.1.3 无此问题，但你要是还在跑老版本，别拿这条当安全边界。
 
 对比两行的监听差异：
 
@@ -1038,7 +1046,7 @@ HTTP 000
 （连接被拒绝）
 ```
 
-连 DNAT 规则都长不一样——回环发布的规则多了 `-d 127.0.0.1/32` 这个目的地址限定：
+连 DNAT 规则都长不一样——回环发布的规则多了 `-d 127.0.0.1/32` 这个目的地址限定（下面这条来自另一台机器上自定义网络容器的 8088 实验，所以接口是 `br-xxxx`、端口是 8088；对应到上面 8081 那个默认 bridge 实验，就是 `! -i docker0 --dport 8081`，`-d 127.0.0.1/32` 这个限定照样在）：
 
 ```text
 -A DOCKER -d 127.0.0.1/32 ! -i br-xxxx -p tcp -m tcp --dport 8088 -j DNAT ...
@@ -1046,7 +1054,7 @@ HTTP 000
 
 一句话总结本课：
 
-> **`-p 容器端口` 这种短写法 = 对宿主机所有地址开放；只想本机访问，必须写全 `-p 127.0.0.1:宿主端口:容器端口`。**
+> **`-p 容器端口` 这种短写法 = 对宿主机所有地址开放；只想本机访问，必须写全 `-p 127.0.0.1:宿主端口:容器端口`（较真的话再补一条 `-p '[::1]:宿主端口:容器端口'`，把 IPv6 回环也按住）。**
 
 ---
 
@@ -1113,6 +1121,8 @@ iptables -D DOCKER-USER -s 172.26.0.0/16 -d 172.17.0.4 -j DROP
 
 > **自定义规则只加 DOCKER-USER 链（FORWARD 第一站，优先于 Docker 规则）；匹配条件要按 DNAT 之后的地址写——容器 IP 和容器端口。**
 
+（延伸一提：官网近版还把「容器 IP 被外面直接路由访问」这件事管得更死了——默认凡是直接发往容器 IP 的包，在 raw 表 PREROUTING 就被丢弃，**比 DOCKER-USER 还早一步**，所以在 DOCKER-USER 里写规则也放不开它。真有这种需求，走的是网络选项 `com.docker.network.bridge.trusted_host_interfaces`、daemon 配置 `allow-direct-routing`，或给网络选别的「网关模式」（`nat` / `routed` / `nat-unprotected` / `isolated`）——这些属于进阶配置，本篇知道有这扇门就够了。）
+
 ---
 
 ## 第 8 课：两个极端——host 与 none
@@ -1178,6 +1188,8 @@ ping: sendto: Network is unreachable
 
 连路由表都是空的。适合什么？批处理任务（离线解压、文件转换）、密钥生成——一切「有 CPU 和文件系统就够，网络纯属风险」的场景。
 
+一个留给你复验的小分叉：上面实机输出里 lo 上有 `inet6 ::1`，而官网 None 驱动手册特意注明「none 模式不配置 IPv6 回环地址」——两边有一处版本差异（跟内核、Docker 版本都可能有关），你手上是哪样就是哪样，别把它当考点，当彩蛋即可。
+
 一句话总结本课：
 
 > **host = 借用宿主机网络栈（快、无隔离、免 `-p`）；none = 彻底断网（最安全的默认）。bridge 夹在中间：隔离与互通兼得。**
@@ -1215,6 +1227,8 @@ pod-ok
 ```
 
 回味一下第 1 课的结论「跨容器用 localhost 必然不通」——**在 container 模式下被打破了**。三个容器在同一个 netns 里，`localhost` 指的是同一个网络世界：同享一块 eth0、同一个 IP、同一套端口空间。sidecar 里监听的 8080，隔壁容器用 localhost 直达。
+
+官方还给 container 模式列了一张「不生效」清单，用之前扫一眼：`-p/--publish`、`-P`、`--expose`、`--hostname`、`--dns`、`--add-host`、`--mac-address` 全都不支持——道理很直白：网络栈是「房主」的，端口发布、主机名、DNS 这些网络配置自然也归房主管，要对外开端口就在房主容器上 `-p`。
 
 这正是 Kubernetes 里 Pod 的网络模型：**一个 Pod 里的所有容器共享一个 netns**，彼此 localhost 互访，「Pod」对外是一个 IP。K8s 集群里每个 Pod 背后都有一个常驻的 pause 容器当「房主」，业务容器都以 container 模式搬进去——名字就是从这来的。你今天用 `--network container:` 手动搭出来的，就是 K8s 网络的地基原型。
 
@@ -1260,6 +1274,8 @@ ping -c1 -W2 172.16.29.2
 
 不通——这是 macvlan 的经典限制：**宿主机默认无法直接访问自己的 macvlan 容器**（发包走的是 eth0 原始路径，不经 macvlan 子接口）。要通得再修一条 macvlan 接口当桥。WSL2 这种 NAT 环境里它也拿不到真实局域网身份，所以这次只求认脸：知道什么场景找它——容器需要**以独立主机身份出现在物理网络**（直连局域网、跑 DHCP、低延迟收发包）时，macvlan/ipvlan 才登场，而且通常先想到的是「是不是其实用 bridge 就够了」。
 
+官网还给 macvlan 列了三条使用前必读：**多数云厂商直接封掉 macvlan**（拿不到物理网络入口）、**rootless 模式不支持**、**Docker Desktop（Mac/Windows）不支持**——它是个纯 Linux 宿主机的玩法，上生产前先确认你的环境放行。
+
 到此六条路全部认完，收口成一张选型表：
 
 | 驱动               | 一句话                  | 什么时候用                                                   |
@@ -1304,5 +1320,6 @@ ping -c1 -W2 172.16.29.2
 - [Bridge network driver](https://docs.docker.com/engine/network/drivers/bridge/)（2026-02 版）：自定义优于默认 bridge 的五条理由、`-p` 默认绑定所有地址、内置 DNS 只解析自定义容器名
 - [Packet filtering and firewalls](https://docs.docker.com/engine/network/packet-filtering-firewalls/)（2025-12 版）：iptables 默认后端与 `firewall-backend` 选项、FORWARD 默认 DROP、Docker 与 ufw 不兼容的机制
 - [Docker with iptables](https://docs.docker.com/engine/network/firewall-iptables/) — DOCKER-USER 链的官方用法与示例规则
+- [Port publishing and mapping](https://docs.docker.com/engine/network/port-publishing/) — `-p` 端口发布权威页：默认绑定所有地址、回环绑定与 `[::1]`、网关模式（nat/routed/nat-unprotected/isolated）、直连路由（`allow-direct-routing` / `trusted_host_interfaces`）
 - [Host](https://docs.docker.com/engine/network/drivers/host/) / [None](https://docs.docker.com/engine/network/drivers/none/) / [Macvlan](https://docs.docker.com/engine/network/drivers/macvlan/) 驱动手册
 - 本机：WSL2 Ubuntu-22.04 + Docker Engine 29.1.3（iptables 后端），全部输出实跑于 2026-08-25

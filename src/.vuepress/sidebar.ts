@@ -168,6 +168,7 @@ export default sidebar({
         "agent-docker-sandbox-dialogue",
         "agent-tg-remote-control-dialogue",
         "mypi-build-minimal-agent",
+        "awesome-ai-agents-deep-dive",
       ],
     },
     {
@@ -1832,6 +1833,18 @@ export default sidebar({
         "capstone-02-rwa",
         "capstone-03-final-project",
         "capstone-04-self-check",
+      ],
+    },
+  ],
+  "/工作记录/": [
+    "",
+    {
+      text: "Dump 分析",
+      icon: "stethoscope",
+      prefix: "dump-analysis/",
+      collapsible: true,
+      children: [
+        "analyze-dotnet-dump-from-zero",
       ],
     },
   ],
