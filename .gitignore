@@ -25,3 +25,4 @@ scripts/tools/pngquant/pngquant/
 
 _temp
 _tmp*
+*.smoke-dist
