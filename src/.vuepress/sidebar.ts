@@ -1132,6 +1132,7 @@ export default sidebar({
         "juc-13-aqs-reentrantlock",
         "juc-14-semaphore",
         "juc-15-latch-barrier",
+        "striped-lock",
       ],
     },
     {
