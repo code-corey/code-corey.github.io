@@ -275,17 +275,50 @@ export default sidebar({
       prefix: "2026-09-01/",
       collapsible: true,
       children: [
-        "00-今日导读",
-        "01-agent-memory-file-format",
-        "02-openclaw-2-release",
-        "03-codex-with-chatgpt",
-        "04-tokentab-cost-cli",
-        "05-on-policy-distillation",
-        "06-dreamx-creator",
-        "07-deepseek-v4-flash-vision-exp",
-        "08-anthropic-lambda-cloud-deal",
-        "09-breaking-claude-code-auto-mode",
-        "10-miit-ai-service-provider-action",
+        {
+          text: "00-今日导读 · 2026-09-01",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-把 Agent 记忆做成一种文件格式",
+          link: "01-agent-memory-file-format",
+        },
+        {
+          text: "02-OpenClaw 2.0，一个「意外」长大…",
+          link: "02-openclaw-2-release",
+        },
+        {
+          text: "03-ChatGPT 负责想，Codex 负责干",
+          link: "03-codex-with-chatgpt",
+        },
+        {
+          text: "04-给 AI 编码 Agent 记账的 CLI",
+          link: "04-tokentab-cost-cli",
+        },
+        {
+          text: "05-On-Policy 蒸馏真的在蒸馏吗？从噪…",
+          link: "05-on-policy-distillation",
+        },
+        {
+          text: "06-DreamX-Creator：2K 分辨率…",
+          link: "06-dreamx-creator",
+        },
+        {
+          text: "07-DeepSeek V4 Flash 视觉实…",
+          link: "07-deepseek-v4-flash-vision-exp",
+        },
+        {
+          text: "08-Anthropic 与 Nvidia 参投…",
+          link: "08-anthropic-lambda-cloud-deal",
+        },
+        {
+          text: "09-攻破 Claude Code Opus 5…",
+          link: "09-breaking-claude-code-auto-mode",
+        },
+        {
+          text: "10-工信部：2 年 3000 家服务商 + F…",
+          link: "10-miit-ai-service-provider-action",
+        },
       ],
     },
     {
@@ -294,17 +327,50 @@ export default sidebar({
       prefix: "2026-09-02/",
       collapsible: true,
       children: [
-        "00-今日导读",
-        "01-slotstream-moe-ssd-streaming",
-        "02-doltlite-agent-prs",
-        "03-dsh-desktop",
-        "04-longhorizon-harness",
-        "05-super-library-agent",
-        "06-h3-world",
-        "07-claude-fable-5-1",
-        "08-openai-astra",
-        "09-meta-agent-email-deletion",
-        "10-agent-interconnection-gb-standard",
+        {
+          text: "00-今日导读 · 2026-09-02",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-在 48GB 内存的 Mac 上以约 12…",
+          link: "01-slotstream-moe-ssd-streaming",
+        },
+        {
+          text: "02-DoltLite：用约 2000 个 ag…",
+          link: "02-doltlite-agent-prs",
+        },
+        {
+          text: "03-DeepSeek Harness 桌面版",
+          link: "03-dsh-desktop",
+        },
+        {
+          text: "04-长时程计算机操作 agent 运行框架",
+          link: "04-longhorizon-harness",
+        },
+        {
+          text: "05-超级库 Agent：超越单一代码库的多应用…",
+          link: "05-super-library-agent",
+        },
+        {
+          text: "06-H3-World：把语言理解变成世界控制",
+          link: "06-h3-world",
+        },
+        {
+          text: "07-Anthropic 发布 Claude F…",
+          link: "07-claude-fable-5-1",
+        },
+        {
+          text: "08-通往 Astra 之路：关键能力与前沿安全…",
+          link: "08-openai-astra",
+        },
+        {
+          text: "09-Meta 安全研究员的 AI Agent …",
+          link: "09-meta-agent-email-deletion",
+        },
+        {
+          text: "10-《人工智能 智能体互联》国家标准宣贯应用推…",
+          link: "10-agent-interconnection-gb-standard",
+        },
       ],
     },
     {
@@ -313,17 +379,50 @@ export default sidebar({
       prefix: "2026-09-03/",
       collapsible: true,
       children: [
-        "00-今日导读",
-        "01-efficient-frontier-of-llm-inference",
-        "02-local-llm-setup-m4-pro",
-        "03-unlazy-agent-depth-tree",
-        "04-reverify-verified-reverse-engineering",
-        "05-smelt-looped-moe-scaling-laws",
-        "06-self-hosted-llm-production-traffic",
-        "07-gemini-3-8-flash-and-cyber",
-        "08-muse-spark-1-3",
-        "09-six-curl-cves-ai-audit-zero",
-        "10-cloudmatrix384-supernode-design",
+        {
+          text: "00-今日导读 · 2026-09-03",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-LLM 推理的效率前沿",
+          link: "01-efficient-frontier-of-llm-inference",
+        },
+        {
+          text: "02-M4 Pro Mac mini 上的本地模…",
+          link: "02-local-llm-setup-m4-pro",
+        },
+        {
+          text: "03-AI Agent 反偷懒技能：Depth …",
+          link: "03-unlazy-agent-depth-tree",
+        },
+        {
+          text: "04-经验证的逆向工程：确定性工具兜底的 AI …",
+          link: "04-reverify-verified-reverse-engineering",
+        },
+        {
+          text: "05-计算量对齐的 MoE 循环 Transfo…",
+          link: "05-smelt-looped-moe-scaling-laws",
+        },
+        {
+          text: "06-从生产流量到后训练：打造覆盖企业请求全集的…",
+          link: "06-self-hosted-llm-production-traffic",
+        },
+        {
+          text: "07-Gemini 3.8 Flash 与网络安…",
+          link: "07-gemini-3-8-flash-and-cyber",
+        },
+        {
+          text: "08-Meta 发布 Muse Spark 1.3",
+          link: "08-muse-spark-1-3",
+        },
+        {
+          text: "09-OpenAI 与 Anthropic 审计…",
+          link: "09-six-curl-cves-ai-audit-zero",
+        },
+        {
+          text: "10-华为超节点系统设计解析",
+          link: "10-cloudmatrix384-supernode-design",
+        },
       ],
     },
     {
@@ -332,17 +431,50 @@ export default sidebar({
       prefix: "2026-09-04/",
       collapsible: true,
       children: [
-        "00-今日导读",
-        "01-coding-agents-tool-choice",
-        "02-webllm-browser-inference",
-        "03-reverify-agent-verification",
-        "04-utopia-world-model",
-        "05-repo-to-skill",
-        "06-lm-self-attention-control",
-        "07-gpt6-astra",
-        "08-nvidia-acquires-huggingface",
-        "09-manufactured-ai-recommendation-sources",
-        "10-china-ai-chip-h1-earnings",
+        {
+          text: "00-每日 AI 简报 · 2026-09-04",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-实测 1.7 万次运行：Claude、Co…",
+          link: "01-coding-agents-tool-choice",
+        },
+        {
+          text: "02-WebLLM：浏览器内高性能 LLM 推理…",
+          link: "02-webllm-browser-inference",
+        },
+        {
+          text: "03-reverify：给读二进制的 agent…",
+          link: "03-reverify-agent-verification",
+        },
+        {
+          text: "04-utopia：号称全球首个开源企业级世界模型",
+          link: "04-utopia-world-model",
+        },
+        {
+          text: "05-Repo-To-Skill：把 GitHu…",
+          link: "05-repo-to-skill",
+        },
+        {
+          text: "06-语言模型可以控制自己的注意力",
+          link: "06-lm-self-attention-control",
+        },
+        {
+          text: "07-GPT-6 Astra：OpenAI 宣告…",
+          link: "07-gpt6-astra",
+        },
+        {
+          text: "08-NVIDIA 近 130 亿美元收购 Hu…",
+          link: "08-nvidia-acquires-huggingface",
+        },
+        {
+          text: "09-三个站点批量制造了 215,128 个「最…",
+          link: "09-manufactured-ai-recommendation-sources",
+        },
+        {
+          text: "10-国产AI芯片\\\"四小龙\\\"中报透视：两家账面扭…",
+          link: "10-china-ai-chip-h1-earnings",
+        },
       ],
     },
   ],

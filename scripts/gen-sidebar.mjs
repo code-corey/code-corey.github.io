@@ -98,13 +98,13 @@ function resolveGroupTitle(folderName, sidebarGroups, configKey) {
  * @param {string} configKey
  * @returns {{ id: string, order: number, sidebarGroup?: string }[]}
  */
-function readMarkdownItems(dirPath, configKey) {
+function readMarkdownItems(dirPath, configKey, numbered = false) {
   if (!fs.existsSync(dirPath)) return [];
   const files = fs
     .readdirSync(dirPath)
     .filter((name) => name.endsWith(".md") && name.toLowerCase() !== "readme.md");
 
-  /** @type {{ id: string, order: number, sidebarGroup?: string }[]} */
+  /** @type {{ id: string, order: number, sidebarGroup?: string, text?: string }[]} */
   const items = [];
   for (const fileName of files) {
     const filePath = path.join(dirPath, fileName);
@@ -117,10 +117,16 @@ function readMarkdownItems(dirPath, configKey) {
     }
     const data = parseSimpleFrontmatter(split.fm);
     const order = data.order !== undefined ? Number(data.order) : undefined;
+    // numbered 模块：文件名带两位序号前缀（如 01-xxx.md）时，侧边栏显示文本带上序号
+    const numMatch = numbered ? fileName.match(/^(\d{2})-/) : null;
+    const label = numMatch
+      ? `${numMatch[1]}-${data.shortTitle || data.title || toSidebarId(fileName)}`
+      : undefined;
     items.push({
       id: toSidebarId(fileName),
       order: sortKey(order),
       sidebarGroup: data.sidebarGroup,
+      text: label,
     });
   }
   items.sort((a, b) => a.order - b.order || a.id.localeCompare(b.id, "zh"));
@@ -133,9 +139,9 @@ function readMarkdownItems(dirPath, configKey) {
  * @param {string} folder
  * @param {string} moduleDir
  */
-function buildGroupEntry(groupDir, folder, moduleDir) {
+function buildGroupEntry(groupDir, folder, moduleDir, numbered = false) {
   const configKey = `${moduleDir}/${folder}`;
-  const rootItems = readMarkdownItems(groupDir, configKey);
+  const rootItems = readMarkdownItems(groupDir, configKey, numbered);
   const nestedDirs = fs
     .readdirSync(groupDir)
     .filter((name) => {
@@ -147,7 +153,7 @@ function buildGroupEntry(groupDir, folder, moduleDir) {
   const children = [];
 
   for (const item of rootItems) {
-    children.push(item.id);
+    children.push(item.text ? { text: item.text, link: item.id } : item.id);
   }
 
   /** @type {{ name: string, order: number, entry: object }[]} */
@@ -155,7 +161,7 @@ function buildGroupEntry(groupDir, folder, moduleDir) {
   for (const nestName of nestedDirs) {
     const nestDir = path.join(groupDir, nestName);
     const nestKey = `${configKey}/${nestName}`;
-    const nestItems = readMarkdownItems(nestDir, nestKey);
+    const nestItems = readMarkdownItems(nestDir, nestKey, numbered);
     if (nestItems.length === 0) continue;
 
     const groupsInFiles = nestItems
@@ -173,7 +179,7 @@ function buildGroupEntry(groupDir, folder, moduleDir) {
         icon,
         prefix: `${nestName}/`,
         collapsible: true,
-        children: nestItems.map((i) => i.id),
+        children: nestItems.map((i) => (i.text ? { text: i.text, link: i.id } : i.id)),
       },
     });
   }
@@ -238,7 +244,7 @@ function collectModuleSidebar(mod) {
 
   for (const folder of subdirs) {
     const groupDir = path.join(dirPath, folder);
-    const built = buildGroupEntry(groupDir, folder, mod.dir);
+    const built = buildGroupEntry(groupDir, folder, mod.dir, mod.numbered);
     if (built) groups.push(built);
   }
 

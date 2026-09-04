@@ -24,14 +24,14 @@ import WorkLog from "./sidebar/工作记录.mjs";
 import News from "./sidebar/News.mjs";
 /**
  * @typedef {{ title?: string, icon?: string, order?: number }} FolderMeta
- * @typedef {{ path: string, dir: string }} SidebarModuleConfig
+ * @typedef {{ path: string, dir: string, numbered?: boolean }} SidebarModuleConfig
  */
 
 /** 大模块列表（顶层目录） */
 /** @type {SidebarModuleConfig[]} */
 export const modules = [
   { path: "/Ai/", dir: "Ai" },
-  { path: "/News/", dir: "News" },
+  { path: "/News/", dir: "News", numbered: true },
   { path: "/BigData/", dir: "BigData" },
   { path: "/DotNet/", dir: "DotNet" },
   { path: "/Java/", dir: "Java" },
