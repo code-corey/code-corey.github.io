@@ -7,7 +7,7 @@
   "packageManager": "pnpm@11.20.0",
   "scripts": {
     "sidebar:gen": "node scripts/gen-sidebar.mjs",
-    "docs:build": "pnpm sidebar:gen && vuepress-vite build src",
+    "docs:build": "pnpm sidebar:gen && cross-env NODE_OPTIONS=--max-old-space-size=12288 vuepress-vite build src",
     "docs:clean-dev": "pnpm sidebar:gen && vuepress-vite dev src --clean-cache",
     "docs:dev": "pnpm sidebar:gen && vuepress-vite dev src",
     "docs:update-package": "pnpm dlx vp-update"
@@ -15,6 +15,7 @@
   "devDependencies": {
     "@vuepress/bundler-vite": "2.0.0-rc.30",
     "@vuepress/plugin-umami-analytics": "2.0.0-rc.131",
+    "cross-env": "^10.1.0",
     "mermaid": "^11.6.0",
     "sass-embedded": "^1.99.0",
     "vue": "^3.5.34",

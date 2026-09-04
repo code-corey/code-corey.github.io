@@ -380,6 +380,15 @@ export default sidebar({
   "/DotNet/": [
     "",
     {
+      text: ".NET 并发源码",
+      icon: "circle-notch",
+      prefix: "threading/",
+      collapsible: true,
+      children: [
+        "threadlocal-vs-asynclocal-deep-dive",
+      ],
+    },
+    {
       text: "ASP.NET Core",
       icon: "code",
       prefix: "aspnetcore/",

@@ -40,8 +40,8 @@ jobs:
 
       - name: Build Docs
         env:
-          # 面试题拆站后主站页数下降；仍给足堆以防峰值。
-          NODE_OPTIONS: --max-old-space-size=8192
+          # News 模块上线后主站页数回升（1572 页）；8GB 堆已在渲染阶段打满溢出，提到 12GB。
+          NODE_OPTIONS: --max-old-space-size=12288
         run: |
           pnpm run docs:build
           touch src/.vuepress/dist/.nojekyll
