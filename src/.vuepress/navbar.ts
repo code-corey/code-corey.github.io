@@ -5,12 +5,18 @@ export default navbar([
   {
     text: "AI",
     icon: "robot",
-    link: "/Ai/",
-  },
-  {
-    text: "每日 AI 简报",
-    icon: "newspaper",
-    link: "/News/",
+    children: [
+      {
+        text: "AI 专栏",
+        icon: "robot",
+        link: "/Ai/",
+      },
+      {
+        text: "每日 AI 简报",
+        icon: "newspaper",
+        link: "/News/",
+      },
+    ],
   },
   {
     text: "Web3 区块链",

@@ -95,7 +95,11 @@ function migrateFile(dayDir, fileName) {
   if (metaLine) {
     const parts = metaLine.replace(/^>\s*/, "").split("|").map((s) => s.trim());
     for (const p of parts) {
-      if (/^[\p{Extended_Pictographic}\uFE0F\u200D\s]*\d{4}-\d{2}-\d{2}/u.test(p)) fileDate = cleanMeta(p);
+      if (/^[\p{Extended_Pictographic}\uFE0F\u200D\s]*\d{4}-\d{2}-\d{2}/u.test(p)) {
+        // date 只保留纯日期，丢弃「（创建）」等注释后缀
+        const dm = p.match(/\d{4}-\d{2}-\d{2}/);
+        fileDate = dm ? dm[0] : dayDir;
+      }
       else if (/^[\p{Extended_Pictographic}\p{Regional_Indicator}\uFE0F\u200D\s]*(工程|值得研究|前沿|模型发布|安全|国内)/u.test(p)) tag = cleanMeta(p);
       else if (/HN|GitHub|HF|↑|分|★/u.test(p)) heat = cleanMeta(p);
     }
