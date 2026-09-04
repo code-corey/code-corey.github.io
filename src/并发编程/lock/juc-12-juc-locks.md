@@ -10,7 +10,7 @@ tag:
   - "Lock"
 ---
 
-> **锁与同步 · 第 4/7 篇**  
+> **锁与同步 · 第 4/8 篇**  
 > 上一篇：[《深入理解 synchronized》](/并发编程/lock/juc-11-synchronized)  
 > 下一篇：[《AQS 与 ReentrantLock 源码要点》](/并发编程/lock/juc-13-aqs-reentrantlock)
 

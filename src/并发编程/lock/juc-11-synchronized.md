@@ -10,7 +10,7 @@ tag:
   - "synchronized"
 ---
 
-> **锁与同步 · 第 3/7 篇**  
+> **锁与同步 · 第 3/8 篇**  
 > 上一篇：[《Atomic 原子操作类详解》](/并发编程/lock/juc-10-atomic)  
 > 下一篇：[《JUC 显式锁与大厂应用实战》](/并发编程/lock/juc-12-juc-locks)
 

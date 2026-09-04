@@ -10,7 +10,7 @@ tag:
   - "Atomic"
 ---
 
-> **锁与同步 · 第 2/7 篇**  
+> **锁与同步 · 第 2/8 篇**  
 > 上一篇：[《深入理解 CAS 比较与交换》](/并发编程/lock/juc-09-cas)  
 > 下一篇：[《深入理解 synchronized》](/并发编程/lock/juc-11-synchronized)
 

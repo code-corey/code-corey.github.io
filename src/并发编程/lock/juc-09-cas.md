@@ -10,7 +10,7 @@ tag:
   - "CAS"
 ---
 
-> **锁与同步 · 第 1/7 篇**  
+> **锁与同步 · 第 1/8 篇**  
 > 上一篇：[《CompletableFuture 与 ThreadLocal》](/并发编程/async/juc-08-threadlocal)  
 > 下一篇：[《Atomic 原子操作类详解》](/并发编程/lock/juc-10-atomic)
 

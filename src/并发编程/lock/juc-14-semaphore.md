@@ -10,7 +10,7 @@ tag:
   - "Semaphore"
 ---
 
-> **锁与同步 · 第 6/7 篇**  
+> **锁与同步 · 第 6/8 篇**  
 > 上一篇：[《AQS 与 ReentrantLock 源码要点》](/并发编程/lock/juc-13-aqs-reentrantlock)  
 > 下一篇：[《CountDownLatch 与 CyclicBarrier》](/并发编程/lock/juc-15-latch-barrier)
 

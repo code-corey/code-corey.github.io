@@ -10,9 +10,9 @@ tag:
   - "CountDownLatch"
 ---
 
-> **锁与同步 · 第 7/7 篇**  
+> **锁与同步 · 第 7/8 篇**  
 > 上一篇：[《Semaphore 源码与限流场景》](/并发编程/lock/juc-14-semaphore)  
-> 下一篇：[《并发容器 Map、List、Set 实战与原理》](/并发编程/collections/juc-16-concurrent-collections)
+> 下一篇：[《分片锁：用 64 把锁守住无限条数据》](/并发编程/lock/striped-lock)
 
 ---
 
@@ -272,4 +272,4 @@ CyclicBarrier 的 parties 包含所有参与者（含主线程），CountDownLat
 - **CountDownLatch**：AQS state 作倒计时，一个（或多个）线程等 N 个任务完成，一次性。
 - **CyclicBarrier**：Lock + Condition，N 个线程互相等，到齐后可选集体任务，可循环使用。
 
-锁与同步系列至此收束；下一系列进入 **并发容器**。
+锁与同步主线至此收束；番外《分片锁》讲完工程造锁后，下一系列进入 **并发容器**。
