@@ -21,6 +21,7 @@ import Frontend from "./sidebar/前端.mjs";
 import Scale from "./sidebar/亿级规模系统.mjs";
 import Web3 from "./sidebar/web3区块链.mjs";
 import WorkLog from "./sidebar/工作记录.mjs";
+import News from "./sidebar/News.mjs";
 /**
  * @typedef {{ title?: string, icon?: string, order?: number }} FolderMeta
  * @typedef {{ path: string, dir: string }} SidebarModuleConfig
@@ -30,6 +31,7 @@ import WorkLog from "./sidebar/工作记录.mjs";
 /** @type {SidebarModuleConfig[]} */
 export const modules = [
   { path: "/Ai/", dir: "Ai" },
+  { path: "/News/", dir: "News" },
   { path: "/BigData/", dir: "BigData" },
   { path: "/DotNet/", dir: "DotNet" },
   { path: "/Java/", dir: "Java" },
@@ -98,6 +100,7 @@ export const folders = {
   ...prefix("亿级规模系统", Scale),
   ...prefix("web3区块链", Web3),
   ...prefix("工作记录", WorkLog),
+  ...prefix("News", News),
 };
 
 /** 未单独配置 icon 时的默认图标 */

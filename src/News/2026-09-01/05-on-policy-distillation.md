@@ -1,0 +1,41 @@
+---
+title: "Does On-Policy Distillation Really Distill? From Noisy Teacher to Self-Improvement（On-Policy 蒸馏真的在蒸馏吗？从噪声 Teacher 到自我改进）"
+shortTitle: "On-Policy 蒸馏真的在蒸馏吗？从噪…"
+sidebarGroup: "2026-09-01"
+order: 5
+date: 2026-09-01
+category:
+  - "每日 AI 简报"
+tag:
+  - "前沿论文"
+description: "这篇论文定量分析了 on-policy distillation（OPD，在线策略蒸馏）训练过程中 teacher 监督信号的质量，得到一个反直觉的结论：teacher 对 student 轨迹的打分含有大量噪声，且 teacher ..."
+---
+# Does On-Policy Distillation Really Distill? From Noisy Teacher to Self-Improvement（On-Policy 蒸馏真的在蒸馏吗？从噪声 Teacher 到自我改进）
+
+> 📅 2026-09-01（HF daily papers）| 🏷️ 🧠 前沿论文 | ⭐ HF upvotes 61
+> 🔗 原文：https://huggingface.co/papers/2608.31046
+
+## 是什么
+
+这篇论文定量分析了 on-policy distillation（OPD，在线策略蒸馏）训练过程中 teacher 监督信号的质量，得到一个反直觉的结论：teacher 对 student 轨迹的打分含有大量噪声，且 teacher 越大噪声越多；但出人意料的是，student 策略对这些噪声并不敏感，依然收敛——这引出一个根本问题：OPD 带来的提升究竟来自「更好的监督」，还是另有机制（自我改进）？
+
+## 为什么值得架构师关注
+
+- **蒸馏是企业降本的核心杠杆**：把大模型能力压到小模型上私有化部署，几乎是每个企业 AI 路线图的必选项。如果 OPD 的收益机制与「teacher 质量」关系不大，那么「用最大最强模型当 teacher」这一默认假设就要重新审视——直接影响蒸馏管线的设计与算力预算分配。
+- **影响技术路线选择**：OPD（密集 token 级监督）与 RLVR（稀疏结果级优势）是当前后训练的两大主流路线，本文为两者的优劣比较提供了来自监督信号质量视角的实证证据。
+- **对采购/供应商评估的启发**：凡是宣称「大模型蒸馏小模型、效果保留 X%」的方案，都值得追问其 teacher 规模与收益的关系曲线——论文提示这条曲线可能不是单调的。
+
+## 核心内容
+
+- OPD 的定位：以密集的 token 级监督替代 RLVR 稀疏的结果级优势信号（摘要原文）。
+- 关键方法学发现：teacher 给 student 生成的轨迹打分时，这些轨迹对 teacher 而言本质上是 off-policy 的，其监督可靠性存疑。
+- 定量结果：OPD 训练过程中 teacher 监督存在大量噪声（substantial noise），且噪声比例随 teacher 规模增大而**上升**。
+- 反直觉结论：student 策略对该噪声不敏感，仍然正常收敛——论文标题将其指向 self-improvement（自我改进）作为提升的真实来源。
+- 社区信号：HF daily 榜 61 upvotes，为当日论文中最高之一，说明「蒸馏收益机制」正是当前训练社区的核心争议点。
+
+## 行动建议
+
+- 正在建蒸馏/小模型管线的团队：精读原文，重点看 teacher 规模 vs student 收益的实验设置。
+- 在下一次蒸馏实验中加入一组对照：不同规模的 teacher、相同 student，验证收益是否真的随 teacher 变强而增加——用自家数据回答论文提出的问题。
+- 对蒸馏类供应商方案的效果声明，把「teacher 是谁、多大」列为标准尽调问题。
+- 不涉及模型训练的读者：了解即可，但记住结论——「更大 teacher ≠ 更好蒸馏」。

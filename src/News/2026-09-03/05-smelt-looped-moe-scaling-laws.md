@@ -1,0 +1,37 @@
+---
+title: "SMELT: Scaling Laws for Compute-Matched MoE Looped Transformers（计算量对齐的 MoE 循环 Transformer 缩放律）"
+shortTitle: "计算量对齐的 MoE 循环 Transfo…"
+sidebarGroup: "2026-09-03"
+order: 5
+date: 2026-09-03
+category:
+  - "每日 AI 简报"
+tag:
+  - "前沿论文"
+description: "一项针对\"循环 Transformer（Looped Transformer）\"的严格缩放律研究。循环结构通过重复迭代共享层块来增加有效深度，但以往评测大多在固定模型尺寸下比较，把\"架构优势\"与\"额外 FLOPs\"混为一谈。本文在逐 ..."
+---
+# SMELT: Scaling Laws for Compute-Matched MoE Looped Transformers（计算量对齐的 MoE 循环 Transformer 缩放律）
+
+> 📅 2026-09（arXiv 2609.01343） | 🏷️ 🧠 前沿论文 | ⭐ HF upvotes 75
+> 🔗 原文：https://huggingface.co/papers/2609.01343
+
+## 是什么
+
+一项针对"循环 Transformer（Looped Transformer）"的严格缩放律研究。循环结构通过重复迭代共享层块来增加有效深度，但以往评测大多在固定模型尺寸下比较，把"架构优势"与"额外 FLOPs"混为一谈。本文在**逐 token FLOPs、非嵌入参数总量、KV cache 三项预算全部对齐**的条件下研究 MoE 上的循环缩放，并给出最终配方 SMELT（Sparse MoE Transformer，middle layers Loop Twice——中间一半层循环两次），从四个尺寸一路扩展到 54B 非嵌入参数规模。
+
+## 为什么值得架构师关注
+
+层循环是"用计算换深度"的架构方向，若缩放律成立，意味着**同一显存占用下可用运行时计算买来更大有效模型**——对推理成本结构是结构性改变（KV cache 与参数不变，FLOPs 增加）。本文最大的方法论价值是"三预算对齐"的实验设计：它给出的结论可以直接回答"循环架构的收益是不是只是算力变多的错觉"这个此前悬而未决的问题。对负责中长期模型路线图的团队，这是评估下一代自研/选型架构时绕不开的证据。
+
+## 核心内容
+
+- **对齐三个预算再比较**：per-token FLOPs、总非嵌入参数、KV cache 全部与不循环基线匹配——首次把循环架构的真实收益从"算力增加"中剥离出来。
+- **SMELT 配方**：中间一半的层循环两次（middle half loop twice），经系列消融实验得出，而非全网络均匀循环。
+- **MoE 上的缩放验证**：在 Mixture-of-Experts 上按四档规模扩展至 54B 非嵌入参数，验证配方的规模一致性。
+- **社区关注度**：HF upvotes 75，为本期论文榜（架构/训练方向）热度第一梯队。
+
+## 行动建议
+
+- 中长期：将其纳入"推理时计算（inference-time compute）"技术雷达——若循环路线在更大规模持续成立，未来可能出现"小参数量、大有效深度"的新模型形态，改变显存规划逻辑。
+- 短期：不必调整现有选型，但可让算法团队复现其对齐方法（三预算对齐实验设计），用于内部评估任何"新架构提分"的声明——这是通用的防坑工具。
+- 跟踪后续：关注作者是否放出代码与 checkpoint（论文页可查），有代码则优先安排复现。

@@ -8,6 +8,11 @@ export default navbar([
     link: "/Ai/",
   },
   {
+    text: "每日 AI 简报",
+    icon: "newspaper",
+    link: "/News/",
+  },
+  {
     text: "Web3 区块链",
     icon: "link",
     link: "/web3区块链/",
