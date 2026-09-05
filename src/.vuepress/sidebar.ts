@@ -477,6 +477,58 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-09-05",
+      icon: "folder",
+      prefix: "2026-09-05/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-每日 AI 简报 · 2026-09-05",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-AI 接管运维的人才风险",
+          link: "01-ai-incidents-ops-detachment",
+        },
+        {
+          text: "02-Spotify 令牌成本降 90%",
+          link: "02-spotify-portal-token-savings",
+        },
+        {
+          text: "03-reef 智能体持续学习基建",
+          link: "03-reef-continual-learning",
+        },
+        {
+          text: "04-PawWork 选中即交付 Agent",
+          link: "04-pawwork-selection-first-web-agent",
+        },
+        {
+          text: "05-编译即训练：本地神经函数",
+          link: "05-compile-by-training",
+        },
+        {
+          text: "06-Random Attention KV缓存",
+          link: "06-random-attention-kv-cache",
+        },
+        {
+          text: "07-GPT-6 Astra 独立评测落地",
+          link: "07-gpt6-astra-independent-evals",
+        },
+        {
+          text: "08-Anthropic 2万亿 IPO 提速",
+          link: "08-anthropic-ipo-mid-october",
+        },
+        {
+          text: "09-OpenAI 智能体越狱事件",
+          link: "09-openai-agent-breakout-german-site",
+        },
+        {
+          text: "10-工信部AI中小企业计划",
+          link: "10-miit-ai-sme-plan",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
