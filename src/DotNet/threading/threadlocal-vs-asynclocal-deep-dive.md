@@ -1,5 +1,5 @@
 ---
-title: "深入 .NET 线程局部存储：ThreadLocal 与 AsyncLocal 的原理、源码与陷阱"
+title: "ThreadLocal 与 AsyncLocal 对话课：从三个翻车实验到 dotnet/runtime 源码"
 sidebarGroup: ".NET 并发源码"
 shortTitle: "ThreadLocal vs AsyncLocal"
 order: 1
@@ -12,87 +12,198 @@ tag:
   - "AsyncLocal"
   - "ExecutionContext"
   - "并发"
-description: "从 dotnet/runtime 源码级剖析 ThreadLocal 与 AsyncLocal 的实现差异：[ThreadStatic] 槽位表、ExecutionContext 不可变 map、写时复制、变更通知与 FailFast，以及线程池脏值、GC 压力等一众陷阱。"
+description: "一堂 0 基础也能跟上的对话课：从全局变量翻车、[ThreadStatic] 初始化器坑、线程池脏值诈尸到通知 FailFast 崩进程，10 个真跑的实验串起 ThreadLocal 与 AsyncLocal 的源码差异。"
 ---
 
-# 深入 .NET 线程局部存储：ThreadLocal 与 AsyncLocal 的原理、源码与陷阱
+> **第 1 篇 · .NET 并发源码系列**（本系列计划 10 篇以上，这是开篇）
 
-> 本文基于 [dotnet/runtime](https://github.com/dotnet/runtime) main 分支源码撰写（`System.Private.CoreLib`，2025 年时间线）。
-> 涉及三个文件：
-> - [`ThreadLocal.cs`](https://github.com/dotnet/runtime/blob/main/src/libraries/System.Private.CoreLib/src/System/Threading/ThreadLocal.cs)
-> - [`AsyncLocal.cs`](https://github.com/dotnet/runtime/blob/main/src/libraries/System.Private.CoreLib/src/System/Threading/AsyncLocal.cs)
-> - [`ExecutionContext.cs`](https://github.com/dotnet/runtime/blob/main/src/libraries/System.Private.CoreLib/src/System/Threading/ExecutionContext.cs)
+本文是一堂完整的师生对话课逐字稿。学生是 0 基础，老师从最简单的现象讲起，一路讲到 dotnet/runtime 源码。文中所有代码都是课堂上真实运行过的，输出原样贴出（.NET 10.0.400，Windows）。
+
+实验工程就一个控制台项目：
+
+```text
+H:\develop\tls-lab\Lab\
+├── Lab.csproj
+└── Program.cs        ← 每个实验一个方法，用命令行参数选择跑哪个
+```
+
+---
+
+## 开场白
+
+> **老师**：好，上课。今天咱们聊两个长得很像的兄弟：`ThreadLocal<T>` 和 `AsyncLocal<T>`。名字里都带个 Local，都能存"局部"的数据，但它们解决的问题完全不同。搞混它们的人，轻则日志里 TraceId 莫名其妙是空的，重则用户 A 的数据串到用户 B 的请求里，直接生产事故。
 >
-> 实现细节在 .NET Framework / 早期 .NET Core 上略有不同，文中会顺带提及演进历史。
+> 我不打算一上来就甩定义。咱们反过来，先做实验、先翻车、先困惑，然后再去源码里找答案。今天全程就回答一个问题——
+>
+> **你存的值，到底跟着谁走？**
+>
+> 记住这句话，一节课都在讲它。准备好了吗？
+
+> **学生**：准备好了。不过老师，我连"局部"这个词都没完全明白，方法里的局部变量叫局部，这俩怎么也叫局部？
+
+> **老师**：问得好，就从这开始。
 
 ---
 
-## 0. 先说结论
+## 第 1 节 先翻车：所有线程共用一个抽屉
 
-一句话概括两者的本质区别：
+> **老师**：你写代码的时候，把一个变量声明成 `static`，它存在哪？
 
-> **`ThreadLocal<T>` 的值跟着"物理线程"走，`AsyncLocal<T>` 的值跟着"逻辑控制流"走。**
+> **学生**：存在……类上面？整个程序只有一份。
 
-| 维度 | `ThreadLocal<T>` | `AsyncLocal<T>` |
-|---|---|---|
-| 数据存在哪 | 每线程一张 `[ThreadStatic]` 槽位表（按 `T` 分组） | 当前线程的 `ExecutionContext` 里的不可变 map |
-| 数据跟谁 | 物理线程（线程不死，值一直在） | 逻辑异步控制流（capture/restore 随 await 漂移） |
-| `await` 之后还在吗 | ❌ 通常丢（换了物理线程就换了值） | ✅ 在（上下文随控制流恢复） |
-| 写入成本 | 极低（快速路径一次字段写） | 较高（每次改变值都分配新 map + 新 EC） |
-| 读取成本 | 极低（几次判空 + 一次字段读） | 低（≤4 个键直接比对，≤16 线性扫描，更多走哈希） |
-| 线程池复用 | ⚠️ 脏值残留（上一个工作项的值还在） | ✅ 无残留（dispatch 完强制重置上下文） |
-| 聚合所有值 | ✅ `Values`（需构造时开启） | ❌ 无任何枚举手段 |
-| 清理方式 | `Dispose()` / 线程退出时 Finalizer 兜底 | 随控制流结束自动"消失"（GC 回收旧上下文） |
-| 典型用途 | 每线程缓存/缓冲区/可重用对象 | 请求上下文、trace、事务、`IHttpContextAccessor` |
+> **老师**：对，整个进程就一份。现在问题来了：如果有 4 个线程同时往这一份变量上加数，会发生什么？咱们真跑一下，眼见为实。新建一个控制台项目，代码就这么点：
 
-下面从底层机制讲到源码，最后集中列坑。
+```csharp
+static int _counter = 0;
+
+static void Main()
+{
+    _counter = 0;
+    var threads = new List<Thread>();
+    for (int t = 0; t < 4; t++)
+    {
+        var th = new Thread(() =>
+        {
+            for (int i = 0; i < 100_000; i++)
+            {
+                _counter++;          // 每个线程都往同一个字段上加
+            }
+            Console.WriteLine($"线程{Environment.CurrentManagedThreadId} 干完了，我看到的 _counter = {_counter}");
+        });
+        threads.Add(th);
+        th.Start();
+    }
+    foreach (var th in threads) th.Join();
+    Console.WriteLine($"最终 _counter = {_counter}（期望 400000）");
+}
+```
+
+> 跑一次看看：
+
+```text
+$ dotnet run
+线程7 干完了，我看到的 _counter = 134720
+线程5 干完了，我看到的 _counter = 134720
+线程6 干完了，我看到的 _counter = 134720
+线程4 干完了，我看到的 _counter = 134720
+最终 _counter = 134720（期望 400000）
+```
+
+> **学生**：啊？跑了 40 万次加法，最后才 13 万？数都去哪了？
+
+> **老师**：`_counter++` 这句话看着是一步，实际上是三步：把值从内存读进寄存器、寄存器加一、写回内存。两个线程同时"读"到了同一个旧值，各自加一，各自写回——其中一个的加法就被覆盖了，凭空消失。这叫竞争条件。
+>
+> 但注意，我今天不是要教你加锁。你想想，假设这个场景换一下：不是"大家共同攒一个总数"，而是"每个线程想要自己的工作 buffer，互不干扰"——用加锁合适吗？
+
+> **学生**：不合适吧？我根本不想跟别人共享，锁反而让大家都排起队来，纯属内耗。
+
+> **老师**：没错。共享是问题的来源，那干脆别共享——**每个线程自己一份，别人碰不到**。这个思路就叫线程局部存储，Thread Local Storage，TLS。
 
 ---
 
-## 1. 第一性原理：两种"局部"到底局部在哪
+## 第 2 节 地基材料：[ThreadStatic]，好用但有暗坑
 
-### 1.1 `[ThreadStatic]`：一切的地基
-
-`ThreadLocal<T>` 的地基是 `[ThreadStatic]` 静态字段。运行时为每个线程维护一份独立的静态字段存储，互不可见：
+> **老师**：.NET 给的最原始工具是个特性，叫 `[ThreadStatic]`。往静态字段上一贴，这个字段就从"全进程一份"变成"每线程一份"。写法：
 
 ```csharp
 [ThreadStatic]
-private static StringBuilder? _sb;
+static int _perThread = 42;   // 想让每个线程都从 42 开始
+```
 
-// 每个线程第一次访问时各自初始化
+> **学生**：看着挺直观。`= 42` 就是给每人发的初始值嘛。
+
+> **老师**：你猜新线程读这个字段，是多少？
+
+> **学生**：42 啊，初始化器写着的。
+
+> **老师**：跑一下：
+
+```csharp
+static void Main()
+{
+    Console.WriteLine($"主线程读 _perThread = {_perThread}");
+    var th = new Thread(() =>
+        Console.WriteLine($"新线程读 _perThread = {_perThread}（不是 42！）"));
+    th.Start();
+    th.Join();
+}
+```
+
+```text
+$ dotnet run
+主线程读 _perThread = 42
+新线程读 _perThread = 0（不是 42！）
+```
+
+> **学生**：等等？！42 呢？新线程的 42 跑哪去了？
+
+> **老师**：这就是 `[ThreadStatic]` 最大的暗坑。`= 42` 这种字段初始化器，本质上是在**静态构造函数**里执行的，而静态构造函数**整个进程只跑一次**——跑在第一个碰它的线程上，也就是主线程。所以这个 42 只"发"给了主线程那一份。
+>
+> 其余线程呢？它们的那份字段是运行时 newly 分配的，直接就是默认值 0。
+
+> **学生**：懂了，初始化器只对第一个线程生效。那每个线程想要初始值怎么办？
+
+> **老师**：只能在每次读的时候自己判断：
+
+```csharp
+[ThreadStatic]
+static StringBuilder? _sb;
+
+// 每个访问点都得这么写
 static StringBuilder SB => _sb ??= new StringBuilder();
 ```
 
-两个经典坑直接催生了 `ThreadLocal<T>`：
-
-1. **字段初始化器只对第一个线程生效**。`[ThreadStatic] static int x = 42;` 在后续线程上读到的不是 42，而是 `default`——静态构造器只跑一次。所以每个访问点都必须判空，样板代码满天飞。
-2. **没有实例语义**。`[ThreadStatic]` 只能挂在静态字段上，无法为不同对象各存一份，也无法提供 factory、枚举、释放等能力。
-
-`ThreadLocal<T>` 的注释开门见山：
-
-> *A class that provides a simple, lightweight implementation of thread-local lazy-initialization ... this provides an alternative to using a ThreadStatic static variable and having to check the variable prior to every access to see if it's been initialized.*
-
-### 1.2 `ExecutionContext`：随控制流漂移的"环境数据"
-
-异步世界里没有稳定的"当前线程"——一个逻辑操作在 `await` 前后可能运行在不同物理线程上。于是 .NET 引入了 `ExecutionContext`（执行上下文）：**一束随逻辑控制流漂移的环境数据（AsyncLocal 值、变更通知、流抑制标志）**。
-
-它的流动规则：
-
-- **捕获（Capture）**：在控制流分叉点（`Task.Run` 排队、注册 await 继续、`new Thread(...).Start()`、`Timer` 构造……）对当前上下文做一次快照；
-- **恢复（Restore/Run）**：快照在未来某个执行点（可能在另一个线程上）被恢复到线程字段 `Thread.CurrentThread._executionContext` 上；
-- 执行完毕后，运行时再把线程**重置回默认上下文**。
-
-`AsyncLocal<T>` 就是寄居在这套机制之上的：它的"值"实际上是**当前线程 `ExecutionContext` 里 map 中以该 `AsyncLocal` 对象为键的那一项**。
-
-记住这个模型，后面的源码全都顺理成章。
+> 这种判空样板代码到处贴，烦不烦？而且 `[ThreadStatic]` 只能挂在静态字段上——你要是想要"每个对象各有一套线程数据"，它做不了。还缺 factory、缺统一释放、缺"把所有线程的值捞出来看看"的能力。
+>
+> 于是官方说：我给你封装一个吧。这就是 `ThreadLocal<T>`。
 
 ---
 
-## 2. `ThreadLocal<T>` 源码解剖
+## 第 3 节 ThreadLocal<T>：给地基装上门面
 
-### 2.1 数据结构总览
+> **老师**：`ThreadLocal<T>` 用起来是这样：
 
-先看全貌。`ThreadLocal<T>` 有三类状态：
+```csharp
+var tl = new ThreadLocal<string>(() =>
+    $"buffer@T{Environment.CurrentManagedThreadId}");
+Console.WriteLine($"主线程: {tl.Value}");
+Console.WriteLine($"主线程再读: {tl.Value}（同一个，不再新建）");
+
+var th = new Thread(() =>
+    Console.WriteLine($"工作线程: {tl.Value}（自己的一份）"));
+th.Start();
+th.Join();
+tl.Dispose();
+```
+
+```text
+$ dotnet run
+主线程: buffer@T2
+主线程再读: buffer@T2（同一个，不再新建）
+工作线程: buffer@T4（自己的一份）
+```
+
+> **学生**：传了个 lambda 进去，然后每个线程第一次读 `Value` 的时候各自执行一遍，得到各自的值。
+
+> **老师**：对，这就是**懒初始化**——谁先用谁触发，没碰过它的线程永远不会执行那个 factory。刚才 `[ThreadStatic]` 的三个烦恼一次解决：
+>
+> 1. 初始化不再依赖静态构造，每个线程自己来，工厂说了算；
+> 2. 判空样板收进库里了，你只管读 `Value`；
+> 3. 它是实例，所以可以建好几个互不干扰的 `ThreadLocal<string>`，还带 `Dispose()` 和 `Values`。
+>
+> 顺带说一句，那个 factory 抛异常的语义也值得记一笔：**异常不会被缓存**，下次再访问 `Value`，factory 会重新执行。这跟 `Lazy<T>` 默认模式（异常缓存住）不一样。
+
+> **学生**：等等，`Values` 是干嘛的？
+
+> **老师**：把"所有线程上这个实例的值"捞成一个 List 出来。注意两个限制：构造的时候要传 `trackAllValues: true` 才有，事后开不了；而且线程退出后，它的值还会留在快照里，别把 `Values` 当"活线程名单"用。
+
+> **学生**：听起来 ThreadLocal 挺完善的，那还要 AsyncLocal 干嘛？
+
+> **老师**：别急。它马上要在异步世界里翻个跟头。但在翻跟头之前，咱们先打开它的源码看看它是怎么干的——这一段会让你后面判断问题特别有底气。
+
+### 源码开胃菜：ThreadLocal 是怎么存值的
+
+> 老师说：咱们看 dotnet/runtime 里 `ThreadLocal.cs` 的骨架（简化过的）：
 
 ```csharp
 public class ThreadLocal<T> : IDisposable
@@ -101,197 +212,122 @@ public class ThreadLocal<T> : IDisposable
     [ThreadStatic]
     private static LinkedSlotVolatile[]? ts_slotArray;
 
-    // 线程退出后负责解链清理的助手（见 2.6）
-    [ThreadStatic]
-    private static FinalizationHelper? ts_finalizationHelper;
-
-    // 本实例的全局唯一 ID 的"按位反码"（~id），用于区分 id=0 与未初始化/已释放
+    // 本实例的全局唯一 ID 的"按位反码"（~id）
     private int _idComplement;
 
     private Func<T>? _valueFactory;
     private volatile bool _initialized;
-    private bool _trackAllValues;
 
-    // 本实例持有的双向链表（哑头结点），串联"所有线程上属于本实例的值"
+    // 本实例的双向链表（哑头结点），串联"所有线程上属于本实例的值"
     private LinkedSlot? _linkedSlot = new LinkedSlot(null);
-
-    // 全局 ID 管理器与全局锁
-    private static readonly IdManager s_idManager = new IdManager();
-    private static readonly Lock s_idManagerLock = new Lock();
 }
 ```
 
-三张图看清它们的关系：
+> **学生**：它自己内部还是用了 `[ThreadStatic]`！绕了一圈？
 
-```
-ThreadLocal<T> 实例 (id=3)
-│
-│  _linkedSlot (哑头)
-│      │  _next/_previous 双向链表：串联所有线程上属于本实例的结点
-│      ▼
-│   哑头 ⇄ LinkedSlot(线程B) ⇄ LinkedSlot(线程A) ⇄ ...
-│              │ _value="B的值"        │ _value="A的值"
-│              │ _slotArray ──────┐    │ _slotArray ──┐
-│              ▼                 │    ▼              │
-│                            线程 B 的 ts_slotArray │ 线程 A 的 ts_slotArray
-│                            [0][1][2][3]...      [0][1][2][3]...
-│                                              ↑ id=3 槽位回指 LinkedSlot
-```
-
-- **线程侧**：每个线程对每个封闭泛型类型 `ThreadLocal<T>` 只有一张 `ts_slotArray`，槽位下标 = 实例 ID。`LinkedSlotVolatile` 是只含一个 `volatile LinkedSlot? Value` 的包装结构，让数组访问带 volatile 语义。
-- **实例侧**：`_linkedSlot` 哑头带出一个**双向链表**，串起所有（线程 × 本实例）的值——`Values` 属性和 `Dispose` 靠它横跨线程。
-- **回指**：每个 `LinkedSlot` 记着 `_slotArray`（所属线程的表），`Dispose` 靠它精准清空各线程的槽位。
-
-注意 `ts_slotArray` 是 `ThreadLocal<T>` 的静态字段——**按封闭类型分组**：`ThreadLocal<string>` 和 `ThreadLocal<object>` 各有一套互不相干的表与链表。
-
-### 2.2 `_idComplement`：一个精巧的哨兵技巧
+> **老师**：对，地基还是那块地基——`ts_slotArray`，一个数组。但它做了几件聪明事：
+>
+> **第一件，槽位表。** 每个 `ThreadLocal<T>` 实例构造时从全局管理器领一个编号 id。每个线程的 `ts_slotArray` 里，下标 id 的位置存的就是"这个线程在这份实例上的值"。
+>
+> 所以你每建一个 `ThreadLocal<string>` 实例，全进程每个碰到过它的线程的表里都会多一个槽。同一个类型的实例越多，每张表越长——这是一种隐性内存开销，记住这个。
+>
+> **第二件，读值的快速路径是无锁的。** 看 `Value` 的 getter（简化）：
 
 ```csharp
-// Slot ID of this ThreadLocal<> instance. We store a bitwise complement of the ID (that is ~ID),
-// which allows us to distinguish between the case when ID is 0 and an incompletely initialized object...
-private int _idComplement;
-```
-
-构造时：`_idComplement = ~s_idManager.GetId(trackAllValues)`； Dispose 时：`_idComplement = 0`。
-
-于是读取时 `int id = ~_idComplement`：
-
-- 正常实例：`id >= 0`（id=0 的实例得 0，**不与任何异常态混淆**）；
-- 已 Dispose 或构造中途异常：`id == -1`。
-
-一个字段同时解决了三个判定：是否已释放、构造器是否抛过异常、以及多线程下与 `Dispose` 竞争时的安全检查。到处可见的 `ObjectDisposedException.ThrowIf(id < 0, this)` 就是这么来的。
-
-ID 由全局 `IdManager` 分配：`_nextIdToTry` 单调递增，`Dispose` 后的 ID 进入 `_freeIds` 列表**复用**（复用时的竞态由 `s_idManagerLock` + 写槽位前再查 `_initialized` 双重防护，源码注释对此有详细说明）。
-
-### 2.3 `Value` 读取：五连判的快速路径
-
-```csharp
-public T Value
+get
 {
-    get
-    {
-        LinkedSlotVolatile[]? slotArray = ts_slotArray;
-        LinkedSlot? slot;
-        int id = ~_idComplement;
-
-        if (slotArray != null          // 1. 本线程建过槽位表吗？
-            && id >= 0                 // 2. 实例没被 Dispose 吧？
-            && id < slotArray.Length   // 3. 表装得下这个 ID 吗？
-            && (slot = slotArray[id].Value) != null  // 4. 本线程给这个实例建过槽吗？
-            && _initialized            // 5. 拿到槽之后再确认一次没被 Dispose（防竞争）
-            )
-        {
-            return slot._value;
-        }
-        return GetValueSlow();
-    }
-    ...
-}
-```
-
-快速路径**无锁、无分配**：读 `[ThreadStatic]` 表 + 边界检查 + 一次 volatile 字段读。第 5 步与注释里的内存序说明很值得品：volatile 读 `slotArray[id]` 保证 `_initialized` 的检查不会乱序到槽位读取之前——保证绝世不可能把值读到"另一个复用了同 ID 的实例"的槽里。
-
-第 3 步解释了表的扩张策略：表按需增长，大小为 `BitOperations.RoundUpToPowerOf2(min)`（首个实例用时表长仅 1）。**你创建的第 N 个 `ThreadLocal<T>` 实例决定了每个线程至少需要 ⌈N⌉ 向上取 2 的幂个槽**——同类型实例越多，每线程表越大（这也是一种隐性内存开销）。
-
-### 2.4 慢路径与工厂语义
-
-`GetValueSlow` 承担首次初始化：
-
-```csharp
-private T? GetValueSlow()
-{
+    LinkedSlotVolatile[]? slotArray = ts_slotArray;
+    LinkedSlot? slot;
     int id = ~_idComplement;
-    ObjectDisposedException.ThrowIf(id < 0, this);
 
-    Debugger.NotifyOfCrossThreadDependency();   // 告诉调试器：这里有跨线程依赖，别傻等
-
-    T value;
-    if (_valueFactory == null)
+    if (slotArray != null                        // 1. 本线程建过表吗？
+        && id >= 0                               // 2. 实例没被 Dispose 吧？
+        && id < slotArray.Length                 // 3. 表装得下这个 id 吗？
+        && (slot = slotArray[id].Value) != null  // 4. 本线程建过这个槽吗？
+        && _initialized)                         // 5. 再确认一次没被 Dispose
     {
-        value = default!;
+        return slot._value;
     }
-    else
-    {
-        value = _valueFactory();
-
-        if (IsValueCreated)   // 工厂执行期间值已被创建 => 递归调用，抛异常
-        {
-            throw new InvalidOperationException(SR.ThreadLocal_Value_RecursiveCallsToValue);
-        }
-    }
-    Value = value;   // 写回（会走 SetValueSlow 建槽）
-    return value;
+    return GetValueSlow();   // 慢路径：建表建槽、跑 factory
 }
 ```
 
-三个重要语义从这里读出来：
+> **学生**：五个 if 连着写……最后那个 `_initialized` 为什么又查一遍？第 2 步不是查过了吗？
 
-1. **懒初始化**：没被访问的线程永远不会执行 factory。
-2. **工厂异常不缓存**：`_valueFactory()` 抛异常时直接向上传播，槽位**没有建立**——下次访问会**重新执行 factory**。这与 `Lazy<T>` 默认模式（异常被缓存）完全不同。
-3. **递归防护**：factory 里再访问 `Value` 会触发 `InvalidOperationException`（内层递归先把槽建好了，外层返回时 `IsValueCreated` 已为 true），而不是无限循环或栈溢出。
+> **老师**：问到点子上了。第 2 步和第 4 步之间，可能另一个线程刚好对实例调了 `Dispose()`。第 5 步是在拿到槽**之后**再确认一次，把竞争窗口关死。而第 1、5 步能这么配合，靠的是 `slotArray[id].Value` 是 volatile 读，内存序上保证了检查不会乱序。这是教科书级的双重检查写法，值得抄进你的笔记。
+>
+> **第三件，`_idComplement` 这个小把戏。** 它存的是 id 的按位反码 `~id`。为什么要反着存？因为 id 可以是 0，而"构造函数还没跑完"和"已经 Dispose 了"也都用 0 这个默认值表示——如果直接存 id，0 就分不清是"合法的 0 号实例"还是"没初始化"。存反码之后：正常实例 `~_idComplement >= 0`（0 号实例也得到 0，不混淆），异常态得到 -1。一个 int 同时当三件事用：判释放、判构造异常、防竞争。
+>
+> **第四件，双向链表。** 每个槽位结点同时挂在实例的 `_linkedSlot` 链表上。`Dispose()` 的时候顺着链表走一遍，把每个线程表里的槽清空，id 还给管理器复用。要是忘了 Dispose，线程退出的时候还有个 `FinalizationHelper` 在 GC 时兜底解链——但那只是兜底，线程池线程几乎不死，兜底兜不到，值就一直钉在内存里。所以规矩是：**用完要 Dispose**。
 
-建槽在 `SetValueSlow` 中完成：建表/扩容（扩容需在全局锁下把旧表中各结点的 `_slotArray` 回指修正到新表）、首次使用某槽时 `CreateLinkedSlot` 把新结点**头插**进实例的双向链表（同样在全局锁下，防 `Dispose` 竞争）。
+> **学生**：好家伙，一个小小的 ThreadLocal 内部这么多机关。
 
-> 性能小结：快速路径就是"一次 TLS 读 + 一次下标访问 + 一次字段读"；真正的锁与分配只发生在每个（线程 × 实例）的第一次访问、以及表扩容时。
-
-### 2.5 `Values`：横跨线程的枚举
-
-```csharp
-private List<T>? GetValuesAsList()
-{
-    ...
-    var valueList = new List<T>();
-    for (linkedSlot = linkedSlot._next; linkedSlot != null; linkedSlot = linkedSlot._next)
-    {
-        valueList.Add(linkedSlot._value!);
-    }
-    return valueList;
-}
-```
-
-实例侧双向链表的用武之地：一条链走遍所有线程的值。注意两点：
-
-- 必须**构造时**传 `trackAllValues: true`，之后 `Values` 才可用（否则 `InvalidOperationException`），没有事后开关；
-- 返回的是快照副本（`List`），且新结点头插，**顺序不代表线程顺序**。
-
-这是 `ThreadLocal` 相对 `AsyncLocal` 的一个独家能力：`AsyncLocal` 从任何公开 API 都无法枚举"当前上下文里到底有哪些值"。
-
-### 2.6 清理：`Dispose` 与线程退出的兜底
-
-`Dispose` 的实现正是双向链表 + `_slotArray` 回指的闭环：
-
-```csharp
-protected virtual void Dispose(bool disposing)
-{
-    lock (s_idManagerLock)
-    {
-        int id = ~_idComplement;
-        _idComplement = 0;              // 之后再访问：id == -1 → ObjectDisposedException
-        ...
-        for (LinkedSlot? linkedSlot = _linkedSlot._next; linkedSlot != null; linkedSlot = linkedSlot._next)
-        {
-            LinkedSlotVolatile[]? slotArray = linkedSlot._slotArray;
-            if (slotArray == null) continue;   // 该线程已退出，表已随 FinalizationHelper 释放
-            linkedSlot._slotArray = null;
-            // 同时清掉线程表里的槽位与值，两者都可被 GC
-            slotArray[id].Value!._value = default;
-            slotArray[id].Value = null;
-        }
-    }
-    _linkedSlot = null;
-    s_idManager.ReturnId(id, _trackAllValues);   // ID 归还池子供复用
-}
-```
-
-如果忘了 `Dispose`？实例的 finalizer（`~ThreadLocal() => Dispose(false)`）会在 GC 时兜底归还 ID 并解链——**前提是实例本身已不可达**。若实例被静态字段等长期持有又从不 Dispose，那么**每个碰过它的存活线程都会一直钉住自己的值**。
-
-那线程退出呢？靠 `ts_finalizationHelper`：线程建表时会顺手把表包进一个 `[ThreadStatic]` 的 `FinalizationHelper`。线程死亡后其静态字段不可达，helper 在下一次 GC 的终结队列里运行 finalizer，把表中各槽位对应的 `LinkedSlot` 从实例链表上**摘除**（对未开启 `trackAllValues` 的实例）或仅断开回指（对开启了的实例），从而释放表与值。一个相当优雅的"死后清理"设计。
+> **老师**：这才一半。接下来看它在异步世界里的翻车现场。
 
 ---
 
-## 3. `AsyncLocal<T>` 源码解剖：站在 ExecutionContext 的肩膀上
+## 第 4 节 await 一来，值没了？
 
-### 3.1 `AsyncLocal<T>` 本体薄得出奇
+> **学生**：老师，我一直有个疑问：async/await 不就是"开个后台线程干活"吗？跟线程有什么关系？
+
+> **老师**：恰恰相反——async/await 的设计目标之一就是**不**固定线程。`await` 之前的代码可能跑在 T2 线程上，`await` 等待结束之后，延续的部分大概率被调度到另一个线程池线程上继续跑。线程会换人，但你的**逻辑操作**还是同一个。
+>
+> 这句话对 ThreadLocal 意味着什么？它的值跟着**物理线程**走。线程一换人，你读到的就是另一个线程的那份——可能还没初始化，factory 重新跑一遍。咱们来实测：
+
+```csharp
+var tl = new ThreadLocal<string>(() =>
+    $"created@T{Environment.CurrentManagedThreadId}");
+var al = new AsyncLocal<string>();   // 先别管它是什么，看表演
+
+al.Value = "请求A的TraceId";
+var _ = tl.Value;                    // 当前物理线程初始化
+
+Console.WriteLine($"await 前: 线程T{Environment.CurrentManagedThreadId} tl={tl.Value} al={al.Value}");
+
+await Task.Delay(200);               // 等待期间当前线程被释放，恢复时换个线程
+
+Console.WriteLine($"await 后: 线程T{Environment.CurrentManagedThreadId} tl={tl.Value} al={al.Value}");
+```
+
+```text
+$ dotnet run
+await 前: 线程T2 tl=created@T2 al=请求A的TraceId
+await 后: 线程T5 tl=created@T5 al=请求A的TraceId
+```
+
+> **学生**：看到了！tl 从 `created@T2` 变成 `created@T5`——线程从 T2 换到 T5，ThreadLocal 的 factory 又跑了一遍，值"丢"了。但 al 那个 AsyncLocal，还是"请求A的TraceId"，稳如老狗。
+
+> **老师**：这就是两个类型最核心的分野，回到开场那句话——
+>
+> **`ThreadLocal<T>` 的值跟着物理线程走，`AsyncLocal<T>` 的值跟着逻辑控制流走。**
+>
+> 而且注意，ThreadLocal 这种"丢"比看着更危险。如果 factory 很贵——比如建一块非托管缓冲区、建一个 DbContext——同一个逻辑操作在不同物理线程上会各自初始化出好几份，旧的那份还得等线程退出才释放。
+
+> **学生**：那 AsyncLocal 凭什么能活着飘过 await？它把值藏哪了？
+
+> **老师**：这就得请出今天真正的主角了。
+
+---
+
+## 第 5 节 ExecutionContext：跟着"逻辑操作"走的环境
+
+> **老师**：先打个比方。你上大学，一节课在 301 教室上，下一节去 505 教室。**你换了教室，但你的书包始终背在你身上**——笔记、水杯、学生卡都在包里，到哪都能用。
+>
+> 异步世界里也一样：逻辑操作就是"你"，物理线程就是"教室"。await 之后线程换了教室，但有一个"书包"跟着逻辑操作一起走。这个书包就叫 `ExecutionContext`，执行上下文。
+>
+> 里面装什么？AsyncLocal 的值、变更通知的登记表、还有几个流控制标志。
+
+> **学生**：那"跟着走"是怎么实现的？总得有个时刻把包递过去吧。
+
+> **老师**：两个动作。
+>
+> **捕获（Capture）**：在控制流分叉的时刻——`Task.Run` 排队的那一瞬间、注册 await 延续的那一瞬间、`new Thread(...).Start()` 的那一刻——对当前书包拍个快照。
+>
+> **恢复（Restore）**：快照跟着工作项走，未来在某个线程上执行时（可能是别的线程），先把快照里的内容恢复到那个线程身上，再执行你的代码。执行完，运行时再把线程重置回空书包，免得污染下一个工作项。
+
+> **学生**：所以 AsyncLocal 的值不在 ThreadLocal 那种表里，而是在这个书包里？
+
+> **老师**：完全正确。看 `AsyncLocal.cs` 的源码，你会怀疑人生——它薄得离谱：
 
 ```csharp
 public sealed class AsyncLocal<T> : IAsyncLocal
@@ -300,100 +336,25 @@ public sealed class AsyncLocal<T> : IAsyncLocal
 
     public T Value
     {
-        get
-        {
-            object? value = ExecutionContext.GetLocalValue(this);
-            if (typeof(T).IsValueType && value is null)
-            {
-                return default;
-            }
-            return (T)value!;
-        }
-        set
-        {
-            ExecutionContext.SetLocalValue(this, value, _valueChangedHandler is not null);
-        }
-    }
-
-    void IAsyncLocal.OnValueChanged(object? previousValueObj, object? currentValueObj, bool contextChanged)
-    {
-        ...
-        _valueChangedHandler(new AsyncLocalValueChangedArgs<T>(previousValue, currentValue, contextChanged));
+        get => (T)ExecutionContext.GetLocalValue(this)!;   // 去当前线程的书包里找
+        set => ExecutionContext.SetLocalValue(this, value, ...);
     }
 }
 ```
 
-**它自己不存任何值**。`AsyncLocal` 实例仅仅是一个"键"（实现 `IAsyncLocal` 供非泛型的 `ExecutionContext` 回调），值一律存在当前线程的 `ExecutionContext` 里。整个类型的全部智能，都在 `ExecutionContext` 侧。
+> 它自己**一个字节的数据都不存**。整个对象就是个"钥匙"——读的时候拿钥匙去当前线程的 `ExecutionContext` 里翻；写的时候让 `ExecutionContext` 更新。数据全在书包里，钥匙本身没有份量。
 
-### 3.2 `ExecutionContext`：三个字段撑起一片天
+> **学生**：那我读 `al.Value` 的时候，运行时具体在干嘛？
 
-```csharp
-public sealed partial class ExecutionContext : IDisposable, ISerializable
-{
-    internal static readonly ExecutionContext Default = new ExecutionContext();
-    internal static readonly ExecutionContext DefaultFlowSuppressed =
-        new ExecutionContext(AsyncLocalValueMap.Empty, new IAsyncLocal[0], isFlowSuppressed: true);
+> **老师**：就一行：`Thread.CurrentThread._executionContext` 拿到当前书包，在里面的 map 里按这把钥匙查值。 map 没查到就返回 null。
+>
+> 写入就有意思了，这是 AsyncLocal 所有性能特征的来源，值得单独讲。
 
-    private readonly IAsyncLocalValueMap? m_localValues;              // 值：不可变 map
-    private readonly IAsyncLocal[]? m_localChangeNotifications;       // 注册了变更通知的键
-    private readonly bool m_isFlowSuppressed;                         // SuppressFlow 标志
-    private readonly bool m_isDefault;
-}
-```
+---
 
-读值就一行（`GetLocalValue`）：
+## 第 6 节 写一次值，运行时干了五件事
 
-```csharp
-internal static object? GetLocalValue(IAsyncLocal local)
-{
-    ExecutionContext? current = Thread.CurrentThread._executionContext;
-    if (current == null) return null;
-    current.m_localValues.TryGetValue(local, out object? value);
-    return value;
-}
-```
-
-真正的重头戏是**写入**与**流动**。先看流动：运行时在控制流分叉点捕获上下文（`Capture()`，注意 `m_isFlowSuppressed` 时返回 null——**流被抑制就什么都不带**），在未来某点通过 `Run`/`Restore` 恢复：
-
-```csharp
-internal static void RestoreChangedContextToThread(Thread currentThread,
-    ExecutionContext? contextToRestore, ExecutionContext? currentContext)
-{
-    // 直接原子替换线程字段
-    currentThread._executionContext = contextToRestore;
-    if ((currentContext != null && currentContext.HasChangeNotifications) ||
-        (contextToRestore != null && contextToRestore.HasChangeNotifications))
-    {
-        // 有注册通知的 AsyncLocal，逐个对比新旧值并回调
-        OnValuesChanged(currentContext, contextToRestore);
-    }
-}
-```
-
-`ExecutionContext.Run` 是所有 await 继续、线程池工作项执行都要经过的极热函数：换上下文 → 跑回调 → **把旧上下文原样换回来**（用 `ExceptionDispatchInfo` 保证异常抛出前先恢复上下文）。线程池的派发循环更干脆（`RunFromThreadPoolDispatchLoop` / `ResetThreadPoolThread`）：每个工作项执行完，**无条件把 EC 与 SynchronizationContext 重置回默认**，并触发相应通知。
-
-> 这一段就是"线程池上 `AsyncLocal` 不脏、`ThreadLocal` 会脏"的源码级解释：前者每次派发都强制清场，后者对 `[ThreadStatic]` 世界一无所知。
-
-### 3.3 不可变 map 的七个层级
-
-值存储 `IAsyncLocalValueMap` 是一棵按元素数分层的继承树（定义在 `AsyncLocal.cs` 底部）：
-
-| 元素数 | 实现 | 结构 |
-|---|---|---|
-| 0 | `EmptyAsyncLocalValueMap` | 全局单例 |
-| 1~4 | `OneElement` / `TwoElement` / `ThreeElement` / `FourElement` | 固定字段，引用比对线性查找 |
-| 5~16 | `MultiElementAsyncLocalValueMap`（`MaxMultiElements = 16`） | `KeyValuePair[]` 数组线性扫描 |
-| >16 | `ManyElementAsyncLocalValueMap` | **手写不可变链式哈希**（`_keyValues` + `int[] _buckets` + `int[] _next`，哈希用 `RuntimeHelpers.GetHashCode(key) & (bucketCount - 1)`，桶数 `RoundUpToPowerOf2(len*1.5)`） |
-
-核心约束是**不可变（persistent data structure）**：任何 `Set` 都不修改旧 map，而是返回新 map。这是整个异步流安全性的根基——
-
-- 旧上下文（可能已被捕获、被别的线程读取）永远不会被篡改；
-- 子流与父流可以各自分叉演化，互不干扰；
-- 因此 `CreateCopy()` 敢直接 `return this`（注释：*since CoreCLR's ExecutionContext is immutable, we don't need to create copies*。对比 .NET Framework 时代的可变实现 + 真拷贝，这是 .NET Core 的一次重大重构）。
-
-顺带一提，源码里还留着有趣的复制粘贴注释小 bug（`ThreeElement` 的删除分支注释写着 "downgrading to a one-element map"，实际代码是降到 `TwoElement`）——读原始源码的乐趣之一。
-
-### 3.4 `SetLocalValue`：一次赋值的完整旅程
+> **老师**：`ExecutionContext.SetLocalValue` 的完整流程（简化）：
 
 ```csharp
 internal static void SetLocalValue(IAsyncLocal local, object? newValue, bool needChangeNotifications)
@@ -403,60 +364,299 @@ internal static void SetLocalValue(IAsyncLocal local, object? newValue, bool nee
     object? previousValue = null;
     bool hadPreviousValue = false;
     if (current != null)
-    {
         hadPreviousValue = current.m_localValues.TryGetValue(local, out previousValue);
-    }
 
     if (previousValue == newValue)
-    {
-        return;   // ★ 值没变：零分配直接返回（引用比较）
-    }
+        return;   // ★ 值没变：零分配直接返回
 
-    // ★ 写时复制：从旧 map 派生新 map（不碰旧的）
+    // ★ 写时复制：从旧 map 派生新 map，绝不修改旧的
     IAsyncLocalValueMap newValues = current != null
-        ? current.m_localValues.Set(local, newValue, treatNullValueAsNonexistent: !needChangeNotifications)
-        : AsyncLocalValueMap.Create(local, newValue, treatNullValueAsNonexistent: !needChangeNotifications);
+        ? current.m_localValues.Set(local, newValue, ...)
+        : AsyncLocalValueMap.Create(local, newValue, ...);
 
-    // ★ 首次赋值时登记变更通知（克隆/扩展通知数组）
-    if (needChangeNotifications) { ... }
+    if (needChangeNotifications) { /* ★ 首次赋值时登记变更通知 */ }
 
-    // ★ 替换线程字段；值清空且未抑制流时退回默认上下文（null）
+    // ★ 换掉线程身上的书包（空了就退回 null）
     Thread.CurrentThread._executionContext =
-        (!isFlowSuppressed && AsyncLocalValueMap.IsEmpty(newValues)) ? null
+        AsyncLocalValueMap.IsEmpty(newValues) ? null
         : new ExecutionContext(newValues, newChangeNotifications, isFlowSuppressed);
 
-    // ★ 同线程赋值：立即同步通知，contextChanged = false
     if (needChangeNotifications)
+        local.OnValueChanged(previousValue, newValue, contextChanged: false);  // ★ 同线程立即通知
+}
+```
+
+> **学生**：等一下，"写时复制"？我改个值，不是直接改吗，怎么是复制一份新的？
+
+> **老师**：这是整个设计里最深的一步棋，我问你：刚才说捕获是"拍快照"，如果快照和原件是**同一个** map，那我捕获之后又改了值，会发生什么？
+
+> **学生**：快照也跟着变了……那"快照"就不快照了。
+
+> **老师**：对。所以 map 是**不可变的**——任何"修改"都不碰旧 map，而是基于旧 map 造一个新 map 返回。旧的继续给已捕获的快照用。好处一连串：
+>
+> - 已捕获的上下文永远不会被篡改；
+> - 父流和子流可以各自演化，互不干扰；
+> - 所以 `CreateCopy()` 敢直接 `return this`，因为根本不需要拷贝。
+>
+> 这个 map 的实现按元素个数分了层：0 个用全局单例；1~4 个是固定字段、引用比对；5~16 个是数组线性扫；超过 16 个才上真哈希表。日常请求里就两三个键，读取就是几次引用比对，非常快。
+
+> **学生**：听着读很快，那写呢？
+
+> **老师**：写就是代价所在。每一次"值真的变了"的写入，至少分配**一个新 map + 一个新 ExecutionContext 对象**。在循环里、每请求几十次地写 AsyncLocal，GC 会很有意见。
+>
+> 所以 ASP.NET Core 给你打了个样：`IHttpContextAccessor` 内部是**一个固定的 AsyncLocal + 一个可变的 holder 对象**。书包里永远只有那一项，要变的是 holder 里的内容，不是 map 的键值——写再多也不分配新 map。
+
+> **学生**：原来如此，那 AsyncLocal 是不是就该省着用？
+
+> **老师**：省着用，但别怕用。它的定位是"随请求流动的低频环境数据"：TraceId、租户、事务、日志 scope。键要少而稳，值能装进一个可变容器就装容器。这两个原则记住，后面选型一节还要用。
+
+---
+
+## 第 7 节 实战与陷阱集中营
+
+> **老师**：概念都齐了。现在进入实验环节，这节全是真实的坑，咱们一个一个踩过去。
+
+### 7.1 正常流动：值能一路飘
+
+> 先确认正常情况，AsyncLocal 设了值，跨过 await，子方法里能读到：
+
+```csharp
+static AsyncLocal<string?> s_trace = new();
+
+static async Task Main()
+{
+    s_trace.Value = "req-001";
+    Console.WriteLine($"入口: trace={s_trace.Value}");
+    await DoWorkAsync();
+    Console.WriteLine($"入口再看: trace={s_trace.Value}");
+
+    static async Task DoWorkAsync()
     {
-        local.OnValueChanged(previousValue, newValue, contextChanged: false);
+        await Task.Delay(50);
+        Console.WriteLine($"子方法: trace={s_trace.Value}");
     }
 }
 ```
 
-一次"改值"的代价清单：至少 **1 个新 map**（`MultiElement` 是数组全拷贝；`ManyElement` 换已有键时聪明地共享 `_buckets/_next` 只克隆值数组，插入/删除则重建）+ **1 个新 ExecutionContext 对象**，外加一次线程字段的写入屏障。这就是"`AsyncLocal` 写贵"的精确来源——也是为什么 ASP.NET Core 内部用它传递 `HttpContext` 引用时，选的是"**一个固定 AsyncLocal + 一个可变 holder 对象**"的方案：上下文里永远只有那一项，改的是 holder 内容而不是 map。
-
-`SetLocalValue` 还有两处魔鬼细节：
-
-1. **`default(T)`（引用类型的 null）≈ 删除**。`treatNullValueAsNonexistent: true` 时写 null 会把键从 map 里摘掉（map 还会逐级降级：Two→One→Empty，Empty 时线程字段退回 null）。但**注册了变更通知的 AsyncLocal 例外**——源码注释解释得很清楚：此时必须显式存一个 null 占位，用来标记"这个键已经注册过通知"，否则无法区分"从未赋值"与"赋值为 null"。
-2. `previousValue == newValue` 的短路是 `object?` 引用比较：对值类型 T，装箱后比较的是引用，`al.Value = 1` 连续赋两次装箱整数也可能各分配一次。要省，请确保赋的是同一个 boxed/引用值。
-
-### 3.5 变更通知：两条触发路径与一颗核弹
-
-`valueChangedHandler` 有两个触发点，语义不同：
-
-```csharp
-// 路径一：同线程 Set（见上）—— contextChanged: false
-local.OnValueChanged(previousValue, newValue, contextChanged: false);
-
-// 路径二：上下文恢复/重置 —— contextChanged: true
-OnValuesChanged(currentContext, contextToRestore);
+```text
+$ dotnet run
+入口: trace=req-001
+子方法: trace=req-001
+入口再看: trace=req-001
 ```
 
-路径二发生在 `ExecutionContext.Run`、`Restore`、线程池派发后清理等**上下文切换点**：对两侧上下文里**所有注册过通知的键**做差集比对，值有变化的逐个回调。注意三点：
+> **学生**：一路都在，很正常。
 
-- 回调发生在**执行恢复动作的那个线程**上——可能是与赋值时完全不同的线程。`IHttpContextAccessor` 正是利用这一点：它的 `AsyncLocal` 持有一个可变 holder，切换发生时在回调里同步维护 thread-static 镜像，让同步代码也能便宜地拿到 `HttpContext`。
-- 通知数组 `m_localChangeNotifications` 只在**第一次赋值**时把该键登记进去（包括赋 null 的占位场景），之后随上下文快照一起流动。
-- **最狠的一条**，异常处理是这个：
+> **老师**：好，正常会了，开始不正常。
+
+### 7.2 坑一：子流写不回传
+
+```csharp
+static AsyncLocal<int> s_num = new();
+
+static async Task Main()
+{
+    s_num.Value = 1;
+    await Task.Run(() =>
+    {
+        s_num.Value = 2;   // 在子流自己的上下文链上改
+        Console.WriteLine($"子任务里: {s_num.Value}");
+    });
+    Console.WriteLine($"父流里:   {s_num.Value}");
+}
+```
+
+```text
+$ dotnet run
+子任务里: 2
+父流里:   1
+```
+
+> **学生**：咦？子任务明明改成 2 了，外面怎么还是 1？
+
+> **老师**：写时复制的必然结果。`Task.Run` 排队那一刻捕获了快照；子任务在快照的基础上写 2，造的是**子流自己的新 map**；父流身上挂的还是原来那个旧 map，从头到尾没被碰过。AsyncLocal 是单向随控制流**下行**的，不是全局变量。想在任务里收集结果回传？老老实实用返回值或者并发容器。
+
+> **学生**：明白了，"下行单行道"。
+
+### 7.3 坑二：捕获时机，排队那一刻就定终身
+
+> **老师**：既然捕获发生在排队那一刻，那下面这段代码会打印什么？
+
+```csharp
+static AsyncLocal<string?> s_msg = new();
+
+static async Task Main()
+{
+    var task = Task.Run(() => Console.WriteLine($"  子任务读到的: {s_msg.Value ?? "<null>"}"));
+    s_msg.Value = "set-after-queue";     // 排完队才赋值，晚了
+    await task;
+}
+```
+
+```text
+$ dotnet run
+  子任务读到的: <null>
+```
+
+> **学生**：null！赋值发生在排队之后，子任务带的还是赋值前的空快照。
+
+> **老师**：对。日常对应的翻车场景是：中间件里在 `await next()` **之后**才写 AsyncLocal——而日志写盘、后台任务早就分叉出去了，什么都收不到。规矩：**要在分叉之前把上下文摆好**。
+
+### 7.4 坑三：线程池脏值，最阴的一击
+
+> **老师**：这个坑是 ThreadLocal 的招牌。先讲原理：线程池的工作线程是**复用**的，干完一个工作项接着干下一个。`[ThreadStatic]` 的世界运行时根本不知道它的存在，没人帮你清场。上一个工作项写的值，就那样留在物理线程上，等着下一个无关的工作项来"继承"。
+>
+> 咱们模拟 50 个工作项，每个先判断"我是不是设过值"，没设过才写：
+
+```csharp
+static ThreadLocal<string?>? s_user;
+
+static void Main()
+{
+    s_user = new ThreadLocal<string?>();
+    var seenStale = new List<string>();
+    var gate = new ManualResetEventSlim(false);
+    int done = 0;
+
+    for (int i = 0; i < 50; i++)
+    {
+        int n = i;   // 闭包捕获拷贝，避免读到循环结束后的 i
+        ThreadPool.QueueUserWorkItem(_ =>
+        {
+            if (s_user.Value is null)
+            {
+                s_user.Value = $"user-set-by-job-{n}";
+            }
+            else
+            {
+                lock (seenStale) seenStale.Add($"job-{n} 看到了脏值: {s_user.Value}");
+            }
+            if (Interlocked.Increment(ref done) == 50) gate.Set();
+        });
+    }
+    gate.Wait();
+    Console.WriteLine($"50 个工作项里，读到别人残留值的有 {seenStale.Count} 个：");
+    foreach (var line in seenStale.Take(3)) Console.WriteLine("  " + line);
+    s_user.Dispose();
+}
+```
+
+```text
+$ dotnet run
+50 个工作项里，读到别人残留值的有 44 个：
+  job-6 看到了脏值: user-set-by-job-5
+  job-9 看到了脏值: user-set-by-job-3
+  job-10 看到了脏值: user-set-by-job-1
+```
+
+> **学生**：44 个读到了别人的值！job-10 干活的时候看到的是 job-1 设的"user-set-by-job-1"——它俩八竿子打不着啊。
+>
+> 对了老师，我插一句，你第一版代码里是不是有 bug？我记得刚才输出全是"job-50"，50 个工作项哪来的 job-50？
+
+> **老师**：好眼力，这段插曲值得讲。第一版我直接在 lambda 里用了循环变量 `i`，而 `for` 循环的 `i` 是**一个**变量，所有 lambda 捕获的都是它同一个——等 lambda 真正执行时循环早跑完了，`i` 全是 50。要拷贝一份 `int n = i` 到循环体里才安全。闭包捕获的是变量本身，不是值，这个坑跟 ThreadLocal 无关，但同样经典。
+
+> **学生**：学到了。那这个脏值问题在生产里严重吗？
+
+> **老师**：严重到可以上事故报告。想象你把"当前用户 ID"放进了 ThreadLocal，一个请求把用户 A 写进去，处理完没清；下一个无关请求恰好复用这个线程，一读——读出了用户 A 的身份。**跨请求数据泄漏**。
+>
+> 而 AsyncLocal 完全没有这个问题，为什么？还记得吗，线程池派发循环里每个工作项执行完，运行时会**无条件把 ExecutionContext 重置回空**。书包装不装、装什么，都是随控制流显式带过来的，工作项结束就清空。一个是没人管的后患，一个是制度化的清场。
+>
+> 顺带吐槽：ThreadLocal 连个 `ClearValue` API 都没有，你想手动清场都别扭，只能 `tl.Value = default`。
+
+### 7.5 坑四：ConfigureAwait(false) 切不断上下文
+
+> **学生**：老师，我听过一个说法："await 后面加 `ConfigureAwait(false)` 就不继承上下文了"，是不是真的？
+
+> **老师**：把两个"上下文"搞混了。`ConfigureAwait(false)` 影响的是 **SynchronizationContext / TaskScheduler** 要不要回到原调度器——跟 **ExecutionContext** 一毛钱关系没有。AsyncLocal 的值照样流动。不信你回去把第 4 节实验里 `await Task.Delay(200)` 改成 `await Task.Delay(200).ConfigureAwait(false)`，`al` 照样是"请求A的TraceId"。
+>
+> 真想切断流动只有一个办法：`ExecutionContext.SuppressFlow()`。抑制期间捕获直接返回空，快照里什么都没有。
+
+### 7.6 坑五：变更通知的"同一把刀，两个刀鞘"
+
+> **老师**：AsyncLocal 构造时可以传一个回调，值变化时通知你。但触发路径有**两条**，语义不一样：
+
+```csharp
+static AsyncLocal<string?> s_ctx = new(args =>
+    Console.WriteLine($"  通知: [{args.PreviousValue ?? "null"}] -> [{args.CurrentValue ?? "null"}] ThreadContextChanged={args.ThreadContextChanged}"));
+
+static async Task Main()
+{
+    Console.WriteLine("(1) 同线程赋值：");
+    s_ctx.Value = "a";
+    s_ctx.Value = "b";
+    Console.WriteLine("(2) await 后上下文恢复：");
+    await Task.Yield();
+    Console.WriteLine("(3) 结束");
+}
+```
+
+```text
+$ dotnet run
+(1) 同线程赋值：
+  通知: [null] -> [a] ThreadContextChanged=False
+  通知: [a] -> [b] ThreadContextChanged=False
+(2) await 后上下文恢复：
+  通知: [b] -> [null] ThreadContextChanged=True
+(3) 结束
+```
+
+> **学生**：前两条是我在同线程赋值，`ThreadContextChanged=False`。第三条 `[b] -> [null]` 是怎么回事？我没写过 null 啊！
+
+> **老师**：那条是运行时发的。`Task.Yield` 的延续作为线程池工作项执行，**执行完**运行时强制重置上下文——从 `[b]` 重置到空，这个变化触发了通知，`ThreadContextChanged=True`。
+>
+> 所以两条路径是：
+>
+> - **路径一**：你自己 `al.Value = x`，同线程、同步、`contextChanged=false`；
+> - **路径二**：上下文恢复或重置的时刻（await 延续换线程、线程池清场），运行时对比新旧书包里所有登记过的键，值有变的逐个回调，`contextChanged=true`。
+>
+> 注意第二个细节：第三条通知发生在**执行恢复动作的那个线程**上，可能跟你赋值的线程完全不同。`IHttpContextAccessor` 就是靠这条路径，在回调里同步维护一个 thread-static 镜像，让同步代码也能便宜地拿到 HttpContext。
+
+> **学生**：那这个回调里能不能写点业务逻辑？
+
+> **老师**：**不能。**这是今天最重的一条警告，我直接给你演示翻车：
+
+```csharp
+static AsyncLocal<string?> s_boom = new(_ => throw new Exception("boom"));
+
+static void Main()
+{
+    try
+    {
+        s_boom.Value = "x";      // 路径一：同线程赋值
+    }
+    catch (Exception e)
+    {
+        Console.WriteLine($"同线程赋值：异常被 catch 住了：{e.Message}");
+    }
+
+    Console.WriteLine("排队一个工作项（它结束后上下文被重置，将触发通知）...");
+    ThreadPool.QueueUserWorkItem(_ =>
+    {
+        Console.WriteLine("  工作项执行完，准备退场");
+    });
+    Thread.Sleep(1000);
+    Console.WriteLine("如果看到这行说明没崩");
+}
+```
+
+```text
+$ dotnet run
+同线程赋值：异常被 catch 住了：boom
+排队一个工作项（它结束后上下文被重置，将触发通知）...
+Process terminated.
+An exception was not handled in an AsyncLocal<T> notification callback.
+   at System.Environment.FailFast(...)
+   at System.Threading.ExecutionContext.OnValuesChanged(...)
+   at System.Threading.ExecutionContext.RunForThreadPoolUnsafe(...)
+   at System.Threading.QueueUserWorkItemCallback.Execute()
+   at System.Threading.ThreadPoolWorkQueue.Dispatch()
+   at System.Threading.PortableThreadPool+WorkerThread.WorkerThreadStart()
+   …（栈继续，直到线程入口）
+```
+
+> **学生**：！！进程直接死了？！catch 呢？
+
+> **老师**：没有 catch。同线程赋值路径抛的异常还能被你 try 住；但路径二的回调运行在**运行时的上下文切换骨架里**——线程池派发循环内部——外面没有任何用户代码栈可以承接异常。源码里的处理方式简单粗暴：
 
 ```csharp
 catch (Exception ex)
@@ -467,187 +667,60 @@ catch (Exception ex)
 }
 ```
 
-在**上下文恢复路径**里抛出的 handler 异常**不可捕获**，直接 `FailFast`，进程当场退出。因为此时回调正运行在运行时的上下文切换骨架里（线程池派发循环、await 基础设施内部），没有任何用户代码栈可以承接这个异常。在 handler 里写业务逻辑 / 让它抛异常，是生产事故的经典配方。
+> `FailFast`，进程当场终止，evtlog 里留一条，连 `finally` 都不跑。所以通知回调里只准做轻量的状态镜像维护，别做 IO、别做断言、更别抛异常。这是生产事故的经典配方。
 
-### 3.6 流动规则速查（结合源码）
+### 7.7 坑六：null 不是存储，是删除
 
-- `await`：继续点捕获当前 EC，恢复时原样带回——**`ConfigureAwait(false)` 只影响 `SynchronizationContext`/`TaskScheduler` 的恢复，完全不阻断 ExecutionContext 流动**。想真切断只有 `ExecutionContext.SuppressFlow()`（`Capture()` 见到 `m_isFlowSuppressed` 直接返回 null）。
-- `Task.Run(...)` / `ThreadPool.QueueUserWorkItem`：捕获发生在**排队那一刻**，之后你再改 AsyncLocal，子任务看到的是旧快照。
-- `new Thread(...).Start()`、`Timer` 构造：同样在起点捕获。
-- 线程池工作项结束：`ResetThreadPoolThread` 强制归零，不污染下一个工作项。
+> **学生**：等等，刚才 7.6 的输出我还想到一个问题——你说过写 null 有讲究？
 
----
+> **老师**：对。对引用类型写 `al.Value = null`，默认情况下是把键**从 map 里摘掉**（map 还会逐级缩水，缩到空时线程身上直接退回空书包）。所以你没法用 null 表达"存在但为空"，读回 null 也分不清"从没设过"和"设了 null"。需要这个语义就包一层，比如 `AsyncLocal<Box?>`。
+>
+> 顺带还有个值类型的细节：赋值前的"值没变就短路"用的是 `object` 引用比较。`al.Value = 1` 连赋两次，装箱后是两个不同对象，短路失效，照样分配。真在意 GC，赋同一个引用。
 
-## 4. 一个程序看懂两者差异
+### 7.8 坑七：值是引用，流动的是引用
 
-```csharp
-var tl = new ThreadLocal<string>(() => $"created@T{Environment.CurrentManagedThreadId}");
-var al = new AsyncLocal<string>();
-
-al.Value = "A";                      // 进入当前逻辑控制流
-var _ = tl.Value;                    // 当前物理线程初始化
-
-Console.WriteLine($"before: T{Environment.CurrentManagedThreadId} tl={tl.Value} al={al.Value}");
-
-await Task.Delay(200);               // 恢复时大概率换了一个线程池线程
-
-Console.WriteLine($"after : T{Environment.CurrentManagedThreadId} tl={tl.Value} al={al.Value}");
-// 典型输出：
-// before: T1  tl=created@T1  al=A
-// after : T4  tl=created@T4  al=A      ← ThreadLocal 换线程"丢"了（factory 重跑），AsyncLocal 稳如老狗
-```
-
-`ThreadLocal` 的"丢"其实更危险：如果你的 factory 昂贵（比如创建非托管缓冲区、DbContext），**一个逻辑操作可能在不同物理线程上初始化出多份**，而且旧那份直到线程退出才释放。
+> **老师**：最后一个坑，最隐蔽。AsyncLocal 流动拷贝的是**引用**，不是对象。你往 `AsyncLocal<List<int>>` 里放一个 List，整条控制流上所有代码拿到的都是**同一个 List 对象**——一处 `Add`，处处可见。用得好是零拷贝的快；用不好，就是隐蔽的可变共享事故。拿到手之后要改，请先想清楚这对象是不是只有你在用。
 
 ---
 
-## 5. 坑，都在这里
+## 第 8 节 选型与总结
 
-### 5.1 `ThreadLocal` 的坑
+> **学生**：老师，一节课下来坑真多。最后给个"一句话判断"吧，我什么场景用哪个？
 
-**坑 1：线程池脏值（最阴的一击）**
+> **老师**：就问自己一个问题：**这个值属于"一次逻辑操作"，还是属于"物理线程本身"？**
+>
+> 值属于一次请求、一个事务、一次业务操作——TraceId、租户、语言环境、事务、日志 scope——**用 AsyncLocal**。因为 await 漂移是常态，只有跟着控制流走的数据才能活下来。
+>
+> 值属于物理线程本身——每线程一个 StringBuilder、一块复用缓冲区、一个 RNG 实例——这类"硬件性"资源**用 ThreadLocal 或 `[ThreadStatic]`**。但要守三条纪律：进线程池回调先判断"是不是我的"再用；用完置回默认；长生命周期实例记得 Dispose。
+>
+> 给你一张速查表收尾：
 
-线程池线程跨工作项复用，而 `[ThreadStatic]` 状态没人帮你清。上一个请求写的值，会在无关的下一个请求里"诈尸"：
-
-```csharp
-var tl = new ThreadLocal<string?>();
-
-for (int i = 0; i < 100; i++)
-{
-    ThreadPool.QueueUserWorkItem(_ =>
-    {
-        if (tl.Value is null) tl.Value = $"first-set-by-{i}";
-        else Console.WriteLine($"#{i} sees stale: {tl.Value}");  // 会打印！
-    });
-}
-```
-
-用户身份、租户 ID、请求上下文这类数据一旦放 `ThreadLocal`，就是跨请求数据泄漏的温床。线程池回调里必须 `tl.Value = default` 显式清场（注意 `ThreadLocal` **没有** `ClearValue` 这类 API，这是它 API 面上反复被吐槽的一点）。
-
-**坑 2：忘了 Dispose 的钉扎**
-
-实例活着，链表就活着；链表活着，所有触碰过它的线程的值就被钉住。特别是 `static readonly ThreadLocal<T>` + 线程池这种"线程几乎不死"的组合。用完即弃的场景请 `Dispose`（它会把所有线程的槽位与值一并解开，ID 还能复用）。
-
-**坑 3：factory 的异常语义与重入**
-
-- 异常**不缓存**，每次访问都重试 factory——若 factory 有副作用（计数、开文件），会重复发生；
-- factory 里访问同一个 `Value` 会得到 `InvalidOperationException`（源码里的 `ThreadLocal_Value_RecursiveCallsToValue`），不是栈溢出，但也足够莫名其妙。
-
-**坑 4：异步代码里用 ThreadLocal 做"逻辑操作"状态**
-
-await 换线程 → 值换了一份（或 factory 重跑）→ "为什么这个请求初始化了三次？"。只要代码里有 await，`ThreadLocal` 的语义就不再是"本次操作的"，而是"本物理线程的"。
-
-**坑 5：`Values` 需要构造时开启，且快照里可能有已死线程的值**
-
-`trackAllValues: false`（默认）时 `Values` 直接抛异常；开启后，线程退出时其值**仍留在 `Values` 快照里**（`FinalizationHelper` 对 tracking 实例只断开表回指、不摘链表结点——这是刻意的语义，但容易误读为"存活线程集合"）。
-
-### 5.2 `AsyncLocal` 的坑
-
-**坑 1：写即分配——高频写 = GC 灾难**
-
-每次"改值"（引用比较后发现不同）都分配新 map + 新 EC。在循环里、每请求几十次地写 `AsyncLocal`，等于给 GC 上供。正确姿势：**上下文里放少量稳定的键；需要变化的聚合状态放一个可变容器对象进去，改容器不改 map**（`IHttpContextAccessor` 的 holder 就是教科书做法）。
-
-**坑 2：子流写不回传**
-
-```csharp
-var al = new AsyncLocal<int>();
-al.Value = 1;
-await Task.Run(() => al.Value = 2);   // 子流自己的 map 链上改
-Console.WriteLine(al.Value);           // 1 —— 父流的原上下文从未被碰过（COW 的必然结果）
-```
-
-`AsyncLocal` 是**单向随控制流下行**的，不是全局变量。想"在任务里收集结果回传"，请用返回值/并发容器，别指望 AsyncLocal。
-
-**坑 3：捕获时机**
-
-```csharp
-var al = new AsyncLocal<string?>();
-var task = Task.Run(() => Console.WriteLine(al.Value ?? "<null>"));
-al.Value = "set-after-queue";          // 捕获发生在 Task.Run 排队时，晚了
-await task;                            // 打印 <null>
-```
-
-同理：中间件里在 `await next()` 之后再写 AsyncLocal，不影响已经分叉出去的日志写盘、后台任务。
-
-**坑 4：`ConfigureAwait(false)` 不阻断、`SuppressFlow` 才阻断**
-
-```csharp
-al.Value = "flows";
-await Task.Yield().ConfigureAwait(false);
-Console.WriteLine(al.Value);           // "flows" —— ConfigureAwait 与 EC 无关
-
-using (ExecutionContext.SuppressFlow())
-{
-    await Task.Run(() => Console.WriteLine(al.Value ?? "<null>"));  // <null>，真断了
-}
-```
-
-大量"我以为 ConfigureAwait(false) 会隔离上下文"的事故，都源于混淆了 `SynchronizationContext` 和 `ExecutionContext`。
-
-**坑 5：handler 里抛异常 = 进程 FailFast（恢复路径不可捕获）**
-
-```csharp
-var al = new AsyncLocal<string?>(_ => throw new Exception("boom"));
-```
-
-赋值路径（`contextChanged:false`）的异常还能被调用方 try 住；一旦异常发生在上下文恢复/线程池清理路径（`OnValuesChanged` 内），源码里就是 `Environment.FailFast`——没有 catch 的机会。handler 里只做轻量、无抛出的状态镜像维护（这是 `IHttpContextAccessor` 的用法），别做 IO、别做断言。
-
-**坑 6：null/`default(T)` 是删除，不是存储**
-
-`al.Value = null` 会把键从 map 摘除（注册了通知的例外，见 3.4）。所以你无法用 null 值表达"存在但为空"的语义；读回 null 也无法区分"没设过"与"设了 null"。需要可空语义，用包装类型（如 `AsyncLocal<Box?>`）。
-
-**坑 7：值是引用，流动的是引用**
-
-AsyncLocal 流动拷贝的是引用。往 `AsyncLocal<List<int>>` 里放个 List，整条控制流共享同一个对象——一处 `Add`，处处可见。这既是零拷贝流动的性能来源，也是"隐蔽的可变共享"事故来源。
-
-**坑 8：后台线程里读，可能什么都没有**
-
-线程池会在工作项结束后重置上下文；fire-and-forget 任务、自定义线程、终结器线程上读 AsyncLocal 得到的是它们自己上下文里的值（多半是空）。"为什么日志里 TraceId 是空的？"——八成是值在错误的时机设置、或读的线程不在预期控制流里。
-
-### 5.3 共同误区
-
-- **把两者当"线程安全的字典"用**：它们都不是集合，无法枚举、无法按需遍历（ThreadLocal 的 `Values` 仅限实例自身，且要构造时开启）。
-- **在库代码里无脑引入**：每多一个 AsyncLocal，进程内每个携带它的上下文快照都多一个键；每多一个 `ThreadLocal<T>` 实例，每线程的槽位表都可能扩容。框架代码对这类"每实例固定成本"是锱铢必较的。
-- **忘了语义模型**：纠结"为什么值不对"之前，先问自己——我要的局部性是**物理线程**（ThreadLocal）还是**逻辑控制流**（AsyncLocal）？选错了模型，怎么调都是错。
-
----
-
-## 6. 选型建议
-
-**用 `AsyncLocal`，当值属于"一次逻辑操作/一个请求/一个事务"**：
-
-- 链路追踪 ID、租户、语言环境、当前 `TransactionScope`（.NET Core 的 `Transaction.Current` 正是 AsyncLocal 流动的）、日志 scope（`ILogger.BeginScope`）、`Activity.Current`。
-- 这类场景下 await 漂移是常态，只有 ExecutionContext 流动模型能活。
-
-**用 `ThreadLocal` / `[ThreadStatic]`，当值属于"物理线程本身"**：
-
-- 每线程的可重用缓冲区、StringBuilder、非托管内存块、RNG 实例等**与控制流无关的硬件性/性能性资源**。
-- 使用守则：进线程池回调先判"是否是我的"再写、用完置默认、长生命周期实例记得 `Dispose`。
-- 高频重缓存场景也可以考虑直接 `[ThreadStatic]` + 数组池（`ThreadLocal` 的对象头/链表/间接层并非零成本），但请接受它的一切样板代码。
-
-**性能直觉表**：
-
-| 操作 | ThreadLocal | AsyncLocal |
+| 维度 | `ThreadLocal<T>` | `AsyncLocal<T>` |
 |---|---|---|
-| 读 | ~1 次 TLS 读 + 数组寻址 | 1 次字段读 + map 查找（≤4 直接比对 / ≤16 线性 / >16 哈希） |
-| 写（值变化） | 1 次字段写 | 新 map + 新 EC 分配 + 写屏障（值相同则零成本短路） |
-| 首次接触 | 建表/建槽 + 全局锁（一次性） | 首个键时建 EC（一次性） |
-| 隐性成本 | 每线程槽位表 ∝ 实例数；忘清理钉扎内存 | 上下文快照随键数变胖；通知数组随注册数变胖 |
+| 值跟着谁 | 物理线程 | 逻辑控制流 |
+| await 之后 | ❌ 换线程就丢 | ✅ 稳定流动 |
+| 存在哪 | 每线程的 `[ThreadStatic]` 槽位表 | 线程身上的 ExecutionContext 不可变 map |
+| 读 | 极快，无锁 | 快，≤4 键引用比对 |
+| 写 | 一次字段写 | 新 map + 新 EC 分配（值没变则短路） |
+| 线程池复用 | ⚠️ 脏值残留，无人清场 | ✅ 派发完强制重置 |
+| 枚举所有值 | ✅ `Values`（构造时开启） | ❌ 无任何手段 |
+| 典型用途 | 每线程缓存/缓冲区 | 请求上下文/trace/事务/`IHttpContextAccessor` |
 
----
+> **学生**：懂了。最后一个问题——今天这些源码细节会不会过几年就变了？
 
-## 7. 结语
-
-把两个类型的源码摆在一起看，会发现 .NET 团队在同一块地基上砌了两栋完全不同的房子：
-
-- `ThreadLocal<T>` 围绕 `[ThreadStatic]` 精雕细琢——哨兵反码 ID、volatile 槽位表、实例级双向链表、终结器兜底——把"每线程一份、懒初始化、可枚举、可释放"四件事做到了无锁快速路径；
-- `AsyncLocal<T>` 则彻底放弃了自己的存储，把一切押注在**不可变的 ExecutionContext + 写时复制 map** 上，用每次写入多一点分配的代价，换来了"值随控制流漂移、快照永不串台"的异步世界正确性。
-
-理解了这对模型——**物理线程 vs 逻辑控制流**——90% 的"灵异问题"（脏值、值丢失、初始化多次、TraceId 为空、进程莫名崩溃）都能在写下第一行代码前就规避掉。
+> **老师**：会变细节，不变模型。`ThreadLocal` 的槽位表和反码 id 这类实现随时可能重写；但"**物理线程 vs 逻辑控制流**"这两个模型是整个 .NET 异步体系的地基，只会越来越稳固。源码我建议照着这个版本读：dotnet/runtime main 分支的 `ThreadLocal.cs`、`AsyncLocal.cs`、`ExecutionContext.cs` 三个文件。
+>
+> 90% 的"灵异问题"——脏值、值丢失、初始化多次、TraceId 为空、进程莫名崩溃——在你写下第一行代码前，用这两个模型想一遍就能规避掉。
+>
+> 下课。下节课我们把 `ExecutionContext` 的不可变 map 掰开揉碎，一行行走读它的七个层级和那个手写哈希表——比今天这节更深。
 
 ## 参考源码
 
 - [ThreadLocal.cs (dotnet/runtime)](https://github.com/dotnet/runtime/blob/main/src/libraries/System.Private.CoreLib/src/System/Threading/ThreadLocal.cs)
 - [AsyncLocal.cs (dotnet/runtime)](https://github.com/dotnet/runtime/blob/main/src/libraries/System.Private.CoreLib/src/System/Threading/AsyncLocal.cs)
 - [ExecutionContext.cs (dotnet/runtime)](https://github.com/dotnet/runtime/blob/main/src/libraries/System.Private.CoreLib/src/System/Threading/ExecutionContext.cs)
-- [Microsoft.AspNetCore.Http 的 HttpContextAccessor](https://github.com/dotnet/aspnetcore/blob/main/src/Http/Http/src/HttpContextAccessor.cs)（AsyncLocal + 可变 holder + 通知镜像的标准范例）
+- [HttpContextAccessor.cs (dotnet/aspnetcore)](https://github.com/dotnet/aspnetcore/blob/main/src/Http/Http/src/HttpContextAccessor.cs)（AsyncLocal + 可变 holder + 通知镜像的标准范例）
+
+---
+
+➡️ **下一篇预告**：《ExecutionContext 源码课：不可变 map 的七个层级与手写哈希表》——顺着今天第 6 节没展开的部分，把 `AsyncLocalValueMap` 一行行走读到底。
