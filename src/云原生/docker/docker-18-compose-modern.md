@@ -244,6 +244,14 @@ fa94ae245d1f                                  # ← 记住这个 ID，下面几�
 
 ```bash
 sed -i 's/VERSION = "v2"/VERSION = "v3"/' app/main.py
+
+# sed —— 流编辑器（stream editor），用于处理文本。
+# -i —— 直接修改原文件（in-place）。不加 -i 只会预览结果，不会真正改动文件。
+# 's/VERSION = "v2"/VERSION = "v3"/' —— 替换指令：
+# s 表示替换（substitute）
+# 第一个斜杠之间的 VERSION = "v2" 是要查找的原内容
+# 第二个斜杠之间的 VERSION = "v3" 是替换成的新内容
+# app/main.py —— 要操作的目标文件路径
 ```
 
 五秒后看页面：
