@@ -51,9 +51,26 @@ description: 师生对话实录课：0 基础学生与教学大师的 Compose �
 
 **🧑‍🏫 老师：**
 
-先搭台。全文围绕一个小工程滚：Flask 小应用（`web`，自己 build）+ Redis（`db`）。四个文件全部可照抄：
+先搭台。全文围绕一个小工程滚：Flask 小应用（`web`，自己 build）+ Redis（`db`）。先把目录建好，本文所有命令都默认在这个目录里执行：
 
-**app/main.py**
+```bash
+mkdir -p /root/compose-modern/app
+cd /root/compose-modern
+```
+
+一共 5 个文件，布局先看一眼，内容全部可照抄：
+
+```text
+/root/compose-modern
+├── app/
+│   ├── main.py
+│   ├── app.conf
+│   └── requirements.txt
+├── Dockerfile
+└── compose.yaml
+```
+
+**① app/main.py**
 
 ```python
 import redis
@@ -73,20 +90,20 @@ if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=True)   # debug=True: Werkzeug 热重载
 ```
 
-**app/app.conf**
+**② app/app.conf**
 
 ```
 Modern Compose Lab
 ```
 
-**app/requirements.txt**
+**③ app/requirements.txt**
 
 ```
 flask==3.1.0
 redis==5.2.1
 ```
 
-**Dockerfile**
+**④ Dockerfile**
 
 ```dockerfile
 FROM python:3.12-slim
@@ -99,7 +116,7 @@ EXPOSE 8000
 CMD ["python", "main.py"]
 ```
 
-**compose.yaml**
+**⑤ compose.yaml**
 
 ```yaml
 services:
@@ -115,7 +132,7 @@ services:
 
 这个工程刻意安排了三类文件：`main.py` 是**源码**（改了想立刻生效）、`app.conf` 是**启动时读一次的配置**（改了得重启进程）、`requirements.txt` 是**依赖**（改了必须重装）。后面整篇都在回答同一个问题：三类文件，各自的改动怎么用最小的代价到达容器。
 
-起来：
+5 个文件都保存后，第一次起来（首次构建要拉 `python:3.12-slim` 和 redis 镜像，视网络等上一两分钟）：
 
 ```bash
 docker compose up -d --build
@@ -180,9 +197,16 @@ $ curl -s localhost:8100
 
 **🧑‍🏫 老师：**
 
-给 web 挂上 watch 规则（compose.yaml 里 services.web 下加一段，其余不动）：
+给 web 挂上 watch 规则。在 services.web 下加一段 `develop:`，改完后的 compose.yaml 全文如下（新增的只有缩进 4 格的那段）：
 
 ```yaml
+services:
+  web:
+    build: .
+    ports:
+      - "8100:8000"
+    depends_on:
+      - db
     develop:
       watch:
         - action: sync
@@ -196,6 +220,8 @@ $ curl -s localhost:8100
           target: /etc/app/app.conf
         - action: rebuild
           path: ./app/requirements.txt
+  db:
+    image: redis:latest
 ```
 
 先别管三种 action 的区别，下一课起逐个实测。读法只有两个要点：每条规则是「**盯哪个路径**（path）+ **怎么反应**（action）」，sync 类的还有「**落到容器哪里**（target）」；`ignore` 的相对路径基准是**本条规则的 path**——`path: ./app` 下写 `app.conf`，指的是 `./app/app.conf`，不是项目根。
@@ -205,6 +231,8 @@ $ curl -s localhost:8100
 ```bash
 nohup docker compose watch web > watch.log 2>&1 &
 ```
+
+想盯着它干活就 `tail -f watch.log`，看完 `Ctrl+C` 退出 tail——watch 本体继续在后台跑。
 
 **第一个坑当场就踩**：watch 刚启动，先干了一件看起来吓人的事——把 web 容器重建了一次。看日志：
 
@@ -240,7 +268,7 @@ fa94ae245d1f                                  # ← 记住这个 ID，下面几�
 
 **🧑‍🏫 老师：**
 
-第一档待遇：`sync`。把 `main.py` 的版本号 v2 改成 v3，模拟你按下保存：
+当前现场：watch 已启用、web 容器 ID 是 `fa94ae245d1f`、页面显示 v2。第一档待遇：`sync`。把 `main.py` 的版本号 v2 改成 v3，模拟你按下保存：
 
 ```bash
 sed -i 's/VERSION = "v2"/VERSION = "v3"/' app/main.py
@@ -290,7 +318,7 @@ Syncing service "web" after 2 changes were detected
 
 **🧑‍🏫 老师：**
 
-第二档：`sync+restart`，伺候「启动时读一次」的文件。把站名改掉：
+当前现场：页面已是 v3，容器 ID 没变过。第二档：`sync+restart`，伺候「启动时读一次」的文件。把站名改掉：
 
 ```bash
 echo "Modern Compose Lab (renamed)" > app/app.conf
@@ -337,7 +365,29 @@ service(s) ["web"] restarted
 
 好眼力，这正是 watch 规则里最容易含糊的地方。网上有个流传的说法是「两条都触发，restart 兜底」。**我不信传闻，直接做实验**：把 sync 规则的 `ignore` 整段删掉（现在两条规则赤裸裸地重叠），改 app.conf，两个落点都检查。
 
-第一次实验（改 app.conf 为 `Overlap Demo Conf`），看 sync 规则的落点 `/app/app.conf`：
+完整步骤四步，一步别跳——**改了 compose.yaml 必须重启 watch**：它把规则读进内存之后就不看文件了，不重启等于没改。
+
+**第 1 步**，停掉现在跑着的 watch：
+
+```bash
+pkill -f "docker compose watch"    # 停掉后台长驻进程
+```
+
+**第 2 步**，编辑 compose.yaml，把 sync 规则里的 `ignore` 三行删掉，删完这条规则只剩：
+
+```yaml
+        - action: sync
+          path: ./app
+          target: /app
+```
+
+**第 3 步**，用第 2 课同款命令重启 watch（配置变了，它会先把 web 重建一遍——和第 2 课一样，等 `Watch enabled` 出现再动手）：
+
+```bash
+nohup docker compose watch web > watch.log 2>&1 &
+```
+
+**第 4 步**，改 app.conf，检查两个落点。第一次实验（改成 `Overlap Demo Conf`），看 sync 规则的落点 `/app/app.conf`：
 
 ```bash
 $ docker compose exec -T web cat /app/app.conf
@@ -371,6 +421,8 @@ note-from-host                                 # ← sync 规则正常工作
 
 结论清楚了，而且**纠正了流传的说法**（至少在 Compose v5.5.0 上）：**精确到单文件的规则会把文件「独占」，广域规则自动让位**——不打架、不重复、不需要靠 ignore 保正确。那 ignore 还写它干嘛？两个字：**性能与清洁**。别把 `node_modules/`、宿主侧依赖清单这种东西灌进容器——官方举例的正是 Node 项目原生模块跨平台必炸的场景。ignore 是给「广域规则没有精确规则接管的地盘」划边界的。
 
+**实验收尾**：把 `ignore` 三行加回 compose.yaml（第 2 课的原文），再按本节第 1、3 步把 watch 重启一次——后面第 5 课还要用它，照旧等 `Watch enabled` 再继续。
+
 一句话收口：
 
 > **重叠时精确规则独占文件（v5.5.0 实测两次验证）；ignore 管的不是正确性，是别把不该送的送进去。**
@@ -381,7 +433,7 @@ note-from-host                                 # ← sync 规则正常工作
 
 **🧑‍🏫 老师：**
 
-第三档：`rebuild`。给依赖清单追加一个真依赖：
+当前现场：watch 已带着完整的 ignore 规则重启（插问 2 收尾），页面 v3、站名已改。第三档：`rebuild`。给依赖清单追加一个真依赖：
 
 ```bash
 echo "ujson==5.10.0" >> app/requirements.txt
@@ -413,6 +465,12 @@ watch.log 的关键行：`Image compose-modern-web Building` → `Container comp
 
 还有一条边界规则：watch 只对**带 `build:` 的服务**生效——纯 `image:` 的服务没得 watch（没有构建过程，rebuild 无从谈起；文件同步对别人的镜像也多半是越权）。
 
+**实验收尾**：三档全部验完，把后台的 watch 收掉——第 6 课起要大改 compose.yaml，而它只认启动那一刻读进内存的规则，留着只会碍事：
+
+```bash
+pkill -f "docker compose watch"
+```
+
 一句话总结本课：
 
 > **rebuild = 重走 Dockerfile 换镜像换容器；依赖变更没有任何捷径，三档里它最重，也只在真正需要时用。**
@@ -439,7 +497,7 @@ watch.log 的关键行：`Image compose-modern-web Building` → `Container comp
 
 **🧑‍🏫 老师：**
 
-第二个烦人时刻：编排越写越长，但里面一半的服务是「偶尔用」。给工程加两个这样的角色——管理后台（偶尔看看）和一次性迁移工具（用完就走）：
+第二个烦人时刻：编排越写越长，但里面一半的服务是「偶尔用」。后台的 watch 已在第 5 课末尾收掉，这节课起改 compose.yaml 不用再顾虑它。给工程加两个这样的角色——管理后台（偶尔看看）和一次性迁移工具（用完就走）——原样追加到 compose.yaml 的 `services:` 下，与 web 平级：
 
 ```yaml
   admin-portal:
@@ -487,9 +545,14 @@ db             Up 5 minutes
 web            Up About a minute
 ```
 
-多组用空格连写多个 `--profile`；环境变量 `COMPOSE_PROFILES=debug,tools` 适合写进 shell 配置；`--profile "*"` 全开。用完单停它不碍主线：`docker compose stop admin-portal`。
+多组用空格连写多个 `--profile`；环境变量 `COMPOSE_PROFILES=debug,tools` 适合写进 shell 配置；`--profile "*"` 全开。看完就把 admin-portal 单独停掉——它躺成 `Exited (0)` 的这个状态先留着，第 9 课的 `ps -a` 里还会见到它：
 
-最后是一一次性工具的正确姿势——`run` 显式点名时，目标服务的 profile **自动激活**，连旗标都不用带：
+```bash
+$ docker compose stop admin-portal
+ Container compose-modern-admin-portal-1 Stopped
+```
+
+最后是一次性工具的正确用法——`run` 显式点名时，目标服务的 profile **自动激活**，连旗标都不用带：
 
 ```bash
 $ docker compose run --rm migrate
@@ -509,7 +572,11 @@ migrate one-off done
 
 **🧑‍🏫 老师：**
 
-第三个烦人时刻：十个仓库各贴一份 redis 定义。做法是「公共部分抽成独立文件，主文件一行拉进来」。把 db 搬出去：
+第三个烦人时刻：十个仓库各贴一份 redis 定义。做法是「公共部分抽成独立文件，主文件一行拉进来」。先建目录，再把 db 搬出去：
+
+```bash
+mkdir -p common
+```
 
 **common/redis.yaml**
 
@@ -519,7 +586,7 @@ services:
     image: redis:latest
 ```
 
-**compose.yaml（顶部加两行，db 段删除）**
+**compose.yaml 全文（顶部加两行 include，db 段整个删掉，其余原样保留）**
 
 ```yaml
 include:
@@ -532,7 +599,32 @@ services:
       - "8100:8000"
     depends_on:
       - db        # db 来自 include，依赖照常引用
-  # ……（develop watch、profiles 部分原样保留）
+    develop:
+      watch:
+        - action: sync
+          path: ./app
+          target: /app
+          ignore:
+            - app.conf
+            - requirements.txt
+        - action: sync+restart
+          path: ./app/app.conf
+          target: /etc/app/app.conf
+        - action: rebuild
+          path: ./app/requirements.txt
+  admin-portal:
+    image: nginx:latest
+    ports:
+      - "8081:80"
+    profiles:
+      - debug
+  migrate:
+    image: python:3.12-slim
+    command: python -c "print('migrate one-off done')"
+    depends_on:
+      - db
+    profiles:
+      - tools
 ```
 
 验证拆分后模型里 db 还在：
@@ -569,7 +661,7 @@ $ docker compose up -d && curl -s localhost:8100
 
 **🧑‍🏫 老师：**
 
-最后一个烦人时刻有点不一样，它烦的不是「每次」，而是「每次都要记得」。场景：应用启动前得先往 Redis 里播一条种子数据（真实项目里就是数据库迁移、修目录权限这类前置活）。**第 16 篇的老写法**是一次性服务：
+当前现场：compose.yaml 是第 7 课的 include 版（web、admin-portal、migrate 三个服务，db 在 common/redis.yaml），后台已无 watch。最后一个烦人时刻有点不一样，它烦的不是「每次」，而是「每次都要记得」。场景：应用启动前得先往 Redis 里播一条种子数据（真实项目里就是数据库迁移、修目录权限这类前置活）。**第 16 篇的老写法**是一次性服务：
 
 ```yaml
 services:
@@ -596,14 +688,49 @@ r.set("seed_msg", "seeded-by-pre-start")
 print("seed ok: seed_msg written to db")
 ```
 
-Dockerfile 加一行 `COPY app/seed.py .`，compose.yaml 的 web 段加两行：
+两处改动，都给了全文照抄：
 
-```yaml
-    pre_start:
-      - command: ["python", "seed.py"]
+**Dockerfile**——在 `COPY app/main.py .` 下面加一行，改完全文：
+
+```dockerfile
+FROM python:3.12-slim
+WORKDIR /app
+COPY app/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+COPY app/main.py .
+COPY app/seed.py .
+COPY app/app.conf /etc/app/app.conf
+EXPOSE 8000
+CMD ["python", "main.py"]
 ```
 
-重建启动：
+**compose.yaml**——`pre_start:` 与 `develop:` 平级，加在 web 服务里：
+
+```yaml
+  web:
+    build: .
+    ports:
+      - "8100:8000"
+    depends_on:
+      - db
+    pre_start:                      # ← 新增：与 develop 平级
+      - command: ["python", "seed.py"]
+    develop:
+      watch:
+        - action: sync
+          path: ./app
+          target: /app
+          ignore:
+            - app.conf
+            - requirements.txt
+        - action: sync+restart
+          path: ./app/app.conf
+          target: /etc/app/app.conf
+        - action: rebuild
+          path: ./app/requirements.txt
+```
+
+重建启动（后台 watch 已收掉，`down`/`up` 随便做）：
 
 ```bash
 $ docker compose down && docker compose up -d --build
@@ -636,6 +763,20 @@ $ curl -s localhost:8100
 **🧑‍🏫 老师：**
 
 规则没骗人，是你被镜像骗了——我踩的是同一个坑。推理一遍：你改的是**宿主机上**的 seed.py，而 pre_start 步骤「继承服务镜像」，跑的是**镜像里**那份。`up -d` 不带 `--build` 时用的是旧镜像——里面装的还是旧的成功版 seed.py。宿主上那个 exit 1 的新版，从头到尾没进过容器。
+
+复现的完整步骤。先把 seed.py 整个替换成会失败的版本：
+
+```python
+import redis
+import sys
+
+r = redis.Redis(host="db", port=6379)
+r.set("seed_msg", "seeded-by-pre-start")
+print("seed ok: seed_msg written to db")
+sys.exit(1)   # ← 假装播种失败
+```
+
+然后 down、再 up——**故意不带 `--build`**：
 
 ```bash
 $ docker compose down && docker compose up -d
@@ -676,7 +817,7 @@ service "web" pre_start[0] exited with code 1     # ← 阻断发生
 ```bash
 $ docker compose ps -a --format "table {{.Service}}\t{{.Status}}"
 SERVICE        STATUS
-admin-portal   Exited (0) 2 minutes ago    # ← 上一课我们自己 stop 的，不是残留
+admin-portal   Exited (0) 2 minutes ago    # ← 第 6 课我们亲手 stop 的，不是残留
 db             Up 6 seconds
 web            Created                     # ← 卡在「已创建、未启动」
 
@@ -686,7 +827,15 @@ connection refused                          # ← 门根本没开
 
 `web Created` 这五个字母就是第 8 课第 1 条规则的实物证据：容器已经创建（卡位占好、网络已接、卷已挂），就因为前置任务 exit 1，永远没等到 `Started`——**「创建之后、启动之前」这个时间点，被你亲眼看到了**。
 
-把 seed.py 改回成功版、`up -d --build`，一切复原。最后用一张表给新老写法定案（官方文档同款结论）：
+最后把现场复原——seed.py 删掉那两处改动（`import sys` 和末尾的 `sys.exit(1)`），改回第 8 课的成功版，再带 `--build` 起一遍：
+
+```bash
+$ docker compose up -d --build
+$ curl -s localhost:8100
+[Modern Compose Lab (renamed)] v3 seed=seeded-by-pre-start   # ← 能播回种子就是复原了
+```
+
+一切复原。最后用一张表给新老写法定案（官方文档同款结论）：
 
 | | 一次性服务（老） | pre_start（新） |
 |---|---|---|
@@ -708,10 +857,12 @@ connection refused                          # ← 门根本没开
 
 **🧑‍🏫 老师：**
 
-`pre_start` 还有两个兄弟，一秒分清：**pre_start 在容器外跑（自己的一次性容器），post_start/pre_stop 在服务容器里面跑**——它们是「钩子」，不是容器。给 web 挂一个留痕：
+`pre_start` 还有两个兄弟，一秒分清：**pre_start 在容器外跑（自己的一次性容器），post_start/pre_stop 在服务容器里面跑**——它们是「钩子」，不是容器。给 web 挂一个留痕——`post_start:` 与 `pre_start:` 平级，加完后 web 的生命周期段长这样：
 
 ```yaml
-    post_start:
+    pre_start:
+      - command: ["python", "seed.py"]
+    post_start:                    # ← 新增：与 pre_start 平级
       - command: ["sh", "-c", "echo post_start hook ran at $(date) > /tmp/hook.txt"]
 ```
 
@@ -767,18 +918,41 @@ post_start hook ran at Tue Aug 25 07:46:25 UTC 2026
 6. **钩子 → post_start/pre_stop 在容器里跑**，与容器外的 pre_start 一墙之隔。
 7. **单机天花板 → 三信号**：跨机、自愈、滚动发布，毕业去 Swarm/K8s，概念同构带走。
 
-**自己跑一遍**（照抄第 1 课四个文件）：
+**自己跑一遍**（建 `/root/compose-modern`，照抄第 1 课的 5 个文件，按课序往下走；每一步的完整操作都在对应课里）：
 
 ```bash
-docker compose up -d --build → curl localhost:8100
-→ 挂 watch：改 main.py 看容器 ID 不变 → 改 app.conf 看 Restarting → 加依赖看 Recreated
-→ 加 profiles：up 不带组 → --profile debug（注意旗标位置）→ run --rm migrate
-→ db 拆进 common/redis.yaml，include 拉回
-→ 加 pre_start：播种成功 → seed.py 改 exit 1，up -d --build，亲眼看 web 卡在 Created
-→ 挂 post_start 钩子，进容器 cat /tmp/hook.txt
+# ① 起工程，体验「改一行没用」（第 1 课）
+docker compose up -d --build && curl localhost:8100
+sed -i 's/VERSION = "v1"/VERSION = "v2"/' app/main.py   # 改了也白改——先记下这个痛
+
+# ② watch 三档待遇（第 2-5 课）：先在 compose.yaml 加 develop.watch 三条规则
+nohup docker compose watch web > watch.log 2>&1 &       # 等日志出现 Watch enabled
+sed -i 's/VERSION = "v2"/VERSION = "v3"/' app/main.py  # sync：容器 ID 不变
+echo "Modern Compose Lab (renamed)" > app/app.conf      # sync+restart：Restarting
+echo "ujson==5.10.0" >> app/requirements.txt            # rebuild：Recreated
+pkill -f "docker compose watch"
+
+# ③ profiles 按需分组（第 6 课）：compose.yaml 加 admin-portal / migrate
+docker compose up -d                          # 不点名，它俩不起
+docker compose --profile debug up -d          # 旗标放子命令前面
+docker compose run --rm migrate               # run 点名即激活
+docker compose stop admin-portal              # 看完就停
+
+# ④ include 拆公共编排（第 7 课）：db 段剪进 common/redis.yaml，顶部加 include
+docker compose config --services              # db 还在模型里
+
+# ⑤ pre_start 播种与失败阻断（第 8-9 课）：seed.py 入镜像，web 加 pre_start
+docker compose down && docker compose up -d --build      # 播种成功
+#   把 seed.py 改成 sys.exit(1) 结尾（记得 import sys），再：
+docker compose down && docker compose up -d --build      # 亲眼看 web 卡在 Created
+#   删掉 sys.exit(1)，再 up -d --build 复原
+
+# ⑥ post_start 钩子（第 10 课）：web 加 post_start 后
+docker compose up -d --force-recreate web
+docker compose exec web cat /tmp/hook.txt
 ```
 
-**清理现场**：`docker compose --profile debug down`（实验目录 `/root/compose-modern` 保留，可重做）。
+**清理现场**：`pkill -f "docker compose watch"`（若还在跑）+ `docker compose --profile debug down`（实验目录 `/root/compose-modern` 保留，可重做）。
 
 **思考题**：同事说「我改了 seed.py，`up -d` 之后种子逻辑没更新，这 pre_start 是坏的」——他大概漏了哪两件事？（提示：插问 4 的镜像陷阱 + 第 8 课的跳过语义，两个答案其实是一件事的两面。）
 

@@ -57,7 +57,13 @@ root           9       2  0 14:19 ?        00:00:00 plan9 --control-socket 7 --l
 root          81       1  0 14:19 ?        00:00:00 /lib/systemd/systemd-journald
 ```
 
-宿主机 1393 个进程；PID 1 是 `/sbin/init`（systemd，万进程之祖）。两处环境细节：本机是 WSL，所以 PID 2 是 `/init`、9 号是 plan9（WSL 特有的 9P 文件系统服务）——普通发行版上 2 号常是 `kthreadd`；1393 这个数偏大是因为我这台机器上正跑着一堆活儿，普通服务器几百行很常见。都不影响结论。
+宿主机 1393 个进程；PID 1 是 `/sbin/init`（systemd，万进程之祖）。两处环境细节：
+
+本机是 WSL，所以 PID 2 是 `/init`
+
+9 号是 plan9（WSL 特有的 9P 文件系统服务）——普通发行版上 2 号常是 `kthreadd`；
+
+1393 这个数偏大是因为我这台机器上正跑着一堆活儿，普通服务器几百行很常见。都不影响结论。
 
 现在请出本篇主角，进它肚子里看同样的三样：
 
@@ -85,9 +91,17 @@ bin dev etc home lib lib64 proc root sys tmp usr var
 | PID 1 | `/sbin/init` | **你起的 `sleep 600`** |
 | hostname | `pc3507` | `a2e75a7299b3` |
 
-细节别放过：第一行长十六进制是 `docker run` 返回的**容器 ID**，hostname `a2e75a7299b3` 正是它的**前 12 位**——Docker 默认拿容器 ID 当主机名。进程表里的 7 号是 `exec` 派进来的 `ps` 自己。还有第四个不一样：`ls /` 装的是 busybox 镜像的内容，宿主机 `/etc` 里的东西一样看不到。
+细节别放过：
 
-四个现象分别压在 PID（进程表+PID 1）、UTS（hostname）、MNT（根目录）三类 namespace 上。今天的路线就是逐个拆穿。先记总纲：**容器不是新机器，而是「创建进程那一刻被换过视图的普通进程」**——同一张内存、同一个内核，它翻的每册「资源清单」都是单独印的。这个「清单」就是 Linux Namespaces。
+第一行长十六进制是 `docker run` 返回的**容器 ID**
+
+hostname `a2e75a7299b3` 正是它的**前 12 位**——Docker 默认拿容器 ID 当主机名。
+
+进程表里的 7 号是 `exec` 派进来的 `ps` 自己。还有第四个不一样：`ls /` 装的是 busybox 镜像的内容，宿主机 `/etc` 里的东西一样看不到。
+
+四个现象分别压在 PID（进程表+PID 1）、UTS（hostname）、MNT（根目录）三类 namespace 上。今天的路线就是逐个拆穿。
+
+先记总纲：**容器不是新机器，而是「创建进程那一刻被换过视图的普通进程」**——同一张内存、同一个内核，它翻的每册「资源清单」都是单独印的。这个「清单」就是 Linux Namespaces。
 
 一句话总结本课：
 
@@ -113,16 +127,30 @@ docker inspect -f '{{.State.Pid}}' ns-lab
 
 ```bash
 ps -o pid,ppid,user,args -p 68973
-grep NSpid /proc/68973/status
-docker top ns-lab
-```
 
-```text
+## ================================================================================
     PID    PPID USER     COMMAND
   68973   68949 root     sleep 600
-NSpid:	68973	1
+## ================================================================================
+
+
+grep NSpid /proc/68973/status
+## ================================================================================
+## NSpid:	68973	1
+## 
+## 第一个数字	68973	该进程在宿主机（最外层） 的 PID
+## 第二个数字	1	该进程在它所在的 PID Namespace（容器内） 的 PID
+## 这个进程在宿主机上叫 68973，但在它自己的"小世界"里，它觉得自己是 1 号进程（老大）。
+## 所以这个进程在容器里"以为"自己是皇帝（PID 1），但在宿主机眼里，它只是个编号 68973 的小弟。
+## ================================================================================
+
+
+
+docker top ns-lab
+## ================================================================================
 UID    PID    PPID  C STIME TTY  TIME CMD
 root  68973  68949  0 16:31  ?   00:00:00  sleep 600
+## ================================================================================
 ```
 
 逐行拆：
@@ -197,6 +225,7 @@ Docker 在 `docker run` 时创建 OCI Spec（容器怎么造的标准说明书�
 插问 1 的说法空口无凭，把隔离当场关掉试试——同一个 busybox 镜像，只多一个参数：
 
 ```bash
+## --pid=host	关键：让容器使用宿主机的 PID Namespace，而不是自己独立的
 docker run --rm --pid=host busybox ps -ef
 ```
 
@@ -210,9 +239,71 @@ docker run --rm --pid=host busybox ps -ef
 
 init、journald、udevd——宿主机全家都在。（花括号里是内核记账用的进程短名 comm，不是花屏。）
 
+同样的逻辑 ，所有 `--xxx=host` 的本质就是：**创建容器时少给对应的 `CLONE_NEWxxx` flag**。
+
+```bash
+--net=host      # 少给 CLONE_NEWNET，直接生在宿主网络 namespace
+--ipc=host      # 少给 CLONE_NEWIPC，直接生在宿主 IPC namespace
+--uts=host      # 少给 CLONE_NEWUTS，直接生在宿主 UTS namespace
+--user=host     # 少给 CLONE_NEWUSER，直接生在宿主 USER namespace
+```
+
 因为 `--pid=host` 少给了 `CLONE_NEWPID`，**这个孩子直接生在宿主机的 PID namespace 里**。对照第 1 课的 ns-lab：同一个镜像，看到的进程表完全两个世界——差别只在创建那一刻给不给某个 flag。隔离不是容器的固有魔法，是一串可以拆装的开关。
 
-什么时候真的需要开它：容器里的诊断工具要看全机进程（比如 node-exporter 这类监控agent）。代价也明显——看得到就意味着可能 `kill` 得到，非必要不开。
+那么,什么时候真的需要开它？有些工具需要**采集整个宿主机的进程信息**，例如：
+
+| 工具              | 需要看全机进程的原因                                    |
+| :---------------- | :------------------------------------------------------ |
+| **node-exporter** | Prometheus 的监控 agent，需要采集 CPU/内存/进程数等指标 |
+| **datadog-agent** | 全机性能监控                                            |
+| **falco**         | 安全审计，需要监控所有进程行为                          |
+| **top/htop**      | 看全机资源占用                                          |
+
+这些工具如果放在容器里跑，默认只能看到容器自己的进程（因为 PID namespace 隔离），看不到宿主机上的其他进程和容器。所以需要用 `--pid=host`。
+
+但是同时，代价也明显——看得到就意味着可能 `kill` 得到，非必要不开。
+
+在Linux源码里面
+
+整个流程如下：
+
+```
+用户空间程序 (Docker/runc/你自己的C程序)
+    ↓ 调用
+系统调用 clone() ← 这里！
+    ↓ 陷入内核
+Linux 内核
+    ↓ 处理
+创建新进程 + 应用 Namespace 标志
+```
+
+具体的代码示例如下：
+
+```c
+// 这是用户空间的 C 代码，写在你的程序里
+#define _GNU_SOURCE
+#include <sched.h>
+
+int main() {
+    char stack[1024 * 1024];
+    pid_t pid = clone(child_func, stack + 1024*1024, 
+                      CLONE_NEWPID | CLONE_NEWNET, NULL);
+    //          ↑
+    //    这是 glibc 提供的系统调用包装函数
+}
+
+// kernel/fork.c
+pid_t kernel_clone(struct kernel_clone_args *args)
+{
+    // 检查是否有 CLONE_NEWPID 标志
+    if (args->flags & CLONE_NEWPID)
+        create_new_pid_namespace(args);  // ← 创建新的 PID namespace
+    
+    return copy_process(args);  // 复制进程
+}
+```
+
+
 
 一句话总结本课：
 

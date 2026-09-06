@@ -91,6 +91,8 @@ docker run -d --name tf-sleep busybox sleep infinity
 ```bash
 docker top tf-sleep
 ps -eo pid,ppid,comm,args | grep 'sleep infinity' | grep -v grep
+
+# grep -v grep	排除 grep 命令自身（避免匹配到 grep 本身）
 ```
 
 ```text
