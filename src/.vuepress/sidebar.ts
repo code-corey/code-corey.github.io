@@ -529,6 +529,58 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-09-06",
+      icon: "folder",
+      prefix: "2026-09-06/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-2026-09-06 今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-Grep 打败 LSP？智能体工具选型",
+          link: "01-grep-beats-lsp",
+        },
+        {
+          text: "02-HydraFusion 多模型编排",
+          link: "02-hydrafusion-multi-model-orchestration",
+        },
+        {
+          text: "03-unlazy 反偷懒技能",
+          link: "03-unlazy-agent-skill",
+        },
+        {
+          text: "04-reverify 确定性核查工具",
+          link: "04-reverify-claim-checking",
+        },
+        {
+          text: "05-轨迹变环境：Terminal-Universe",
+          link: "05-terminal-universe",
+        },
+        {
+          text: "06-LLaDA-Image 全开源配方",
+          link: "06-llada-image",
+        },
+        {
+          text: "07-GPT-6 Astra 发布",
+          link: "07-gpt6-astra-release",
+        },
+        {
+          text: "08-Nvidia 收购 HF 冲击波",
+          link: "08-nvidia-huggingface-gerganov",
+        },
+        {
+          text: "09-智能体留言板事件",
+          link: "09-openai-agent-message-board",
+        },
+        {
+          text: "10-MiniMax 出海沙特",
+          link: "10-minimax-saudi-sovereign",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
