@@ -581,6 +581,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-09-07",
+      icon: "folder",
+      prefix: "2026-09-07/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-09-07 今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-GPT-6 Astra 评审实测",
+          link: "01-gpt6-astra-code-review-eval",
+        },
+        {
+          text: "02-Git 原生 Agent 记忆",
+          link: "02-okf-agent-memory",
+        },
+        {
+          text: "03-开源短视频流水线",
+          link: "03-short-video-generator-ai",
+        },
+        {
+          text: "04-最薄 Mac Agent 层",
+          link: "04-browser-use-macos-harness",
+        },
+        {
+          text: "05-经验何时该作废",
+          link: "05-knowing-when-not-to-reuse",
+        },
+        {
+          text: "06-DRACO 长程训练",
+          link: "06-draco-dynamic-rubrics",
+        },
+        {
+          text: "07-GPT-6 Astra 发布",
+          link: "07-gpt6-astra-launch",
+        },
+        {
+          text: "08-OpenAI 掐断 Cursor",
+          link: "08-openai-cuts-cursor",
+        },
+        {
+          text: "09-LLM 认知病毒论",
+          link: "09-llms-cognitive-virus",
+        },
+        {
+          text: "10-国产模型调用量登顶",
+          link: "10-china-llm-usage-hy4",
+        },
+        {
+          text: "11-Liquid 白帽事件",
+          link: "11-liquid-network-pause",
+        },
+        {
+          text: "12-21 大行稳定币",
+          link: "12-banks-joint-stablecoin",
+        },
+        {
+          text: "13-波兰法案三否",
+          link: "13-poland-crypto-veto",
+        },
+        {
+          text: "14-BTC 贷抵押品复用",
+          link: "14-better-coinbase-btc-collateral",
+        },
+        {
+          text: "15-Harmony 迁移以太坊",
+          link: "15-harmony-sunset-ai-video",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
