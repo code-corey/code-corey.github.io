@@ -653,6 +653,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-09-08",
+      icon: "folder",
+      prefix: "2026-09-08/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-2026-09-08 今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-vLLM AMD 投机解码",
+          link: "01-vllm-speculative-decoding-amd",
+        },
+        {
+          text: "02-Engrim 本地记忆引擎",
+          link: "02-engrim-sqlite-memory",
+        },
+        {
+          text: "03-rakazo 自托管 Agent",
+          link: "03-rakazo",
+        },
+        {
+          text: "04-mobilecode 移动端分叉",
+          link: "04-mobilecode",
+        },
+        {
+          text: "05-多智能体博弈协调论文",
+          link: "05-bilevel-coordinated-reflection",
+        },
+        {
+          text: "06-RoboTok 机器人数据引擎",
+          link: "06-robotok",
+        },
+        {
+          text: "07-GPT-6 Astra 通关 Portal",
+          link: "07-gpt6-astra-portal",
+        },
+        {
+          text: "08-OpenAI 智能体劫持事件上报",
+          link: "08-openai-agent-incident-eu",
+        },
+        {
+          text: "09-AI 自主经营实测",
+          link: "09-ai-ran-real-businesses",
+        },
+        {
+          text: "10-最高法涉AI审判意见",
+          link: "10-supreme-court-ai-rules",
+        },
+        {
+          text: "11-Liquid 3.2亿美元被盗",
+          link: "11-liquid-network-hack",
+        },
+        {
+          text: "12-CLARITY法案决胜周",
+          link: "12-clarity-act-senate",
+        },
+        {
+          text: "13-MetaMask 桌面版",
+          link: "13-metamask-desktop",
+        },
+        {
+          text: "14-Solana 吞吐三倍升级",
+          link: "14-solana-capacity",
+        },
+        {
+          text: "15-EIP-8141 稳定币付Gas",
+          link: "15-eip-8141-stablecoin-gas",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
