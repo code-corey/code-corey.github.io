@@ -725,6 +725,82 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-09-09",
+      icon: "folder",
+      prefix: "2026-09-09/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-2026-09-09 今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-I-have-ADHD 治智能体废话",
+          link: "01-i-have-adhd-agent-skill",
+        },
+        {
+          text: "02-智能体会自我验证吗",
+          link: "02-agentic-testing-verification",
+        },
+        {
+          text: "03-OpenWAM 世界模型开源",
+          link: "03-openwam-world-action-model",
+        },
+        {
+          text: "04-BankMCP 银行只读MCP",
+          link: "04-bankmcp-open-banking-mcp",
+        },
+        {
+          text: "05-离散扩散无损加速LLM",
+          link: "05-llm-discrete-diffusion-speedup",
+        },
+        {
+          text: "06-Dr. Claw 科研工作区",
+          link: "06-dr-claw-ai-scientist-workspace",
+        },
+        {
+          text: "07-OpenAI 攻克千禧年难题？",
+          link: "07-openai-navier-stokes-claim",
+        },
+        {
+          text: "08-Mistral 融资30亿欧元",
+          link: "08-mistral-sovereign-open-weight",
+        },
+        {
+          text: "09-Mercury 2.5 扩散LLM",
+          link: "09-mercury-25-diffusion-llm",
+        },
+        {
+          text: "10-10组模型框架同题实测",
+          link: "10-model-harness-threejs-test",
+        },
+        {
+          text: "11-重庆获批国家AI先导区",
+          link: "11-chongqing-ai-pilot-zone",
+        },
+        {
+          text: "12-Liquid被盗BTC大部分归还",
+          link: "12-liquid-hack-mostly-returned",
+        },
+        {
+          text: "13-LayerX 智能体执行网络",
+          link: "13-layerx-agent-network",
+        },
+        {
+          text: "14-Cronos 回滚2小时交易",
+          link: "14-cronos-reorg-reversal",
+        },
+        {
+          text: "15-Visa 数据接入链上借贷",
+          link: "15-visa-stablecoin-blockchain-lenders",
+        },
+        {
+          text: "16-AI 发现BTC基础设施漏洞",
+          link: "16-ai-bitcoin-l2-vulnerabilities",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
