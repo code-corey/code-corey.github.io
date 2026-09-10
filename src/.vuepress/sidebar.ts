@@ -801,6 +801,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-09-10",
+      icon: "folder",
+      prefix: "2026-09-10/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-2026-09-10 今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-自然语言开发指令爆帖",
+          link: "01-claude-add-to-cart-blue",
+        },
+        {
+          text: "02-Kimi K3 SSD流式推理",
+          link: "02-kimi-k3-ssd-streaming",
+        },
+        {
+          text: "03-VoiceMem 语音记忆层",
+          link: "03-voicemem-voice-agent-memory",
+        },
+        {
+          text: "04-qanat 量化Agent工作流",
+          link: "04-qanat-agent-alpha-dag",
+        },
+        {
+          text: "05-AuK 开源语音基座",
+          link: "05-auk-speech-foundation-model",
+        },
+        {
+          text: "06-BeaconKV 缓存压缩",
+          link: "06-beaconkv-kv-cache-compression",
+        },
+        {
+          text: "07-GPT-6 Astra 正式发布",
+          link: "07-gpt6-astra-launch",
+        },
+        {
+          text: "08-MiniCPM5-2B 端侧上榜",
+          link: "08-minicpm5-2b-hf-trending",
+        },
+        {
+          text: "09-Anthropic 安全连环披露",
+          link: "09-anthropic-cyber-incidents-assessment",
+        },
+        {
+          text: "10-首部AI司法裁判规则",
+          link: "10-china-first-ai-judicial-rules",
+        },
+        {
+          text: "11-Tether 私人信贷基金",
+          link: "11-tether-private-credit-fund",
+        },
+        {
+          text: "12-意大利逐笔制裁筛查",
+          link: "12-italy-crypto-sanctions-screening",
+        },
+        {
+          text: "13-美国银行稳定币实测",
+          link: "13-usbank-stablecoin-stellar",
+        },
+        {
+          text: "14-darkflow 私序测量",
+          link: "14-darkflow-private-orderflow",
+        },
+        {
+          text: "15-抗量子硬件3亿美元",
+          link: "15-quantum-clock-hardware-program",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
