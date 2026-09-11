@@ -873,6 +873,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-09-11",
+      icon: "folder",
+      prefix: "2026-09-11/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-09-11 今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-OpenAI Agents API",
+          link: "01-openai-agents-api",
+        },
+        {
+          text: "02-$998 训练 3.8B LLM",
+          link: "02-train-3p8b-llm-998-usd",
+        },
+        {
+          text: "03-tokentab 成本核算",
+          link: "03-tokentab-ai-coding-cost",
+        },
+        {
+          text: "04-agent-memory 记忆层",
+          link: "04-agent-memory-runtime",
+        },
+        {
+          text: "05-Show-Harness 机器人",
+          link: "05-show-harness-vlm-robot",
+        },
+        {
+          text: "06-可编程世界模型",
+          link: "06-programmable-world-model",
+        },
+        {
+          text: "07-DeepSeek V4.1 Flash",
+          link: "07-deepseek-v4-1-flash",
+        },
+        {
+          text: "08-Cognition SWE-2",
+          link: "08-cognition-swe-2",
+        },
+        {
+          text: "09-Anthropic 威胁情报",
+          link: "09-anthropic-threat-intel-report",
+        },
+        {
+          text: "10-王梦迪谈 AI 科学发现",
+          link: "10-wang-mengdi-llm-science-limits",
+        },
+        {
+          text: "11-CLARITY 法案投票",
+          link: "11-senate-clarity-act-revised-bill",
+        },
+        {
+          text: "12-US Bank 稳定币试点",
+          link: "12-usbank-usbdc-stablecoin-pilot",
+        },
+        {
+          text: "13-Coldcard 被盗亿元",
+          link: "13-coldcard-hack-100m",
+        },
+        {
+          text: "14-量子攻击成本下修",
+          link: "14-quantum-attack-bitcoin-cost-cut",
+        },
+        {
+          text: "15-solana-ecvrf 随机数",
+          link: "15-solana-ecvrf",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
