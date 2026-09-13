@@ -945,6 +945,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-09-13",
+      icon: "folder",
+      prefix: "2026-09-13/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-09-13 简报导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-Astra 编程浪潮反思",
+          link: "01-astra-for-coding",
+        },
+        {
+          text: "02-Google goto 反爬升级",
+          link: "02-google-goto-anti-scraping",
+        },
+        {
+          text: "03-anything2explainer",
+          link: "03-anything2explainer",
+        },
+        {
+          text: "04-Show-Harness 机器人Agent",
+          link: "04-show-harness",
+        },
+        {
+          text: "05-世界模型扩展科研Agent",
+          link: "05-scaling-research-agents-world-models",
+        },
+        {
+          text: "06-NCP 概念级预训练",
+          link: "06-ncp-archpreview",
+        },
+        {
+          text: "07-巨头集体呼吁降速",
+          link: "07-amodei-pace-the-frontier",
+        },
+        {
+          text: "08-DeepSeek V4.1 Flash",
+          link: "08-deepseek-v4.1-flash",
+        },
+        {
+          text: "09-数学界AI对齐事件",
+          link: "09-ai-math-misalignment",
+        },
+        {
+          text: "10-智谱50亿美元融资",
+          link: "10-zhipu-5b-funding",
+        },
+        {
+          text: "11-SEC加密发行框架",
+          link: "11-sec-crypto-offering-framework",
+        },
+        {
+          text: "12-Liquid遭攻击3.2亿",
+          link: "12-liquid-sidechain-attack",
+        },
+        {
+          text: "13-Phyzical_org数据层",
+          link: "13-phyzical-org-web3-ai-data",
+        },
+        {
+          text: "14-量子威胁690万BTC",
+          link: "14-bitcoin-quantum-exposure",
+        },
+        {
+          text: "15-稳定币黑灰产分析",
+          link: "15-stablecoins-high-risk-addresses",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
