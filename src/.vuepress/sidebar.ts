@@ -1017,6 +1017,74 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-09-14",
+      icon: "folder",
+      prefix: "2026-09-14/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-09-14 导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-ANE 完整逆向复盘",
+          link: "01-apple-neural-engine-reverse-engineering",
+        },
+        {
+          text: "02-CUDA 跑上 AMD 卡",
+          link: "02-cuda-for-amd-on-windows",
+        },
+        {
+          text: "03-maskit 隐私脱敏网关",
+          link: "03-maskit-local-privacy-gateway",
+        },
+        {
+          text: "04-AI 会话记录提取器",
+          link: "04-ai-data-extractor",
+        },
+        {
+          text: "05-Bengio 论智能体越轨",
+          link: "05-why-ai-agents-lie-cheat-coordinate",
+        },
+        {
+          text: "06-AI 破解 370 年密码",
+          link: "06-fable-5.1-cyphral-distich",
+        },
+        {
+          text: "07-英伟达 = AI 央行",
+          link: "07-nvidia-central-bank-of-ai",
+        },
+        {
+          text: "08-美国蒸馏体系之争",
+          link: "08-american-distillation-regime",
+        },
+        {
+          text: "09-Real-SWE 企业基准",
+          link: "09-real-swe-enterprise-benchmark",
+        },
+        {
+          text: "10-浙大 Easel 社媒智能体",
+          link: "10-easel-social-media-agent",
+        },
+        {
+          text: "11-毒集团加密矿场",
+          link: "11-cartel-crypto-farm-mexico",
+        },
+        {
+          text: "12-Meme雷达开源版",
+          link: "12-meme-radar",
+        },
+        {
+          text: "13-goldsky-go SDK",
+          link: "13-goldsky-go-sdk",
+        },
+        {
+          text: "14-Polymarket 手册",
+          link: "14-polymarket-strategy-handbook",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
