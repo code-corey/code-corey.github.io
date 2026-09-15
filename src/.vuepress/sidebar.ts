@@ -1085,6 +1085,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-09-15",
+      icon: "folder",
+      prefix: "2026-09-15/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-Pion 自主运营公司智能体",
+          link: "01-pion-autonomous-company-agent",
+        },
+        {
+          text: "02-Opus 迁自托管 Ollama 踩坑记",
+          link: "02-migrating-preprompts-opus-to-ollama",
+        },
+        {
+          text: "03-ToolReplay Agent 审计工具",
+          link: "03-toolreplay-agent-audit",
+        },
+        {
+          text: "04-AI Infra 开源书稿",
+          link: "04-ai-infra-book",
+        },
+        {
+          text: "05-DataFlex-RL 评测平台",
+          link: "05-dataflex-rl-rlvr-data-policies",
+        },
+        {
+          text: "06-SAS 注意力稀疏化",
+          link: "06-sas-attention-sparsification",
+        },
+        {
+          text: "07-GPT-6 Astra 发布",
+          link: "07-gpt-6-astra-for-work",
+        },
+        {
+          text: "08-特朗普反击 AI 放缓呼吁",
+          link: "08-trump-counters-ai-slowdown",
+        },
+        {
+          text: "09-低价模型代码评审实测",
+          link: "09-luna-vs-astra-code-review",
+        },
+        {
+          text: "10-智谱融资 50 亿美元",
+          link: "10-zhipu-5b-fundraising",
+        },
+        {
+          text: "11-CLARITY 法案表决在即",
+          link: "11-clarity-act-senate-vote",
+        },
+        {
+          text: "12-稳定币收益条款博弈",
+          link: "12-stablecoin-yield-bill",
+        },
+        {
+          text: "13-代币化股票主流化",
+          link: "13-tokenized-stocks-wall-street",
+        },
+        {
+          text: "14-U.S. Bank 稳定币落地",
+          link: "14-usbank-first-usbdc-transaction",
+        },
+        {
+          text: "15-Celsius 起诉 BitMEX",
+          link: "15-celsius-sues-bitmex",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
