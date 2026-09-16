@@ -1157,6 +1157,74 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-09-16",
+      icon: "folder",
+      prefix: "2026-09-16/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-OpenArch 架构参考实现",
+          link: "01-openarch-llm-architectures-pytorch",
+        },
+        {
+          text: "02-研究Agent为何不过拟合",
+          link: "02-why-ml-research-agents-dont-overfit",
+        },
+        {
+          text: "03-Rune 原生开发环境",
+          link: "03-rune-native-ide-agent-multiplexer",
+        },
+        {
+          text: "04-gap-trap 质量门禁",
+          link: "04-gap-trap-vibe-coding-quality-gates",
+        },
+        {
+          text: "05-PC-ALM 反传替代方案",
+          link: "05-sakana-pc-alm-backprop-alternative",
+        },
+        {
+          text: "06-Navier-Stokes后仍看空LLM",
+          link: "06-still-bearish-on-llms-after-navier-stokes",
+        },
+        {
+          text: "07-System One 模型与Jev",
+          link: "07-typesafe-system-one-models-jev",
+        },
+        {
+          text: "08-Gemini 3.8 Live发布",
+          link: "08-gemini-3-8-live-extended-thinking",
+        },
+        {
+          text: "09-Baseten供应链漏洞复盘",
+          link: "09-baseten-github-pat-takeover",
+        },
+        {
+          text: "10-Nari Qwen3语音登顶",
+          link: "10-nari-qwen3-tts-asr-coval-benchmarks",
+        },
+        {
+          text: "11-特朗普加密收益14亿美元",
+          link: "11-trump-crypto-earnings-disclosure",
+        },
+        {
+          text: "12-goldsky-php 链上SDK",
+          link: "12-goldsky-php-chain-data-sdk",
+        },
+        {
+          text: "13-trench-mcp 链上MCP",
+          link: "13-trench-mcp-robinhood-chain-agents",
+        },
+        {
+          text: "14-WASM搜比特币谜题",
+          link: "14-weblottery-turbo-btc-puzzle-wasm",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
