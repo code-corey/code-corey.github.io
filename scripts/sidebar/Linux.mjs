@@ -15,4 +15,9 @@ export default {
     icon: "key",
     order: 3,
   },
+  loadbalancing: {
+    title: "负载均衡与高可用",
+    icon: "shield-halved",
+    order: 4,
+  },
 };
