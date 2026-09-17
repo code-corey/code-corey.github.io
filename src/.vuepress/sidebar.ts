@@ -1225,6 +1225,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-09-17",
+      icon: "folder",
+      prefix: "2026-09-17/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-今日导读 09-17",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-AI Agent 冲击互联网",
+          link: "01-ai-agents-ruining-internet",
+        },
+        {
+          text: "02-NVIDIA 官宣 CUDA Rust",
+          link: "02-nvidia-cuda-rust",
+        },
+        {
+          text: "03-SGLang 推理从零到一",
+          link: "03-zero-to-sglang",
+        },
+        {
+          text: "04-魔搭实战手册",
+          link: "04-modelscope-cookbook",
+        },
+        {
+          text: "05-持续学习长程记忆",
+          link: "05-continual-learning-long-horizon",
+        },
+        {
+          text: "06-StepAudio3 实时语音",
+          link: "06-stepaudio3-realtime",
+        },
+        {
+          text: "07-DeepSeek V4.1 Flash",
+          link: "07-deepseek-v41-flash",
+        },
+        {
+          text: "08-Mistral 联手 Mozilla",
+          link: "08-mistral-x-mozilla",
+        },
+        {
+          text: "09-Flock AI 摄像头被黑",
+          link: "09-flock-camera-hack",
+        },
+        {
+          text: "10-AI+脑机接口国标",
+          link: "10-china-ai-bci-standard",
+        },
+        {
+          text: "11-CLARITY 法案折戟",
+          link: "11-clarity-act-senate-failure",
+        },
+        {
+          text: "12-CFTC 自立规则",
+          link: "12-cftc-crypto-rules",
+        },
+        {
+          text: "13-Circle 自建公链",
+          link: "13-circle-arc-blockchain",
+        },
+        {
+          text: "14-Bitcoin Core 大版本",
+          link: "14-bitcoin-core-major-update",
+        },
+        {
+          text: "15-矿工为 AI 让路",
+          link: "15-bitcoin-miners-to-ai",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
@@ -1602,6 +1674,15 @@ export default sidebar({
         "ssh-01-windows-terminal-ssh-key-login",
         "ssh-02-autodl-vllm-gemma4-deploy",
         "ssh-03-rclone-mount-remote-root-to-windows",
+      ],
+    },
+    {
+      text: "负载均衡与高可用",
+      icon: "shield-halved",
+      prefix: "loadbalancing/",
+      collapsible: true,
+      children: [
+        "loadbalancing-01-keepalived-vip-lvs",
       ],
     },
   ],
