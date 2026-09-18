@@ -1297,6 +1297,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-09-18",
+      icon: "folder",
+      prefix: "2026-09-18/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-GLM 自建推理基础设施",
+          link: "01-glm-inference-infrastructure",
+        },
+        {
+          text: "02-HarnessTax 编码智能体评测",
+          link: "02-harnesstax-coding-agents",
+        },
+        {
+          text: "03-Blitz Strike MCP渗透工具带",
+          link: "03-blitzstrike-mcp-pentest",
+        },
+        {
+          text: "04-超低成本Computer Use",
+          link: "04-typesafe-computer-use",
+        },
+        {
+          text: "05-LimiX-2 结构化数据模型",
+          link: "05-limix2-structured-data",
+        },
+        {
+          text: "06-XConf 智能体置信度",
+          link: "06-xconf-experiential-confidence",
+        },
+        {
+          text: "07-Anthropic 进展测量框架",
+          link: "07-anthropic-pace-measurements",
+        },
+        {
+          text: "08-OpenAI 法律版Astra",
+          link: "08-openai-astra-for-law",
+        },
+        {
+          text: "09-OpenAI 模型自生成注入",
+          link: "09-openai-self-generated-injections",
+        },
+        {
+          text: "10-智能体互联国家标准",
+          link: "10-agent-interconnect-gb-standard",
+        },
+        {
+          text: "11-CLARITY法案折戟参院",
+          link: "11-clarity-act-senate-failure",
+        },
+        {
+          text: "12-SEC创新豁免与代币化",
+          link: "12-sec-innovation-exemption-rwa",
+        },
+        {
+          text: "13-美司法部伊朗加密案",
+          link: "13-doj-iran-crypto-forfeiture",
+        },
+        {
+          text: "14-Neovim比特币捐款闲置",
+          link: "14-neovim-bitcoin-donation",
+        },
+        {
+          text: "15-加密期权占衍生品近半",
+          link: "15-glassnode-options-market-structure",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
