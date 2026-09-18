@@ -50,4 +50,9 @@ export default {
     icon: "golang",
     order: 10,
   },
+  cka: {
+    title: "CKA 通过之路",
+    icon: "certificate",
+    order: 11,
+  },
 };

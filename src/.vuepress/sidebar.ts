@@ -2050,6 +2050,23 @@ export default sidebar({
         "golang-03-basics-units",
       ],
     },
+    {
+      text: "CKA 通过之路",
+      icon: "certificate",
+      prefix: "cka/",
+      collapsible: true,
+      children: [
+        "cka-00-why-and-plan",
+        "cka-01-first-deployment",
+        "cka-02-yaml-tree",
+        "cka-03-configmap-secret",
+        "cka-04-service-endpoints",
+        "cka-05-readiness-probe",
+        "cka-06-dnat-iptables",
+        "cka-07-liveness-crashloopbackoff",
+        "cka-08-startup-probe",
+      ],
+    },
   ],
   "/中间件/": [
     "",
