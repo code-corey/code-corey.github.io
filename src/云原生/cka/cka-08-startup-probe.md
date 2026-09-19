@@ -15,7 +15,7 @@ tag:
 description: 一个健康的慢启动应用，被 livenessProbe 以「启动太慢」的罪名反复处决。先试 initialDelaySeconds 平反——一根旋钮伺候不了两个主人；然后学生在课堂上自己发明了 startupProbe，再用双实验对照盖章。外加白捡一个知识点：Killing 之后还有 30 秒宽限期。
 ---
 
-> **CKA 通过之路 · 第 9/9 篇**
+> **CKA 通过之路 · 第 9/10 篇**
 > 上一篇：[《卡死了谁来救？——livenessProbe 与 CrashLoopBackOff 的算法》](/云原生/cka/cka-07-liveness-crashloopbackoff) · 下一篇：[《名单的另一半——label 与 selector》](/云原生/cka/cka-09-label-selector)
 
 ---
@@ -107,24 +107,46 @@ Liveness:  http-get http://:8080/  delay=0s  timeout=1s  period=10s  ...
 
 ### 实验一：冤案复现（slow-a，liveness 默认参数）
 
+完整创建命令（`--command --` 后面整段是假扮慢应用的启动命令）：
+
+```bash
+kubectl run slow-a --image=nginx:alpine \
+  --command -- sh -c "sleep 90 && exec nginx -g 'daemon off;'" \
+  --dry-run=client -o yaml > slow-a.yaml
+# 编辑 slow-a.yaml：容器字段下加 livenessProbe（httpGet :80，全默认参数）
+kubectl apply -f slow-a.yaml
+kubectl describe pod slow-a
+```
+
 ```text
 Warning  Unhealthy  25s (x3 over 45s)  Liveness probe failed:
 Get "http://10.244.0.19:80/": dial tcp 10.244.0.19:80: connect: connection refused
 Normal   Killing    25s               Container app failed liveness probe, will be restarted
 ```
 
-死刑时间表分毫不差：3 次失败 → Killing（t≈31s）。但真实数据冒出一个**预测之外的知识点**——Killing 下令后快照里 `RESTARTS 0`、容器还活着：
+死刑时间表分毫不差：3 次失败 → Killing（t≈31s）。但真实数据冒出一个**预测之外的知识点**——Killing 下令后快照里 `RESTARTS 0`、容器还活着。用同一条命令连续取证：
 
-> **Killing ≠ 立刻死。** kubelet 先发温和信号（SIGTERM），默认给 **30 秒宽限期**（`terminationGracePeriodSeconds`）清理现场；不理会就强杀（SIGKILL）。我们的 `sh → sleep` 不理会 TERM，于是死刑精确执行于 t=61s（31s 下令 + 30s 宽限）——算术严丝合缝：
+```bash
+kubectl get pod slow-a
+```
 
 ```text
 slow-a   1/1   Running   1 (31s ago)   92s     ← t=61s 死刑已执行，sleep 重演
 slow-a   1/1   Running   6 (96s ago)   7m37s   ← 退场前：7 分半被杀 6 次，冤案循环播放
 ```
 
+> **Killing ≠ 立刻死。** kubelet 先发温和信号（SIGTERM），默认给 **30 秒宽限期**（`terminationGracePeriodSeconds`）清理现场；不理会就强杀（SIGKILL）。我们的 `sh → sleep` 不理会 TERM，于是死刑精确执行于 t=61s（31s 下令 + 30s 宽限）——算术严丝合缝。
+
 ### 实验二：平反（slow-b，+ startupProbe 300 秒预算）
 
 同一个慢应用，加上 `startupProbe: failureThreshold: 30, periodSeconds: 10`：
+
+```bash
+# slow-b.yaml = 同一个应用 + startupProbe（完整 yaml 见第 5 课）
+kubectl apply -f slow-b.yaml
+kubectl get pod slow-b
+kubectl describe pod slow-b
+```
 
 ```text
 slow-b   1/1   Running   0     116s

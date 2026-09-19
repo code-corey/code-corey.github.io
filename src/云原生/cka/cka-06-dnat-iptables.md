@@ -16,7 +16,7 @@ tag:
 description: 「IP 进名单后流量放行」的底层原理追问。用 docker -p 映射亲手抓一条 DNAT 规则，逐字段拆解 iptables，再对照 kube-proxy 的 KUBE- 链——Service 转发没有魔法，全是内核规则。
 ---
 
-> **CKA 通过之路 · 第 7/9 篇**
+> **CKA 通过之路 · 第 7/10 篇**
 > 上一篇：[《READY 0/1 之谜——就绪探针与 connection refused》](/云原生/cka/cka-05-readiness-probe) · 下一篇：[《卡死了谁来救？——livenessProbe 与 CrashLoopBackOff 的算法》](/云原生/cka/cka-07-liveness-crashloopbackoff)
 
 ---
@@ -96,7 +96,26 @@ iptables 的三层结构，一次记够：
 
 ## 第 4 课：kube-proxy 写的规则——同一套把戏
 
-回头看 k8s 节点里（`docker exec demo-control-plane iptables-save | grep probe-test`）：
+先取两个事实：Service 的虚拟 IP、pod 的 IP（后面规则里都会出现）：
+
+```bash
+k get svc probe-test -o wide
+k get pod probe-test -o wide
+```
+
+```text
+NAME         TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE     SELECTOR
+probe-test   ClusterIP   10.96.113.42   <none>        80/TCP    6h56m   run=probe-test
+
+NAME         READY   STATUS    RESTARTS   AGE   IP            NODE
+probe-test   1/1     Running   0          21h   10.244.0.16   demo-control-plane
+```
+
+再进 k8s 节点（它是个 docker 容器，第 2 篇讲过）看内核里的真实规则：
+
+```bash
+docker exec demo-control-plane iptables-save | grep probe-test
+```
 
 ```text
 -A KUBE-SERVICES -d 10.96.113.42/32 -p tcp --dport 80 -j KUBE-SVC-XXX

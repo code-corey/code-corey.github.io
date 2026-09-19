@@ -15,7 +15,7 @@ tag:
 description: 一个永远 READY 0/1、重启 0 次的 pod：用 describe 的事件读出探针默认参数，用 connection refused vs timeout 分清"没人听"和"路不通"，用 endpoints 除名闭环理解就绪探针存在的意义。
 ---
 
-> **CKA 通过之路 · 第 6/9 篇**
+> **CKA 通过之路 · 第 6/10 篇**
 > 上一篇：[《流量转发名单——Service 与 endpoints》](/云原生/cka/cka-04-service-endpoints) · 下一篇：[《提前课：docker -p 就是 DNAT——iptables 与 kube-proxy》](/云原生/cka/cka-06-dnat-iptables)
 
 ---
@@ -45,7 +45,18 @@ probe-test   1/1     Running   0          5m
 
 ## 第 2 课：8080 实验——永远 READY 0/1
 
-实验对象（`k run probe-test --image=nginx:alpine --port=80` 生成草稿后加探针，nginx 实际监听 80，探针故意指向 8080）：
+实验对象制作三步（完整命令，nginx 实际监听 80，探针故意指向 8080）：
+
+```bash
+# 1. 生成草稿存成文件（第 3 篇的标准动作）
+k run probe-test --image=nginx:alpine --port=80 --dry-run=client -o yaml > probe.yaml
+
+# 2. 编辑 probe.yaml：在容器字段下加探针（加进去的段落见下）
+# 3. 创建
+k apply -f probe.yaml
+```
+
+第 2 步加进 probe.yaml 的探针段（注意 `readinessProbe` 与容器的 `name` 同级，挂在容器字段下）：
 
 ```yaml
 spec:
@@ -60,12 +71,20 @@ spec:
 
 > **🧑‍🏫 老师：** 先预测：pod 会是什么状态？（a）Running（b）CrashLoopBackOff（c）一直 ContainerCreating
 
-我选了 b——容器坏了当然崩。apply 后现实：
+我选了 b——容器坏了当然崩。apply 之后用同一条命令看两次（隔两分钟）：
+
+```bash
+k get pods
+```
+
+第 1 次（14 秒时）：
 
 ```text
 NAME         READY   STATUS    RESTARTS   AGE
 probe-test   0/1     Running   0          14s
 ```
+
+第 2 次（2 分 13 秒时）：
 
 ```text
 NAME         READY   STATUS    RESTARTS   AGE

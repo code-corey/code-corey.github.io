@@ -15,7 +15,7 @@ tag:
 description: pod 生生死死 IP 一直变，谁来当稳定入口？expose 出一个 Service，围观 endpoints 名单随杀 pod 实时增删——外加一次 WSL 睡醒后 Unknown 状态的真实排障。
 ---
 
-> **CKA 通过之路 · 第 5/9 篇**
+> **CKA 通过之路 · 第 5/10 篇**
 > 上一篇：[《把配置和密码放进容器——ConfigMap 与 Secret》](/云原生/cka/cka-03-configmap-secret) · 下一篇：[《READY 0/1 之谜——就绪探针与 connection refused》](/云原生/cka/cka-05-readiness-probe)
 
 ---
@@ -34,9 +34,23 @@ description: pod 生生死死 IP 一直变，谁来当稳定入口？expose 出�
 
 上一篇的 app1 有个集群内 IP（10.244 开头）。老师让我做一件事：
 
-> **🧑‍🏫 老师：** 删掉 app1 重建，然后describe 看新 IP。
+> **🧑‍🏫 老师：** 删掉 app1 重建，然后 describe 看新 IP。
 
-删了重建，IP 从 `10.244.0.5` 变成了 `10.244.0.9`。**pod 的 IP 生命周期 = pod 本身**——自愈是新造一个（新 IP），滚动更新是新批次（新 IP），扩容是新成员（新 IP）。任何"把 IP 写死"的访问方式在 k8s 里都活不过一次重启。
+完整操作（先看旧 IP，再删、重建、再看）：
+
+```bash
+k get pod app1 -o wide          # 重建前：IP 是 10.244.0.5
+k delete pod app1
+k apply -f app1.yaml
+k get pod app1 -o wide          # 重建后：IP 变了
+```
+
+```text
+NAME   READY   STATUS    RESTARTS   AGE   IP            NODE
+app1   1/1     Running   0          15s   10.244.0.9    demo-control-plane
+```
+
+IP 从 `10.244.0.5` 变成了 `10.244.0.9`。**pod 的 IP 生命周期 = pod 本身**——自愈是新造一个（新 IP），滚动更新是新批次（新 IP），扩容是新成员（新 IP）。任何"把 IP 写死"的访问方式在 k8s 里都活不过一次重启。
 
 ## 第 2 课：expose——给一批 pod 一个固定入口
 

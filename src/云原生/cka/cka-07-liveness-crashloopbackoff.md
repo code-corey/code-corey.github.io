@@ -15,7 +15,7 @@ tag:
 description: 从「卡死的容器没人管」一步步逼出 livenessProbe；从冻结的 RESTARTS 猜出翻倍退避算法，再用 7 分钟记录仪实测 5 分钟封顶；最后解开「一直失败的 pod 凭什么 READY 1/1」——学生中途三次说「看不懂」，回退拆小步的实录全部保留。
 ---
 
-> **CKA 通过之路 · 第 8/9 篇**
+> **CKA 通过之路 · 第 8/10 篇**
 > 上一篇：[《提前课：docker -p 就是 DNAT——iptables 与 kube-proxy》](/云原生/cka/cka-06-dnat-iptables) · 下一篇：[《慢启动的冤案——startupProbe》](/云原生/cka/cka-08-startup-probe)
 
 ---
@@ -101,11 +101,24 @@ spec:
         port: 8080
 ```
 
+完整创建命令（cka-05 同款三步）：
+
+```bash
+kubectl run live-test --image=nginx:alpine --port=80 --dry-run=client -o yaml > live.yaml
+# 编辑 live.yaml：容器字段下加上面那段 livenessProbe
+kubectl apply -f live.yaml
+```
+
+
 apply 前先写预测，学生原话：
 
 > **🧑‍🎓 学生：** 我原本认为这个数字会跳得很快，因为一旦发现访问不通，就会重启
 
 现实出分（本机逐字粘贴）：
+
+```bash
+kubectl describe pod live-test
+```
 
 ```text
 Liveness:  http-get http://:8080/ delay=0s timeout=1s period=10s successThreshold=1 failureThreshold=3
@@ -154,7 +167,11 @@ pod 除了镜像等个别字段，**其余部分创建后不可改**——想改
 
 > **🧑‍🎓 学生：** 我没看到这个啊
 
-都对——那是**同一个 pod 的两个不同瞬间**：Running 快照是刚重启完、容器活着的短暂窗口，学生屏幕上是等待下一次重启的漫长间隙。连拍三张：
+都对——那是**同一个 pod 的两个不同瞬间**：Running 快照是刚重启完、容器活着的短暂窗口，学生屏幕上是等待下一次重启的漫长间隙。同一条命令连拍三张：
+
+```bash
+kubectl get pod live-test
+```
 
 ```text
 06:29:29   live-test   0/1   CrashLoopBackOff   7 (3m29s ago)   11m
@@ -216,6 +233,10 @@ CrashLoopBackOff
 
 现实里还埋着一个反常：liveness 检查每 10 秒失败一次、**永远失败**，可容器活着的窗口里 READY 是满分：
 
+```bash
+kubectl get pod live-test
+```
+
 ```text
 live-test   1/1   Running   8 (5m12s ago)   12m
 ```
@@ -238,6 +259,10 @@ live-test   1/1   Running   8 (5m12s ago)   12m
 - 拼图②（学生自己说的）：live-test 没写 readinessProbe
 
 没人检查就绪了，k8s 只剩一个最原始的判断依据——**容器在不在跑**。它在跑（Running），那 READY 给几分？读屏幕即可：
+
+```bash
+kubectl get pod live-test
+```
 
 ```text
 NAME        READY   STATUS    RESTARTS      AGE
@@ -292,7 +317,14 @@ spec:
         port: 8080
 ```
 
-前 100 秒实录（每 20 秒一拍，逐字）：
+完整命令（裸 pod 不可改，删了重建）：
+
+```bash
+kubectl delete pod live-test
+kubectl apply -f live.yaml     # 双探针版
+```
+
+前 100 秒实录（每 20 秒执行一次 `kubectl get pod live-test`，逐字）：
 
 ```text
 06:55:40   live-test   0/1   Running   0            20s

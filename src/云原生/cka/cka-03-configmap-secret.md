@@ -15,7 +15,7 @@ tag:
 description: docker -e 传环境变量在 k8s 里的正统做法：ConfigMap 存配置、Secret 存密码，envFrom 整包注入，k exec 进容器验证，base64 解码看明文——含一次真实的 passsword 三个 s 事故。
 ---
 
-> **CKA 通过之路 · 第 4/9 篇**
+> **CKA 通过之路 · 第 4/10 篇**
 > 上一篇：[《yaml 就是一棵树——dry-run 生成、缩进陷阱与报错定位》](/云原生/cka/cka-02-yaml-tree) · 下一篇：[《流量转发名单——Service 与 endpoints》](/云原生/cka/cka-04-service-endpoints)
 
 ---
@@ -132,13 +132,18 @@ abc123
 
 ## 第 5 课：passsword——三个 s 的事故
 
-真实翻车记录：实验后我用一条命令核对 Secret 键名，输出里赫然是：
+真实翻车记录：实验后照第 4 课的方法再核对一次键名：
 
-```text
-passsword: YWJjMTIz
+```bash
+k get secret db-cred -o yaml | grep -A3 "^data:"
 ```
 
-`passsword`，三个 s。回看我建对象那行命令——`--from-literal=passsword=abc123`，从源头就拼错了，集群忠实地把错误键名存了一路。教训三条：
+```text
+data:
+  passsword: YWJjMTIz
+```
+
+输出里赫然是 `passsword`——三个 s。回看我建对象那行命令——`--from-literal=passsword=abc123`，从源头就拼错了，集群忠实地把错误键名存了一路。教训三条：
 
 1. **键名是普通字符串，拼错了照样成功创建**，报错不会替你拦
 2. 注入后变量名 = 键名，`passsword=abc123` 注进容器，程序读 `password` 读不到

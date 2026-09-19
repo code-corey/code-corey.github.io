@@ -15,7 +15,7 @@ tag:
 description: 用 kind 在 WSL 里 3 分钟建一个真 k8s 集群，亲手杀 pod 看它自愈、扩容、滚动更新——全部控制台输出为本机真实运行结果。
 ---
 
-> **CKA 通过之路 · 第 2/9 篇**
+> **CKA 通过之路 · 第 2/10 篇**
 > 上一篇：[《会 Docker 的我决定考 CKA——考试拆解、15 周计划与课堂公约》](/云原生/cka/cka-00-why-and-plan) · 下一篇：[《yaml 就是一棵树——dry-run 生成、缩进陷阱与报错定位》](/云原生/cka/cka-02-yaml-tree)
 
 ---
@@ -42,8 +42,9 @@ description: 用 kind 在 WSL 里 3 分钟建一个真 k8s 集群，亲手杀 po
 ```bash
 # kind 从 GitHub Releases，kubectl 从 dl.k8s.io
 install -m 0755 kind kubectl /usr/local/bin/
+kind version
+kubectl version --client
 ```
-
 ```text
 kind v0.33.0 go1.26.7 linux/amd64
 Client Version: v1.37.0
@@ -52,7 +53,7 @@ Client Version: v1.37.0
 建集群：
 
 ```bash
-kind create cluster --name demo --wait 120s
+time kind create cluster --name demo --wait 120s
 ```
 
 ```text
