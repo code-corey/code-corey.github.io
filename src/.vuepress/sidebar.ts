@@ -1369,6 +1369,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-09-19",
+      icon: "folder",
+      prefix: "2026-09-19/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-09-19 今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-Claude Code 兼容 AGENTS.md",
+          link: "01-claude-code-agents-md",
+        },
+        {
+          text: "02-编码 Agent Harness 实证研究",
+          link: "02-coding-agent-harness-design-study",
+        },
+        {
+          text: "03-NeoHorse 递归自我改进",
+          link: "03-neohorse-recursive-self-improvement",
+        },
+        {
+          text: "04-EvoOntology 自进化本体层",
+          link: "04-evoontology-data-agents",
+        },
+        {
+          text: "05-DeepSeek V4.1-Flash 论文",
+          link: "05-deepseek-v4-1-flash-kv-cache",
+        },
+        {
+          text: "06-JEPA-Anything 世界模型",
+          link: "06-jepa-anything-world-models",
+        },
+        {
+          text: "07-Qwen3.8 Omni Flash 发布",
+          link: "07-qwen3-8-omni-flash",
+        },
+        {
+          text: "08-Gemini 首例 Agent 破防",
+          link: "08-gemini-first-agent-breakout",
+        },
+        {
+          text: "09-OpenAI 内部仓库攻破复盘",
+          link: "09-openai-internal-repos-breach",
+        },
+        {
+          text: "10-ZCode 静默上传 Git 历史",
+          link: "10-zcode-git-history-upload",
+        },
+        {
+          text: "11-CLARITY 受挫 SEC/CFTC 接棒",
+          link: "11-clarity-act-sec-cftc-rules",
+        },
+        {
+          text: "12-SEC 放行代币化股票",
+          link: "12-sec-tokenized-stocks",
+        },
+        {
+          text: "13-Haruko 供应链攻击事件",
+          link: "13-haruko-supply-chain-hack",
+        },
+        {
+          text: "14-区块链后量子竞赛",
+          link: "14-post-quantum-blockchain",
+        },
+        {
+          text: "15-美财政部制裁伊朗交易所",
+          link: "15-treasury-sanctions-iran-exchange",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
@@ -2065,6 +2137,7 @@ export default sidebar({
         "cka-06-dnat-iptables",
         "cka-07-liveness-crashloopbackoff",
         "cka-08-startup-probe",
+        "cka-09-label-selector",
       ],
     },
   ],
