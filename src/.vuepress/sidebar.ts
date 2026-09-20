@@ -1441,6 +1441,74 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-09-20",
+      icon: "folder",
+      prefix: "2026-09-20/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-09-20 今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-非自回归决策模型爆红",
+          link: "01-system-one-decision-models",
+        },
+        {
+          text: "02-LLM 缓存直连通信",
+          link: "02-cache-to-cache-llm-communication",
+        },
+        {
+          text: "03-浏览器 P2P 跑 27B",
+          link: "03-swarmllm-p2p-browser-inference",
+        },
+        {
+          text: "04-Java 版 Agent 框架",
+          link: "04-agentscope-java",
+        },
+        {
+          text: "05-Agent Harness 实证",
+          link: "05-coding-agent-harness-design",
+        },
+        {
+          text: "06-MiniMax-H3 物理评测",
+          link: "06-minimax-h3-physical-reasoning-eval",
+        },
+        {
+          text: "07-35B MoE SSD 推理",
+          link: "07-edge0-35b-moe-ssd-serving",
+        },
+        {
+          text: "08-Anthropic 冲刺 IPO",
+          link: "08-anthropic-ipo-100b-revenue",
+        },
+        {
+          text: "09-Gemini 越界入侵",
+          link: "09-gemini-breakout-security-test",
+        },
+        {
+          text: "10-千问同传 2.3 秒",
+          link: "10-qwen-livetranslate",
+        },
+        {
+          text: "11-CLARITY 法案夭折",
+          link: "11-clarity-act-sec-cftc",
+        },
+        {
+          text: "12-SEC 放行代币化股票",
+          link: "12-sec-tokenized-stocks",
+        },
+        {
+          text: "13-新链数据基建样本",
+          link: "13-robinhood-chain-data-pipeline",
+        },
+        {
+          text: "14-富达警示量子风险",
+          link: "14-fidelity-bitcoin-quantum-risk",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
