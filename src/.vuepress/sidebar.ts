@@ -1509,6 +1509,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-09-22",
+      icon: "folder",
+      prefix: "2026-09-22/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-2026-09-22 导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-Google 开源编排器 AX",
+          link: "01-ax-google-agentic-orchestrator",
+        },
+        {
+          text: "02-Linear 重构 CI 实录",
+          link: "02-linear-ci-bottleneck",
+        },
+        {
+          text: "03-jev-review 代码评审",
+          link: "03-jev-review",
+        },
+        {
+          text: "04-BrowserKitten 网页代理",
+          link: "04-browserkitten",
+        },
+        {
+          text: "05-IntBMoE：MoE 三量解耦",
+          link: "05-intbmoe",
+        },
+        {
+          text: "06-CodeMidas：RL 环境规模化",
+          link: "06-codemidas",
+        },
+        {
+          text: "07-Grok 4.7 发布",
+          link: "07-grok-4-7",
+        },
+        {
+          text: "08-DeepSeek 押注华为芯片",
+          link: "08-deepseek-huawei-chips",
+        },
+        {
+          text: "09-ChatGPT 广告采集器争议",
+          link: "09-chatgpt-ad-collector",
+        },
+        {
+          text: "10-陈云霁谈国产 AI 芯片",
+          link: "10-chen-yunji-domestic-ai-chips",
+        },
+        {
+          text: "11-谷歌苹果招募加密人才",
+          link: "11-google-apple-crypto-talent",
+        },
+        {
+          text: "12-美国加速资产上链",
+          link: "12-us-asset-tokenization",
+        },
+        {
+          text: "13-Hyperliquid 上线 BTC VIX",
+          link: "13-hyperliquid-btc-vix-perps",
+        },
+        {
+          text: "14-俄央行：加密合法化在望",
+          link: "14-russia-crypto-legalization",
+        },
+        {
+          text: "15-crypto-tax-calculator",
+          link: "15-crypto-tax-calculator",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
@@ -2206,6 +2278,7 @@ export default sidebar({
         "cka-07-liveness-crashloopbackoff",
         "cka-08-startup-probe",
         "cka-09-label-selector",
+        "cka-10-scheduling",
       ],
     },
   ],
