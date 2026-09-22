@@ -2280,6 +2280,7 @@ export default sidebar({
         "cka-09-label-selector",
         "cka-10-scheduling",
         "cka-11-tolerations",
+        "cka-12-storage",
       ],
     },
   ],

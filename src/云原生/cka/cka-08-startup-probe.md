@@ -15,7 +15,7 @@ tag:
 description: 一个健康的慢启动应用，被 livenessProbe 以「启动太慢」的罪名反复处决。先试 initialDelaySeconds 平反——一根旋钮伺候不了两个主人；然后学生在课堂上自己发明了 startupProbe，再用双实验对照盖章。外加白捡一个知识点：Killing 之后还有 30 秒宽限期。
 ---
 
-> **CKA 通过之路 · 第 9/12 篇**
+> **CKA 通过之路 · 第 9/13 篇**
 > 上一篇：[《卡死了谁来救？——livenessProbe 与 CrashLoopBackOff 的算法》](/云原生/cka/cka-07-liveness-crashloopbackoff) · 下一篇：[《名单的另一半——label 与 selector》](/云原生/cka/cka-09-label-selector)
 
 ---
