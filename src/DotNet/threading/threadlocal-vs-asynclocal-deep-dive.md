@@ -159,7 +159,7 @@ static StringBuilder SB => _sb ??= new StringBuilder();
 
 ---
 
-## 第 3 节 ThreadLocal<T>：给地基装上门面
+## 第 3 节 `ThreadLocal<T>`：给地基装上门面
 
 > **老师**：`ThreadLocal<T>` 用起来是这样：
 
