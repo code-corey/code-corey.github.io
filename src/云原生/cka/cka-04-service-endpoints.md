@@ -15,7 +15,7 @@ tag:
 description: pod 生生死死 IP 一直变，谁来当稳定入口？expose 出一个 Service，围观 endpoints 名单随杀 pod 实时增删——外加一次 WSL 睡醒后 Unknown 状态的真实排障。
 ---
 
-> **CKA 通过之路 · 第 5/10 篇**
+> **CKA 通过之路 · 第 5/11 篇**
 > 上一篇：[《把配置和密码放进容器——ConfigMap 与 Secret》](/云原生/cka/cka-03-configmap-secret) · 下一篇：[《READY 0/1 之谜——就绪探针与 connection refused》](/云原生/cka/cka-05-readiness-probe)
 
 ---

@@ -15,7 +15,7 @@ tag:
 description: 从「卡死的容器没人管」一步步逼出 livenessProbe；从冻结的 RESTARTS 猜出翻倍退避算法，再用 7 分钟记录仪实测 5 分钟封顶；最后解开「一直失败的 pod 凭什么 READY 1/1」——学生中途三次说「看不懂」，回退拆小步的实录全部保留。
 ---
 
-> **CKA 通过之路 · 第 8/10 篇**
+> **CKA 通过之路 · 第 8/11 篇**
 > 上一篇：[《提前课：docker -p 就是 DNAT——iptables 与 kube-proxy》](/云原生/cka/cka-06-dnat-iptables) · 下一篇：[《慢启动的冤案——startupProbe》](/云原生/cka/cka-08-startup-probe)
 
 ---

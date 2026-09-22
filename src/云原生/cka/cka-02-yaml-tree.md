@@ -15,7 +15,7 @@ tag:
 description: kubectl --dry-run=client -o yaml 生成草稿、缩进差两格引发的两种报错、「两个空格还是一个 Tab」、以及用报错里的字段路径定位 yaml 错误的通用方法——全部真实对话与真实报错。
 ---
 
-> **CKA 通过之路 · 第 3/10 篇**
+> **CKA 通过之路 · 第 3/11 篇**
 > 上一篇：[《从 docker run 到「我要 3 个」——kind 十分钟初体验》](/云原生/cka/cka-01-first-deployment) · 下一篇：[《把配置和密码放进容器——ConfigMap 与 Secret》](/云原生/cka/cka-03-configmap-secret)
 
 ---
