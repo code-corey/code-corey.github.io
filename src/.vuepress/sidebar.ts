@@ -2279,6 +2279,7 @@ export default sidebar({
         "cka-08-startup-probe",
         "cka-09-label-selector",
         "cka-10-scheduling",
+        "cka-11-tolerations",
       ],
     },
   ],

@@ -17,7 +17,7 @@ tag:
 description: pod 落在哪个节点，谁拍板？这节课抓到拍板人的签名，又造了个挑剔的 pod：nodeSelector 只去贴着 disk=ssd 的节点，结果等了 34 小时坐冷板凳，重试 75 次不放水——一张标签贴上去，8 秒复活。后半程讲节点怎么拒客：污点 gpu=true:NoSchedule 逐字拆开，附完整可照抄的污点+容忍书实验。中间夹一场 kind 三节点考场五连败，和一次老师编造输出被当场拆穿的坦白。
 ---
 
-> **CKA 通过之路 · 第 11/11 篇**
+> **CKA 通过之路 · 第 11/12 篇**
 > 上一篇：[《名单的另一半——label 与 selector》](/云原生/cka/cka-09-label-selector) · 下一篇：[《牌与书的博弈——tolerations 进阶》](/云原生/cka/cka-11-tolerations)
 
 ---
