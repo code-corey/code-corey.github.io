@@ -17,7 +17,7 @@ tag:
 description: pod 是随时会被赶走的房客，数据住哪？四站搬家实录：容器自带磁盘（pod 死文件陪葬）、emptyDir（同 pod 共享抽屉，照样殉葬）、hostPath（跨 pod 活了但绑死一台机器）、PVC/StorageClass/PV 三件套（申请单先 Pending 等第一个消费者，pod 落地货秒造，删 pod 数据复活，注销申请单货连数据物理销毁）。课堂中途全部清空从零重讲，课尾三道 CKA 风格出题暴露审数字、字段拼写、读表看错列三个丢分重灾区。
 ---
 
-> **CKA 通过之路 · 第 13/13 篇**
+> **CKA 通过之路 · 第 13/14 篇**
 > 上一篇：[《牌与书的博弈——tolerations 进阶》](/云原生/cka/cka-11-tolerations) · 下一篇：[《配置的座位——ConfigMap 与 Secret》](/云原生/cka/cka-13-configmap-secret)
 
 ---

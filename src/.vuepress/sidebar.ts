@@ -1581,6 +1581,74 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-09-24",
+      icon: "folder",
+      prefix: "2026-09-24/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-2026-09-24 导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-Claude Opus 5.5 发布",
+          link: "01-claude-opus-5-5",
+        },
+        {
+          text: "02-GPT-6 Sol 与 Luna",
+          link: "02-gpt-6-sol-luna",
+        },
+        {
+          text: "03-25 行实现 Jev",
+          link: "03-jev-25-lines",
+        },
+        {
+          text: "04-Stripe 知识 AI 平台",
+          link: "04-stripe-knowledge-ai",
+        },
+        {
+          text: "05-jev-chat-jarvis 副驾",
+          link: "05-jev-chat-jarvis",
+        },
+        {
+          text: "06-geo-sleuth 照片定位",
+          link: "06-geo-sleuth",
+        },
+        {
+          text: "07-Claude 发现新酶系统",
+          link: "07-claude-enzyme-discovery",
+        },
+        {
+          text: "08-gzip 当语言模型",
+          link: "08-gzip-language-model",
+        },
+        {
+          text: "09-Claude Code 遥测争议",
+          link: "09-claude-code-agents-md-telemetry",
+        },
+        {
+          text: "10-MiMo-v2.6-Pro 评测",
+          link: "10-mimo-v2-6-pro-analysis",
+        },
+        {
+          text: "11-GPT-6 破译 Enigma",
+          link: "11-gpt6-astra-enigma-break",
+        },
+        {
+          text: "12-Radicle 协议漏洞披露",
+          link: "12-radicle-protocol-vulnerability",
+        },
+        {
+          text: "13-BNB Agent Chain 实验",
+          link: "13-bnb-agent-chain",
+        },
+        {
+          text: "14-Monero 自托管钱包",
+          link: "14-monero-web-wallet",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
@@ -2281,6 +2349,7 @@ export default sidebar({
         "cka-10-scheduling",
         "cka-11-tolerations",
         "cka-12-storage",
+        "cka-13-configmap-secret",
       ],
     },
   ],

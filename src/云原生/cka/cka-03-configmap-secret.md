@@ -15,7 +15,7 @@ tag:
 description: docker -e 传环境变量在 k8s 里的正统做法：ConfigMap 存配置、Secret 存密码，envFrom 整包注入，k exec 进容器验证，base64 解码看明文——含一次真实的 passsword 三个 s 事故。
 ---
 
-> **CKA 通过之路 · 第 4/13 篇**
+> **CKA 通过之路 · 第 4/14 篇**
 > 上一篇：[《yaml 就是一棵树——dry-run 生成、缩进陷阱与报错定位》](/云原生/cka/cka-02-yaml-tree) · 下一篇：[《流量转发名单——Service 与 endpoints》](/云原生/cka/cka-04-service-endpoints)
 
 ---

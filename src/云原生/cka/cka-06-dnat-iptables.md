@@ -16,7 +16,7 @@ tag:
 description: 「IP 进名单后流量放行」的底层原理追问。用 docker -p 映射亲手抓一条 DNAT 规则，逐字段拆解 iptables，再对照 kube-proxy 的 KUBE- 链——Service 转发没有魔法，全是内核规则。
 ---
 
-> **CKA 通过之路 · 第 7/13 篇**
+> **CKA 通过之路 · 第 7/14 篇**
 > 上一篇：[《READY 0/1 之谜——就绪探针与 connection refused》](/云原生/cka/cka-05-readiness-probe) · 下一篇：[《卡死了谁来救？——livenessProbe 与 CrashLoopBackOff 的算法》](/云原生/cka/cka-07-liveness-crashloopbackoff)
 
 ---
