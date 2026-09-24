@@ -1978,6 +1978,7 @@ export default sidebar({
         "mitmweb",
         "wechat-mmtls",
         "wmpfdebugger",
+        "terminal-beautify",
       ],
     },
   ],
