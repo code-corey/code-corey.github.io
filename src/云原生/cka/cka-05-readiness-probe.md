@@ -15,7 +15,7 @@ tag:
 description: 一个永远 READY 0/1、重启 0 次的 pod：用 describe 的事件读出探针默认参数，用 connection refused vs timeout 分清"没人听"和"路不通"，用 endpoints 除名闭环理解就绪探针存在的意义。
 ---
 
-> **CKA 通过之路 · 第 6/14 篇**
+> **CKA 通过之路 · 第 6/17 篇**
 > 上一篇：[《流量转发名单——Service 与 endpoints》](/云原生/cka/cka-04-service-endpoints) · 下一篇：[《提前课：docker -p 就是 DNAT——iptables 与 kube-proxy》](/云原生/cka/cka-06-dnat-iptables)
 
 ---

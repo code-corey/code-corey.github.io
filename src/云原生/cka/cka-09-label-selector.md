@@ -16,7 +16,7 @@ tag:
 description: kubectl expose 里没写过一个 pod 名字或 IP，Service 的转发名单却精确收编了该收的 pod——悬案一节课告破：pod 胸口贴 label，Service 手里攥 selector，expose 的 selector 是从 deployment 身上抄来的。撕标签实验证明：健康的 pod 身份不对照样出局；外加一位「影子同学」在同集群做同款实验的真实碰撞。
 ---
 
-> **CKA 通过之路 · 第 10/14 篇**
+> **CKA 通过之路 · 第 10/17 篇**
 > 上一篇：[《慢启动的冤案——startupProbe》](/云原生/cka/cka-08-startup-probe) · 下一篇：[《节点也有标签——调度开篇》](/云原生/cka/cka-10-scheduling)
 
 ---
