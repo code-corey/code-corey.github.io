@@ -1,0 +1,63 @@
+---
+title: "Fed proposes GENIUS Act rules for stablecoin reserves and bank issuers（美联储就 GENIUS 法案稳定币储备与银行发行商规则公开征求意见）"
+shortTitle: "美联储 GENIUS 稳定币规则"
+sidebarGroup: "2026-09-25"
+order: 11
+date: 2026-09-24
+category:
+  - "每日 AI 简报"
+tag:
+  - "Web3 & Crypto"
+description: 美联储依 GENIUS 法案就稳定币储备金与银行发行商规则公开征求意见，美国稳定币监管框架加速成型。
+---
+
+# Fed proposes GENIUS Act rules for stablecoin reserves and bank issuers（美联储就 GENIUS 法案稳定币储备与银行发行商规则公开征求意见）
+
+> 📅 2026-09-24 | 🏷️ Web3 & Crypto | ⭐ 多源确认：Bloomberg / Crypto News / 财联社 / 新浪财经
+> 🔗 原文：https://news.google.com/rss/articles/CBMif0FVX3lxTE5XOXFQb1hiNGg1S3ZBMG1hbUVZRzRIOGxqLTl1anR6S2VWUU1vclNYX3hETnpRd2hHQnJ2VlBDRk5POFFQRW1kb0N6UVRaMXFnbTF1ellfd1Z1WElJQVZyZkl0S2RmMjJfWGFDMHJvdjVYdGE5WGJIZnlXbVhpME0?oc=5
+
+## 是什么
+
+美联储依据《GENIUS 法案》发布了两项与稳定币相关的监管提案，内容涉及储备金（reserves）与银行类发行商（bank issuers），并向公众征求意见。Bloomberg 的报道称，美国监管者正在"拥抱加密"、公布更多稳定币监管计划。这意味着美国稳定币监管框架正在从立法走向可执行的细则。
+
+## 🔍 小白解读
+
+### 先说几个词
+
+- **稳定币（Stablecoin）**：一种价格锚定法币（如 1:1 锚定美元）的数字货币，类似"数字化的人民币/美元代金券"，可以像现金一样在区块链上转账。
+- **储备金（Reserves）**：发行方为支撑稳定币而持有的真实资产。打个比方：就像发行代金券的商家必须在金库里真存着等额的钱，代金券才值钱。
+- **银行类发行商（Bank issuers）**：拿到银行牌照或由银行体系直接发行稳定币的机构，相当于"有正规金融执照的印钞方"。
+- **GENIUS 法案**：美国针对稳定币设立的联邦立法，为发行、储备与监管划定法律框架。
+- **征求意见（Comment period）**：监管发布草案后开放公众与机构提意见的阶段，规则还没最终定稿。
+
+### 这篇到底在说什么
+
+美国政府此前通过了《GENIUS 法案》，给稳定币立了法。现在美联储把法案落到具体执行层面，拿出了两项提案：一项关系到稳定币背后要有怎样的储备金，另一项关系到什么样的银行类机构可以发行稳定币。这些提案目前处于征求意见阶段，也就是说企业和公众可以提交反馈，条款细节以官方最终发布为准。Bloomberg 的角度是：监管者不仅没有排斥加密行业，反而在主动搭建稳定币的制度框架，公布了更多计划。多家中英文媒体（财联社、新浪财经、tmgm、Investing.com）都做了跟进，口径一致。对整个行业来说，稳定币发行正在从"谁都能发"走向"持牌 + 储备金规则化"的时代。
+
+### 这跟普通人有什么关系
+
+如果你所在的公司涉及稳定币收付款、跨境结算，未来选择合作方时就要看发行方是否持牌、储备是否透明——就像转账前确认对方是不是正规银行。对个人持有者而言，规则化意味着劣质发行方暴雷的风险有望下降，但具体保护程度要看最终细则。
+
+## 为什么值得架构师关注
+
+- 稳定币发行进入持牌/储备金规则化时代，支付与结算系统的合规前提在变：接入稳定币的架构必须把"发行方合规资质验证"作为设计约束。
+- 对跨境结算与支付链路而言，储备金规则会影响流动性与外汇敞口架构的设计方式。
+- 涉及稳定币收付的企业，需要把"跟踪发行方合规状态与储备透明度"纳入运营流程，而不是一次性选型。
+
+## 核心内容
+
+- 美联储依据《GENIUS 法案》发布稳定币相关提案，并公开征求意见。
+- 提案涉及两大主题：储备金（reserves）与银行类发行商（bank issuers）。
+- Bloomberg 报道称监管者正"拥抱加密"、公布更多稳定币计划。
+- 条款细节目前未公开（缓存无更多内容），最终规则以官方通报为准。
+- 中文媒体（财联社、新浪财经、tmgm、Investing.com）多源跟进，口径一致。
+
+相关报道：
+
+- Bloomberg：Fed Unveils More Stablecoin Plans As Regulators Embrace Crypto：https://news.google.com/rss/articles/CBMiswFBVV95cUxPbWRNa2VXUVQ1UUFOSHlnM3VoVFJGaVB6eFVWdmVNNklWcEh6WEd5amxLdk15emhFU2FEVS1sY0xtS3dEcGszTF9STHljMVJvWTl2dGh3eVBLNXJlajg5X1p2QjQ3UUhzRnpxUE1RaENGMmRfMVhuVFhSWVpHVTZ2NUlhU1A2Ukp6VEZBUTNlbEc5TnFwYzJIM2lQRkpyZTFtemtUUlN5ZUZ1OUdyS3FRWmZ4SQ?oc=5
+- 中文（tmgm）：美联储根据《GENIUS法案》就两项稳定币提案征求公众意见：https://news.google.com/rss/articles/CBMi5AFBVV95cUxNajhjSFFwQklZZTMzdlFWdGxvTkJkSGVVWUF1MXMwMnU1eDFCNXN0ZGx2bC1JMlgwRTZCbzNteG9yd0o4MzlXQXFyeUxxTWtrcHNrXzMtRFBqWUhqNl93d0d0SGJtSnNMSEYwZ3RkRWZ0S3FGbE14c083Y29hT0VkWE1wc2NFeXg4dHNPdjVqTUxJVkJ1SW1rd01ib1g3cXdrd1Rrd1lUYlRNd3NUTDRGdEk5UFVyYS0xU2xuU3hzZUkzZXBzUHYzaXJTcm02WE1lZFJaRWVhOS1ISFdaME5mUDdVaF8?oc=5
+- 中文（Investing.com）：美联储发布稳定币发行商监管框架提案：https://news.google.com/rss/articles/CBMic0FVX3lxTE5MVGlNTm92b0laTTBBNGNzQjhfYU54azVJdGY0eFpWN1RzcjRIMnd3dUgtRHIyQ09IallXYW5wamM0bXhrdFFMUkdQaFVtanFsOEplWHhZZmRKaC1hVGtHWUdpR1ZzN1pkWFFHRjJHdVlGQmc?oc=5
+
+## 行动建议
+
+企业若涉及稳定币收付或结算，建议：一是建立对发行方合规资质与储备透明度的持续跟踪机制；二是梳理现有支付/结算架构对储备规则变化的敏感点；三是在征求意见阶段关注行业反馈，预判规则走向。细节尚未定稿，了解规则框架即可，无需急于调整架构。

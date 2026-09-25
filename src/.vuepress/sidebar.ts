@@ -1649,6 +1649,58 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-09-25",
+      icon: "folder",
+      prefix: "2026-09-25/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-Claude 用测量驱动提速",
+          link: "01-claude-measure-faster",
+        },
+        {
+          text: "02-Mercury 2.5 达 770 token/秒",
+          link: "02-mercury-2-5-770-tokens-per-second",
+        },
+        {
+          text: "03-golive-skill 上线门禁",
+          link: "03-golive-skill",
+        },
+        {
+          text: "04-magpie 模型切换器",
+          link: "04-magpie-coding-agent-switcher",
+        },
+        {
+          text: "05-JIT Memory 论文",
+          link: "05-just-in-time-memory",
+        },
+        {
+          text: "06-SpeakerMem-R1 记忆论文",
+          link: "06-speaker-mem-r1",
+        },
+        {
+          text: "07-Gemini 3.8 Live 发布",
+          link: "07-gemini-3-8-live",
+        },
+        {
+          text: "08-Akamai×Anthropic 116亿美元",
+          link: "08-akamai-anthropic-11b-deal",
+        },
+        {
+          text: "09-OpenAI Agent 入侵澳政府网站",
+          link: "09-openai-agent-australia-breach",
+        },
+        {
+          text: "11-美联储 GENIUS 稳定币规则",
+          link: "11-fed-genius-stablecoin-rules",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
@@ -2351,6 +2403,9 @@ export default sidebar({
         "cka-11-tolerations",
         "cka-12-storage",
         "cka-13-configmap-secret",
+        "cka-14-rollout",
+        "cka-15-job-cronjob",
+        "cka-16-requests-limits",
       ],
     },
   ],
