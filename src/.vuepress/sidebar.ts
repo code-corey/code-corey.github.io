@@ -1701,6 +1701,62 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-09-30",
+      icon: "folder",
+      prefix: "2026-09-30/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-09-30 今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-Jeff 0.8B 家用决策模型",
+          link: "01-jeff-08b-decision-models",
+        },
+        {
+          text: "02-OpenAI Dots 常驻智能体",
+          link: "02-openai-dots-always-on-agents",
+        },
+        {
+          text: "03-AIHOT 自动热点日报框架",
+          link: "03-aihot-self-running-hotspot-framework",
+        },
+        {
+          text: "04-MCP 安全审计 CLI",
+          link: "04-mcp-audit-tool",
+        },
+        {
+          text: "05-对话式 AI 隐私测量研究",
+          link: "05-privacy-analysis-conversational-ai-agents",
+        },
+        {
+          text: "06-AI 元认知经典回顾",
+          link: "06-metacognition-in-ai",
+        },
+        {
+          text: "07-Claude Sonnet 5.5 发布",
+          link: "07-claude-sonnet-5-5",
+        },
+        {
+          text: "08-GPT 6.1 Sol 低价发布",
+          link: "08-gpt-6-1-sol",
+        },
+        {
+          text: "09-World Labs 加入 AMD",
+          link: "09-world-labs-joins-amd",
+        },
+        {
+          text: "10-Nvidia agent 看门狗芯片",
+          link: "10-nvidia-agent-watchdog-chip",
+        },
+        {
+          text: "11-GLM-5.3 网络能力研究",
+          link: "11-glm-5-3-cyber-capabilities",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
