@@ -1757,6 +1757,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-10-01",
+      icon: "folder",
+      prefix: "2026-10-01/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-今日导读 10-01",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-PostHog Jeeves 决策推理",
+          link: "01-posthog-jeeves",
+        },
+        {
+          text: "02-Magnitude 自优化推理",
+          link: "02-magnitude-self-optimizing-inference",
+        },
+        {
+          text: "03-Claude 部分中断",
+          link: "03-claude-partial-outage",
+        },
+        {
+          text: "04-dots 反封锁浏览器Agent",
+          link: "04-dots-browser-agent",
+        },
+        {
+          text: "05-Nokia AnyJev 决策层",
+          link: "05-anyjev-typed-decisions",
+        },
+        {
+          text: "06-Raschka 分类演进史",
+          link: "06-classifier-history-to-jev",
+        },
+        {
+          text: "07-PSSA 非Transformer",
+          link: "07-pssa-non-transformer-rust",
+        },
+        {
+          text: "08-Gemini 4 Argon 发布",
+          link: "08-gemini-4-argon",
+        },
+        {
+          text: "09-GPT-6.1 Sol 独立评测",
+          link: "09-gpt-6-1-sol-benchmark-analysis",
+        },
+        {
+          text: "10-DraftKings AI 定向争议",
+          link: "10-draftkings-ai-targeting",
+        },
+        {
+          text: "11-Livenerf 模型漂移追踪",
+          link: "11-livenerf-opus-nerf-tracking",
+        },
+        {
+          text: "12-Meta Muse 权限失守",
+          link: "12-meta-muse-permissions",
+        },
+        {
+          text: "13-USPIS 伪造标签案",
+          link: "13-uspis-counterfeit-postage",
+        },
+        {
+          text: "14-x402 链上风险API",
+          link: "14-jev-risk-check-x402",
+        },
+        {
+          text: "15-Agent 可读审计数据集",
+          link: "15-agent-friendly-audit-findings",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
