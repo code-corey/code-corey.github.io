@@ -1829,6 +1829,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-10-02",
+      icon: "folder",
+      prefix: "2026-10-02/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-今日导读 10-02",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-向量数据库之死",
+          link: "01-rip-vector-database",
+        },
+        {
+          text: "02-Cloudflare Clef 决策模型",
+          link: "02-clef-open-weight-decision-models",
+        },
+        {
+          text: "03-coucou 盯梢 Coding Agent",
+          link: "03-coucou-agent-monitor",
+        },
+        {
+          text: "04-seiso 文档规范 Linter",
+          link: "04-seiso-docs-linter",
+        },
+        {
+          text: "05-潜在视觉推理反思",
+          link: "05-latent-visual-reasoning",
+        },
+        {
+          text: "06-MILO 自动进化 Harness",
+          link: "06-milo-harness-coevolution",
+        },
+        {
+          text: "07-GPT-Synopsys 芯片设计",
+          link: "07-gpt-synopsys-chip-design",
+        },
+        {
+          text: "08-Broadcom 贷款 420 亿美元",
+          link: "08-broadcom-anthropic-chip-loan",
+        },
+        {
+          text: "09-Agent 身份管理白皮书",
+          link: "09-agentic-ai-identity",
+        },
+        {
+          text: "10-中国模型进 OpenAI 采购单",
+          link: "10-china-model-openai-procurement",
+        },
+        {
+          text: "11-SEC 加密托管新规",
+          link: "11-sec-crypto-custody-rules",
+        },
+        {
+          text: "12-Visa/Stripe 推 OUSD",
+          link: "12-ousd-stablecoin-launch",
+        },
+        {
+          text: "13-MetaMask 退出验证者",
+          link: "13-metamask-validator-exit",
+        },
+        {
+          text: "14-矿企转型 AI",
+          link: "14-bitcoin-miners-ai-pivot",
+        },
+        {
+          text: "15-稳定币卡月耗 11.7 亿",
+          link: "15-stablecoin-card-spending",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
