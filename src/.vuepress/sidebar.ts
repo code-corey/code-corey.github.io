@@ -1901,6 +1901,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-10-04",
+      icon: "folder",
+      prefix: "2026-10-04/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-2026-10-04 每日 AI 简报",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-GLM 5.3 Flash 一个月实编",
+          link: "01-glm-53-flash-one-month-coding",
+        },
+        {
+          text: "02-ds4 本地跑大模型",
+          link: "02-ds4-local-llm-runtime",
+        },
+        {
+          text: "03-universal-modder 游戏改造",
+          link: "03-universal-modder",
+        },
+        {
+          text: "04- strands-decider 决策模型",
+          link: "04-strands-decider",
+        },
+        {
+          text: "05-蒸馏动力学：On/Off-Policy",
+          link: "05-on-policy-off-policy-distillation",
+        },
+        {
+          text: "06-OneStreamer 流式视频模型",
+          link: "06-onestreamer-streaming-video",
+        },
+        {
+          text: "07-GPT-6 Sol/Luna 发布",
+          link: "07-gpt-6-sol-and-luna",
+        },
+        {
+          text: "08-美国政府与 Anthropic 切割",
+          link: "08-trump-anthropic-cut-ties",
+        },
+        {
+          text: "09-LLM 时代的内核安全",
+          link: "09-kroah-hartman-security-llm-age",
+        },
+        {
+          text: "10-平安银行首部 AI 管理办法",
+          link: "10-china-bank-ai-governance",
+        },
+        {
+          text: "11-SEC 加密托管新规",
+          link: "11-sec-crypto-custody-rules",
+        },
+        {
+          text: "12-英国稳定币监管 2027",
+          link: "12-uk-stablecoin-regime-2027",
+        },
+        {
+          text: "13-Blast 链关停",
+          link: "13-blast-chain-shutdown",
+        },
+        {
+          text: "14-Nuvex 可验证计算协议",
+          link: "14-nuvex-solana-verifiable-compute",
+        },
+        {
+          text: "15-加密货币俘获外国援助",
+          link: "15-nber-crypto-capture-foreign-aid",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
