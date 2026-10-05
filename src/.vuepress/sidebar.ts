@@ -1973,6 +1973,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-10-05",
+      icon: "folder",
+      prefix: "2026-10-05/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-10-05 今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-Agent 成本保险丝",
+          link: "01-default-hard-budget-caps",
+        },
+        {
+          text: "02-Agent 要文档不要记忆？",
+          link: "02-agents-need-documentation",
+        },
+        {
+          text: "03-answer-me-with-html",
+          link: "03-answer-me-with-html",
+        },
+        {
+          text: "04-yomiyasu 日语润色 Skill",
+          link: "04-yomiyasu",
+        },
+        {
+          text: "05-小 LoRA 解锁 Transformer 深度",
+          link: "05-transformers-stop-thinking-too-early",
+        },
+        {
+          text: "06-X-Tree：经验分词进权重",
+          link: "06-x-tree-agent-experience",
+        },
+        {
+          text: "07-德国主权 LLM Kolibri",
+          link: "07-aleph-alpha-kolibri",
+        },
+        {
+          text: "08-DeepSeek×华为 vs Nvidia",
+          link: "08-deepseek-huawei-nvidia",
+        },
+        {
+          text: "09-OpenAI 安全负责人离职",
+          link: "09-openai-safety-culture",
+        },
+        {
+          text: "10-7 亿用户：AI 产业底盘",
+          link: "10-china-ai-700m-users",
+        },
+        {
+          text: "11-四大巨头押注 Open USD",
+          link: "11-openusd-billion-stablecoin",
+        },
+        {
+          text: "12-美财政部稳定币赎回新规",
+          link: "12-treasury-stablecoin-rules",
+        },
+        {
+          text: "13-USDT 回归比特币网络",
+          link: "13-usdt-returns-to-bitcoin",
+        },
+        {
+          text: "14-ChainChaos EVM 混沌测试",
+          link: "14-chainchaos-evm-chaos-testing",
+        },
+        {
+          text: "15-贝莱德：稳定币成AI支付轨道",
+          link: "15-blackrock-stablecoin-ai-rails",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
