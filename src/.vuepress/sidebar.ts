@@ -2045,6 +2045,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-10-07",
+      icon: "folder",
+      prefix: "2026-10-07/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-2026-10-07 导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-Claude Code建议消息的真实用户",
+          link: "01-ai-claude-code-suggested-message",
+        },
+        {
+          text: "02-OpenAI Decisions API公测",
+          link: "02-ai-openai-decisions-api",
+        },
+        {
+          text: "03-replica-skill克隆应用技能集",
+          link: "03-ai-replica-skill",
+        },
+        {
+          text: "04-dscode智能体harness解析",
+          link: "04-ai-dscode-harness",
+        },
+        {
+          text: "05-Agentic检索性能成本实测",
+          link: "05-ai-agentic-retrieval-costs",
+        },
+        {
+          text: "06-Agent记忆：选择替代抽取",
+          link: "06-ai-agent-memory-selection-vs-extraction",
+        },
+        {
+          text: "07-Mistral Large 4发布",
+          link: "07-ai-mistral-large-4",
+        },
+        {
+          text: "08-Reflection发布501B Beam",
+          link: "08-ai-beam-reflection-501b",
+        },
+        {
+          text: "09-Anthropic上报用户日记事件",
+          link: "09-ai-anthropic-diary-police",
+        },
+        {
+          text: "10-dsh免费模型插件现象",
+          link: "10-ai-dsh-free-model",
+        },
+        {
+          text: "11-CFTC拟立加密联邦新规",
+          link: "11-web3-cftc-federal-rules",
+        },
+        {
+          text: "12-首批3倍杠杆BTC/ETH ETF放行",
+          link: "12-web3-sec-3x-etf",
+        },
+        {
+          text: "13-USDG稳定币登陆Arbitrum",
+          link: "13-web3-usdg-arbitrum",
+        },
+        {
+          text: "14-OKX获Circle Ripple投资",
+          link: "14-web3-okx-expansion",
+        },
+        {
+          text: "15-Vitalik谈AI成新UI",
+          link: "15-web3-vitalik-ai-ui-security",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
