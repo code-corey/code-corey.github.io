@@ -2117,6 +2117,82 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-10-08",
+      icon: "folder",
+      prefix: "2026-10-08/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-2026-10-08 今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-Strands Decider 2B 模型",
+          link: "01-strands-decider-2b",
+        },
+        {
+          text: "02-Docker 官方 Agent 框架",
+          link: "02-docker-agent",
+        },
+        {
+          text: "03-OpenQodex 代码审查闸门",
+          link: "03-openqodex-code-review",
+        },
+        {
+          text: "04-bilibili 翻译模型家族",
+          link: "04-bilibili-index-translate",
+        },
+        {
+          text: "05-CheckerBench Agent 基准",
+          link: "05-checkerbench",
+        },
+        {
+          text: "06-DAEDALUS Agent 记忆",
+          link: "06-daedalus-agent-memory",
+        },
+        {
+          text: "07-Mistral Large 4 发布",
+          link: "07-mistral-large-4",
+        },
+        {
+          text: "08-Claude Haiku 5.5 发布",
+          link: "08-claude-haiku-5-5",
+        },
+        {
+          text: "09-OpenAI 数学进展公开",
+          link: "09-openai-math-progress",
+        },
+        {
+          text: "10-韩国银行 AI 黑客事件",
+          link: "10-korea-ai-bank-hacks",
+        },
+        {
+          text: "11-DeepSeek 押注国产算力",
+          link: "11-deepseek-domestic-compute",
+        },
+        {
+          text: "12-CFTC 数字商品认定",
+          link: "12-cftc-xrp-stellar-commodities",
+        },
+        {
+          text: "13-Polygon×TRON 稳定币",
+          link: "13-polygon-tron-stablecoin",
+        },
+        {
+          text: "14-Stellar 链上加密邮件",
+          link: "14-stellar-hush-private-email",
+        },
+        {
+          text: "15-gem-search 链上扫描",
+          link: "15-gem-search-onchain-scanner",
+        },
+        {
+          text: "16-AI×Crypto 安全警报",
+          link: "16-bunker-mode-ai-crypto-threat",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
