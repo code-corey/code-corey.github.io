@@ -2193,6 +2193,82 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-10-09",
+      icon: "folder",
+      prefix: "2026-10-09/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-2026-10-09 今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-LLM移植TS编译器到Rust",
+          link: "01-ts-rust-typescript-compiler-by-llm",
+        },
+        {
+          text: "02-亚1比特LLM压缩LittleBit",
+          link: "02-sub-1-bit-llm-compression-littlebit",
+        },
+        {
+          text: "03-Bops企业运营AI机器人",
+          link: "03-bops-ai-business-ops-bots",
+        },
+        {
+          text: "04-AI编程记录提取器",
+          link: "04-ai-data-extractor",
+        },
+        {
+          text: "05-NAMVIS自回归多视图合成",
+          link: "05-namvis-next-scale-multiview",
+        },
+        {
+          text: "06-MIMESIS用户模拟器",
+          link: "06-mimesis-user-simulator",
+        },
+        {
+          text: "07-OpenAI全量推送GPT-6",
+          link: "07-gpt6-intelligent-ui",
+        },
+        {
+          text: "08-谷歌发布Gemini4Argon",
+          link: "08-gemini-4-argon",
+        },
+        {
+          text: "09-OpenAI营收缺口200亿",
+          link: "09-openai-revenue-gap",
+        },
+        {
+          text: "10-OpenAI撤回3篇数学论文",
+          link: "10-openai-withdraws-3-math-papers",
+        },
+        {
+          text: "11-IDC大模型防火墙首份横评",
+          link: "11-idc-llm-firewall-report",
+        },
+        {
+          text: "12-欧盟稳定币下架大限",
+          link: "12-eu-stablecoin-deadline",
+        },
+        {
+          text: "13-三星8200万手机USDC汇款",
+          link: "13-samsung-usdc-remittance-solana-sui",
+        },
+        {
+          text: "14-Solana上线代币化美股",
+          link: "14-securitize-tokenized-stocks-solana",
+        },
+        {
+          text: "15-Stellar稳定币通道监控",
+          link: "15-stellar-pathfinder",
+        },
+        {
+          text: "16-Vitalik背书地堡模式",
+          link: "16-vitalik-bunker-mode-ai-math",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
