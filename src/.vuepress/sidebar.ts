@@ -2269,6 +2269,54 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-10-10",
+      icon: "folder",
+      prefix: "2026-10-10/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-AI Agent 屏幕标注工具",
+          link: "01-agent-screen-arrows",
+        },
+        {
+          text: "02-编码Agent为何这么笨",
+          link: "02-why-coding-agents-dumb",
+        },
+        {
+          text: "03-开源本地AI理财",
+          link: "03-aurelio-finance",
+        },
+        {
+          text: "04-AntOmniEvo自动进化",
+          link: "04-antomnievo",
+        },
+        {
+          text: "05-OpenAI收入缩水200亿",
+          link: "05-openai-revenue-gap",
+        },
+        {
+          text: "06-OpenAI解雇安全研究员",
+          link: "06-openai-safety-researchers-fired",
+        },
+        {
+          text: "07-微软快速决策模型",
+          link: "07-microsoft-decision-1",
+        },
+        {
+          text: "08-ChatGPT卷入假新闻行动",
+          link: "08-iran-chatgpt-disinfo",
+        },
+        {
+          text: "09-Jevman决策模型基准",
+          link: "09-jevman-benchmark",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
