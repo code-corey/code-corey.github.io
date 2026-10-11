@@ -2317,6 +2317,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-10-11",
+      icon: "folder",
+      prefix: "2026-10-11/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-10-11 今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-MXC：AI Agent 执行容器",
+          link: "01-mxc-execution-containers",
+        },
+        {
+          text: "02-Talorys：免费套餐个人 Agent",
+          link: "02-talorys-cloudflare-agent",
+        },
+        {
+          text: "03-Mortiflix：Agent 视频流水线",
+          link: "03-mortiflix-oss-agent-video-pipeline",
+        },
+        {
+          text: "04-Solvecraft：Rust 开源 CAD",
+          link: "04-solvecraft-rust-cad-mcp",
+        },
+        {
+          text: "05-Memento 3：规则簿世界模型",
+          link: "05-memento3-rulebook-world-models",
+        },
+        {
+          text: "06-U-Space：模型不确定性",
+          link: "06-u-space-uncertainty-llm",
+        },
+        {
+          text: "07-NVIDIA 洽购 Reflection AI",
+          link: "07-nvidia-reflection-ai-talks",
+        },
+        {
+          text: "08-白宫 AI 上报制度",
+          link: "08-white-house-ai-reporting-mandate",
+        },
+        {
+          text: "09-Anthropic 智能体失控复盘",
+          link: "09-anthropic-agent-misbehavior",
+        },
+        {
+          text: "10-人社部 AI 促就业行动",
+          link: "10-mohrss-ai-employment-action",
+        },
+        {
+          text: "11-CFTC 监管框架问计",
+          link: "11-cftc-crypto-framework-input",
+        },
+        {
+          text: "12-国家区块链网络政策",
+          link: "12-china-national-blockchain-network",
+        },
+        {
+          text: "13-Stripe 卡位 AI+稳定币",
+          link: "13-stripe-ai-stablecoin-rails",
+        },
+        {
+          text: "14-Clearledger 发票融资",
+          link: "14-clearledger-stellar-invoice-finance",
+        },
+        {
+          text: "15-Stellar 合规监控栈",
+          link: "15-stellar-sentinel-compliance-monitor",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
