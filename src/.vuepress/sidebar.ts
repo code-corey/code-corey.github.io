@@ -2389,6 +2389,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-10-12",
+      icon: "folder",
+      prefix: "2026-10-12/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-10-12 今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-5000亿token反编译FPS",
+          link: "01-ai-agents-decompile-fps",
+        },
+        {
+          text: "02-LLM能力认知鸿沟拉大",
+          link: "02-karpathy-llm-capability-gap",
+        },
+        {
+          text: "03-DigUp本地语义搜索",
+          link: "03-digup-on-device-search",
+        },
+        {
+          text: "04-Agent复用Chrome中继",
+          link: "04-agent-chrome-relay",
+        },
+        {
+          text: "05-REMEMORY残差记忆",
+          link: "05-remory-context-compaction",
+        },
+        {
+          text: "06-Opera编码Agent批评者",
+          link: "06-opera-verbal-critic",
+        },
+        {
+          text: "07-亚马逊70亿收购Decart",
+          link: "07-amazon-decart-acquisition",
+        },
+        {
+          text: "08-FTC启动AI安全调查",
+          link: "08-ftc-ai-safety-probe",
+        },
+        {
+          text: "09-Anthropic越权事件复盘",
+          link: "09-anthropic-unintended-actions",
+        },
+        {
+          text: "10-国务院AI重磅文件",
+          link: "10-china-ai-policy-document",
+        },
+        {
+          text: "11-三季度数字资产报告",
+          link: "11-web3-quarterly-report",
+        },
+        {
+          text: "12-稳定币牌照遭诉讼",
+          link: "12-occ-stablecoin-charter-lawsuit",
+        },
+        {
+          text: "13-Windle链上承诺市场",
+          link: "13-windle-solana-promises",
+        },
+        {
+          text: "14-以太坊量子安全分叉",
+          link: "14-starknet-quantum-split",
+        },
+        {
+          text: "15-Hashi五亿BTC借贷",
+          link: "15-hashi-bitcoin-loans-sui",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
