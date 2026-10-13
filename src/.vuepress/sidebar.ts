@@ -2461,6 +2461,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-10-13",
+      icon: "folder",
+      prefix: "2026-10-13/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-10-13 今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-Codex CLI后台守护进程",
+          link: "01-codex-cli-daemon",
+        },
+        {
+          text: "02-Agent多代码少软件",
+          link: "02-ai-agents-more-code",
+        },
+        {
+          text: "03-7美元ESP32操控iPhone",
+          link: "03-esp32-iphone-agent",
+        },
+        {
+          text: "04-nanoMuse个人智能体",
+          link: "04-nanomuse-personal-agent",
+        },
+        {
+          text: "05-S-Space空间表征",
+          link: "05-sspace-spatial-subspace",
+        },
+        {
+          text: "06-AAArena启发式学习",
+          link: "06-aaarena-heuristic-learning",
+        },
+        {
+          text: "07-Meta Muse Wonder发布",
+          link: "07-meta-muse-wonder",
+        },
+        {
+          text: "08-智谱GLM-Legal发布",
+          link: "08-glm-legal",
+        },
+        {
+          text: "09-AI公司黑客责任争议",
+          link: "09-ai-hacking-liability",
+        },
+        {
+          text: "10-丘成桐数学AI联盟",
+          link: "10-yau-math-ai-labs",
+        },
+        {
+          text: "11-韩国银行BTC抵押贷款",
+          link: "11-korea-bank-btc-loans",
+        },
+        {
+          text: "12-FTX矿场转AI算力",
+          link: "12-ftx-mining-to-ai-compute",
+        },
+        {
+          text: "13-英高院钱志敏案裁定",
+          link: "13-uk-court-btc-restitution-china-law",
+        },
+        {
+          text: "14-Ledger隐藏芯片争议",
+          link: "14-ledger-hidden-chip",
+        },
+        {
+          text: "15-后量子密码选型指南",
+          link: "15-pqc-crypto-right-answers",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
