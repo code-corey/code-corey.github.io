@@ -11,7 +11,7 @@ tag:
   - Kubernetes
   - 资源管理
   - OOM
-description: 小区食堂没人管饭量，一户大胃王能把全小区吃穷。Kubernetes 的规矩就两个数字：requests（报饭量，排座时看）和 limits（红线，跑起来后看）。本课一路实测三条墙：exec 副手吃超被 exit 137 秒杀、红线画太低在开工仪式上就被掐（RunContainerError）、/dev/shm 内存假盘自带 64Mi 盘墙挡住 dd——最后用 awk 指数翻倍纯内存猛吃，实锤 Last State: OOMKilled / Exit Code 137 / 启动死亡同一秒。附 QoS 三档（BestEffort / Burstable / Guaranteed）。全程大白话 + 命令输出逐字实录。
+description: "小区食堂没人管饭量，一户大胃王能把全小区吃穷。Kubernetes 的规矩就两个数字：requests（报饭量，排座时看）和 limits（红线，跑起来后看）。本课一路实测三条墙：exec 副手吃超被 exit 137 秒杀、红线画太低在开工仪式上就被掐（RunContainerError）、/dev/shm 内存假盘自带 64Mi 盘墙挡住 dd——最后用 awk 指数翻倍纯内存猛吃，实锤 Last State: OOMKilled / Exit Code 137 / 启动死亡同一秒。附 QoS 三档（BestEffort / Burstable / Guaranteed）。全程大白话 + 命令输出逐字实录。"
 ---
 
 > **CKA 通过之路 · 第 17/17 篇**

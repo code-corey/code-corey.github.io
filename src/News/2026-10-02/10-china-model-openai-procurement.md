@@ -1,5 +1,5 @@
 ---
-title: "首次！中国大模型进入 OpenAI 企业"采购单"（中国大模型首次现身 OpenAI 企业采购名单）"
+title: "首次！中国大模型进入 OpenAI 企业“采购单”（中国大模型首次现身 OpenAI 企业采购名单）"
 shortTitle: "中国模型进 OpenAI 采购单"
 sidebarGroup: "2026-10-02"
 order: 10
@@ -11,7 +11,7 @@ tag:
 description: "观察者网报道：中国大模型首次进入 OpenAI 企业'采购单'，国产模型获得国际头部 AI 公司采购视野的标志性信号。"
 ---
 
-# 首次！中国大模型进入 OpenAI 企业"采购单"（中国大模型首次现身 OpenAI 企业采购名单）
+# 首次！中国大模型进入 OpenAI 企业“采购单”（中国大模型首次现身 OpenAI 企业采购名单）
 
 > 📅 2026-10-01 | 🏷️ 国内生态 | ⭐ 观察者网（Google News 中文源）
 > 🔗 原文：https://news.google.com/rss/articles/CBMiZEFVX3lxTFBmekEzWThWT2N3TjloSnJNWVFhNVRlbExIRjlEa3V1OTBRTnUzbHkzMlZkVHFXb3dGbkZicjY2VU9qTWRQcDc4TnZvOHh0alNRaFVKckJHYTUtNndHcTVjaEczeGU?oc=5
