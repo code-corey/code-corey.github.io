@@ -2533,6 +2533,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-10-14",
+      icon: "folder",
+      prefix: "2026-10-14/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-2026-10-14 今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-Apple 闲置设备 GPU 云研究",
+          link: "01-apple-distributed-gpu-cloud",
+        },
+        {
+          text: "02-Janas：SSD 流式跑大模型",
+          link: "02-janas-ssd-moe-inference",
+        },
+        {
+          text: "03-new-term-radar 新词雷达",
+          link: "03-new-term-radar",
+        },
+        {
+          text: "04-Folkbench 中转站实测",
+          link: "04-folkbench-api-relay-benchmark",
+        },
+        {
+          text: "05-AgentSWE 基准论文",
+          link: "05-agentswe-benchmark",
+        },
+        {
+          text: "06-Thinking Inertia 论文",
+          link: "06-thinking-inertia",
+        },
+        {
+          text: "07-Gemini 4 Argon 发布",
+          link: "07-gemini-4-argon",
+        },
+        {
+          text: "08-Anthropic 自复制警告",
+          link: "08-anthropic-self-replication",
+        },
+        {
+          text: "09-模型可证明藏能力",
+          link: "09-provably-hidden-capabilities",
+        },
+        {
+          text: "10-政务大模型国标发布",
+          link: "10-china-gov-llm-standard",
+        },
+        {
+          text: "11-英国 38 亿英镑 BTC 裁决",
+          link: "11-uk-bitcoin-high-court",
+        },
+        {
+          text: "12-CFTC 后 CLARITY 计划",
+          link: "12-cftc-post-clarity",
+        },
+        {
+          text: "13-硬件钱包藏 eSIM",
+          link: "13-hardware-wallet-esim",
+        },
+        {
+          text: "14-Coinbase 抗量子建议",
+          link: "14-coinbase-post-quantum-bitcoin",
+        },
+        {
+          text: "15-trycanari Agent 赏金",
+          link: "15-trycanari-agent-bounties",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
