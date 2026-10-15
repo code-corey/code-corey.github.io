@@ -2605,6 +2605,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-10-15",
+      icon: "folder",
+      prefix: "2026-10-15/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-10-15 今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-pg_vectorsearch 新向量索引",
+          link: "01-pg-vectorsearch",
+        },
+        {
+          text: "02-游戏开发的 AI Harness 工程",
+          link: "02-ai-harness-game-dev",
+        },
+        {
+          text: "03-scout 开源浏览器 Agent",
+          link: "03-scout-browser-agent",
+        },
+        {
+          text: "04-decomp.wtf 字节级 AI 反编译",
+          link: "04-decomp-wtf",
+        },
+        {
+          text: "05-GreenWAM 机器人世界模型",
+          link: "05-greenwam-world-model",
+        },
+        {
+          text: "06-AI 安全编码基准 LSCB",
+          link: "06-last-secure-code-benchmark",
+        },
+        {
+          text: "07-JEV-35B 决策模型开源",
+          link: "07-jev-35b-system-one",
+        },
+        {
+          text: "08-Anthropic Q3 营收与 IPO",
+          link: "08-anthropic-q3-ipo",
+        },
+        {
+          text: "09-AI 安全事故=工程失败",
+          link: "09-ai-agent-containment",
+        },
+        {
+          text: "10-可信办公智能体标准",
+          link: "10-trusted-office-agent-standard",
+        },
+        {
+          text: "11-FSB 稳定币破产机制",
+          link: "11-fsb-stablecoin-insolvency",
+        },
+        {
+          text: "12-英国6万BTC没收大案",
+          link: "12-uk-btc-forfeiture",
+        },
+        {
+          text: "13-solana-classic 开源链",
+          link: "13-solana-classic",
+        },
+        {
+          text: "14-Ledger 钱包后门调查",
+          link: "14-ledger-backdoors",
+        },
+        {
+          text: "15-Coinbase 比特币抗量子",
+          link: "15-coinbase-quantum-btc",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
