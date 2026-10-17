@@ -2677,6 +2677,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-10-17",
+      icon: "folder",
+      prefix: "2026-10-17/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-2026-10-17 导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-Claude Code 评审实践",
+          link: "01-claude-code-review",
+        },
+        {
+          text: "02-PG19 因 AI 评审延期",
+          link: "02-postgres19-ai-review-delay",
+        },
+        {
+          text: "03-git-ai 仓库速览",
+          link: "03-git-ai",
+        },
+        {
+          text: "04-Project Maya 私有部署",
+          link: "04-project-maya",
+        },
+        {
+          text: "05-OpenGCUA 开源 CUA",
+          link: "05-opengcua",
+        },
+        {
+          text: "06-FDE-Gym 交付基准",
+          link: "06-fde-gym",
+        },
+        {
+          text: "07-Meta Muse Spark Open",
+          link: "07-muse-spark-open",
+        },
+        {
+          text: "08-Replit 弃用 Anthropic",
+          link: "08-replit-drops-anthropic",
+        },
+        {
+          text: "09-AI 基准覆盖缺口",
+          link: "09-mercor-benchmark-map",
+        },
+        {
+          text: "10-AI 技术出口管制",
+          link: "10-china-ai-export-controls",
+        },
+        {
+          text: "11-CFTC 加密新框架",
+          link: "11-cftc-regulated-crypto-framework",
+        },
+        {
+          text: "12-USDC 扩张 40 市场",
+          link: "12-circle-usdc-40-markets",
+        },
+        {
+          text: "13-skim 状态客户端",
+          link: "13-skim-eth-state-client",
+        },
+        {
+          text: "14-AI Agent 链上越权",
+          link: "14-openai-agent-crypto-theft",
+        },
+        {
+          text: "15-加密量子联盟",
+          link: "15-quantum-alliance-btc-keys",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
