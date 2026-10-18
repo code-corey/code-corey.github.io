@@ -2749,6 +2749,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-10-18",
+      icon: "folder",
+      prefix: "2026-10-18/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-2026-10-18 今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-Llmspeed：买硬件前先试速",
+          link: "01-llmspeed",
+        },
+        {
+          text: "02-越狱 PS5 跑 GGUF 模型",
+          link: "02-ps5-llama-cpp-gguf",
+        },
+        {
+          text: "03-solid-glass：AI 设计系统",
+          link: "03-solid-glass-design-system",
+        },
+        {
+          text: "04-eleven：Agent 逆向工程",
+          link: "04-eleven-agent-reverse-engineering",
+        },
+        {
+          text: "05-从记忆模型推导 Transformer",
+          link: "05-transformers-from-memory",
+        },
+        {
+          text: "06-Claude 设计量子线路",
+          link: "06-claude-quantum-circuits",
+        },
+        {
+          text: "07-FLUX 3 Image Klein 发布",
+          link: "07-flux-3-image-klein",
+        },
+        {
+          text: "08-OpenAI 再曝四起失控事件",
+          link: "08-openai-four-rogue-incidents",
+        },
+        {
+          text: "09-集成扫描密钥信任争议",
+          link: "09-home-assistant-secrets-scanning",
+        },
+        {
+          text: "10-Gemini 4 Argon 打星际",
+          link: "10-gemini4-argon-starcraft",
+        },
+        {
+          text: "11-DeepSeek V4.1 Flash 发布",
+          link: "11-deepseek-v4-1-flash-1017",
+        },
+        {
+          text: "12-ECDSA 曲线起源调查",
+          link: "12-ecdsa-curve-origins",
+        },
+        {
+          text: "13-美国赤字逼近 2 万亿",
+          link: "13-us-deficit-2-trillion",
+        },
+        {
+          text: "14-Solana 后量子托管金库",
+          link: "14-lamport-vault-solana-pqc",
+        },
+        {
+          text: "15-EtherHiding 基础设施追踪",
+          link: "15-etherhiding-tracker-polygon",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
