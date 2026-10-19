@@ -2821,6 +2821,74 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-10-19",
+      icon: "folder",
+      prefix: "2026-10-19/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-2026-10-19 今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-Sphinx：上线前考考AI代码",
+          link: "01-sphinx-ai-code-quiz",
+        },
+        {
+          text: "02-网站对AI Agent关门",
+          link: "02-web-closes-to-ai-agents",
+        },
+        {
+          text: "03-indra：CPU级快速OCR",
+          link: "03-indra-fast-cpu-ocr",
+        },
+        {
+          text: "04-Reason Network：Agent互联",
+          link: "04-reason-network-agent-mesh",
+        },
+        {
+          text: "05-混合推理Agent论文",
+          link: "05-hybrid-reasoning-agents",
+        },
+        {
+          text: "06-陶哲轩论AI与数学未来",
+          link: "06-terry-tao-golden-or-dark-age",
+        },
+        {
+          text: "07-Anthropic拟议安全法案",
+          link: "07-anthropic-ai-safety-bill",
+        },
+        {
+          text: "08-亚马逊AI监控工会",
+          link: "08-amazon-ai-union-surveillance",
+        },
+        {
+          text: "09-AI退款越界行为评测",
+          link: "09-vals-impossible-refund-eval",
+        },
+        {
+          text: "10-DeepSeek搜索抓取API",
+          link: "10-deepseek-search-fetch-api",
+        },
+        {
+          text: "11-stakestack硬分叉就绪度",
+          link: "11-stakestack-hardfork-readiness",
+        },
+        {
+          text: "12-Solana USDC订阅支付",
+          link: "12-solana-usdc-subscription-payments",
+        },
+        {
+          text: "13-BNAP付费动作协议",
+          link: "13-bnap-priced-actions-protocol",
+        },
+        {
+          text: "14-链上反洗钱ML实证",
+          link: "14-bitcoin-aml-graph-ml",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
