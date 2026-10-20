@@ -2889,6 +2889,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-10-20",
+      icon: "folder",
+      prefix: "2026-10-20/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-2026-10-20 今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-自建 LLM 代理的价值",
+          link: "01-own-llm-proxy",
+        },
+        {
+          text: "02-AI 代码上线之问",
+          link: "02-ai-written-code",
+        },
+        {
+          text: "03-Tmux 编排 Claude Code",
+          link: "03-tmux-claude-code",
+        },
+        {
+          text: "04-ARTEX AI渗透测试",
+          link: "04-artex-pentest",
+        },
+        {
+          text: "05-Earshot 智能体听觉",
+          link: "05-earshot-agent-audio",
+        },
+        {
+          text: "06-谷歌发布 Gemini 4 Argon",
+          link: "06-gemini-4-argon",
+        },
+        {
+          text: "07-Mercury 3 扩散模型",
+          link: "07-mercury-3-diffusion",
+        },
+        {
+          text: "08-美国清除 DeepSeek 禁令",
+          link: "08-us-deepseek-ban",
+        },
+        {
+          text: "09-AI 智能体军团入侵事件",
+          link: "09-ai-agents-hack",
+        },
+        {
+          text: "10-DeepSeek/MiniMax 智能体之战",
+          link: "10-deepseek-minimax-agents",
+        },
+        {
+          text: "11-JPM Coin 上以太坊",
+          link: "11-jpmcoin-ethereum",
+        },
+        {
+          text: "12-Visa×Mesh 稳定币支付",
+          link: "12-visa-mesh-stablecoin",
+        },
+        {
+          text: "13-法国稳定币兑换税",
+          link: "13-france-stablecoin-tax",
+        },
+        {
+          text: "14-加密金库高风险借贷",
+          link: "14-crypto-vaults-lending",
+        },
+        {
+          text: "15-Plex 挖矿木马事件",
+          link: "15-plex-cryptominer",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
