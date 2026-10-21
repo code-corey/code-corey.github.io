@@ -2961,6 +2961,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-10-21",
+      icon: "folder",
+      prefix: "2026-10-21/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-10-21 导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-DeepSeek 开源 DeepInfer",
+          link: "01-deepinfer",
+        },
+        {
+          text: "02-Agentic Monitoring",
+          link: "02-agentic-monitoring",
+        },
+        {
+          text: "03-Blender AI MCP 插件",
+          link: "03-blender-ai-mcp-addon",
+        },
+        {
+          text: "04-Antirion Rust AI 网关",
+          link: "04-antirion-ai-gateway",
+        },
+        {
+          text: "05-Claude 设计蝎毒蛋白结合剂",
+          link: "05-claude-protein-binders",
+        },
+        {
+          text: "06-Google Harness2 递归智能体",
+          link: "06-harness2-recursive-agent-harnessing",
+        },
+        {
+          text: "07-Mistral 时序模型 Timestral",
+          link: "07-mistral-timestral",
+        },
+        {
+          text: "08-Anthropic S-1 与 IPO",
+          link: "08-anthropic-s1-ipo",
+        },
+        {
+          text: "09-假数据污染 LLM 引用",
+          link: "09-fake-stats-llm-citations",
+        },
+        {
+          text: "10-美国联邦禁用 DeepSeek",
+          link: "10-deepseek-us-ban",
+        },
+        {
+          text: "11-SEC 加密监管意见期收官",
+          link: "11-sec-regulation-crypto",
+        },
+        {
+          text: "12-法国稳定币交易税",
+          link: "12-france-stablecoin-tax",
+        },
+        {
+          text: "13-摩根大通存币上以太坊",
+          link: "13-jpm-coin-ethereum",
+        },
+        {
+          text: "14-稳定币季度转账 8910 亿",
+          link: "14-stablecoin-q3-volume",
+        },
+        {
+          text: "15-Ofcom 4chan 案让步",
+          link: "15-ofcom-4chan-case",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
