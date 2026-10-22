@@ -3033,6 +3033,62 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-10-22",
+      icon: "folder",
+      prefix: "2026-10-22/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-10-22 导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-LayerFS：Agent 专用文件系统",
+          link: "01-layerfs-agent-filesystem",
+        },
+        {
+          text: "02-GitHub：agent 规模 Git 基建",
+          link: "02-agent-scale-git",
+        },
+        {
+          text: "03-Alter：多用户 Agent 访问控制",
+          link: "03-alter-agent-access-control",
+        },
+        {
+          text: "04-audio-studio-mcp 本地音频",
+          link: "04-audio-studio-mcp",
+        },
+        {
+          text: "05-MyAgent 通用智能体运行时",
+          link: "05-myagent-runtime",
+        },
+        {
+          text: "06-Voxtral 3 语音模型",
+          link: "06-voxtral-3",
+        },
+        {
+          text: "07-TorchTPU：TPU 原生后端",
+          link: "07-torch-tpu",
+        },
+        {
+          text: "08-Claude Duet 上线",
+          link: "08-claude-duet",
+        },
+        {
+          text: "09-PHP2Shell：AI挖出PHP RCE",
+          link: "09-php2shell-ai-rce",
+        },
+        {
+          text: "10-OpenAI：AI 挖洞全球协同披露",
+          link: "10-patch-the-planet",
+        },
+        {
+          text: "11-麦当劳 MCP 生态爆发",
+          link: "11-mcdonalds-mcp-ecosystem",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
