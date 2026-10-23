@@ -3089,6 +3089,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-10-23",
+      icon: "folder",
+      prefix: "2026-10-23/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-10-23 今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-NVIDIA OpenShell",
+          link: "01-openshell-agent-runtime",
+        },
+        {
+          text: "02-AI 代理变更审计",
+          link: "02-trailofbits-agent-diff-audit",
+        },
+        {
+          text: "03-Lampline 电话代理",
+          link: "03-lampline-ai-phone-agents",
+        },
+        {
+          text: "04-StartLux 决策模型",
+          link: "04-startlux-decision-models",
+        },
+        {
+          text: "05-RAG 组合性 LASAGNA",
+          link: "05-rag-compositionality-lasagna",
+        },
+        {
+          text: "06-世界模型校验 GUI 代理",
+          link: "06-world-models-gui-verifiers",
+        },
+        {
+          text: "07-OpenAI 上 Google Cloud",
+          link: "07-openai-models-google-cloud",
+        },
+        {
+          text: "08-决策模型竞赛升温",
+          link: "08-decision-model-race",
+        },
+        {
+          text: "09-LLM 自评置信度不可靠",
+          link: "09-llm-confidence-scoring",
+        },
+        {
+          text: "10-科大讯飞新模型",
+          link: "10-iflytek-new-model",
+        },
+        {
+          text: "11-美国稳定币付息新规",
+          link: "11-us-stablecoin-yield-rule",
+        },
+        {
+          text: "12-俄罗斯开放散户交易",
+          link: "12-russia-retail-crypto",
+        },
+        {
+          text: "13-代币化股票 Q3 数据",
+          link: "13-tokenized-stocks-q3",
+        },
+        {
+          text: "14-Visa×Mesh 稳定币支付",
+          link: "14-visa-mesh-stablecoin-payments",
+        },
+        {
+          text: "15-比特币量子倒计时",
+          link: "15-bitcoin-quantum-countdown",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
