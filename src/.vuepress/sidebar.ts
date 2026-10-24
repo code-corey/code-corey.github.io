@@ -3161,6 +3161,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-10-24",
+      icon: "folder",
+      prefix: "2026-10-24/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-10-24 今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-Anthropic：LLM×形式化验证",
+          link: "01-anthropic-formal-verification",
+        },
+        {
+          text: "02-OpenAI CLI 开源上线",
+          link: "02-openai-cli",
+        },
+        {
+          text: "03-MemT-1.0 记忆模型",
+          link: "03-memt-1-memory-model",
+        },
+        {
+          text: "04-easyread 论文翻译",
+          link: "04-easyread-paper-translation",
+        },
+        {
+          text: "05-AI 圈占科学公地",
+          link: "05-ai-scientific-commons-enclosure",
+        },
+        {
+          text: "06-Kimi K3.1 Pro 发布",
+          link: "06-kimi-k3-1-pro",
+        },
+        {
+          text: "07-OpenAI 弃用实时网络训练",
+          link: "07-openai-frontier-training-security",
+        },
+        {
+          text: "08-ai-jailbreaks 红队库",
+          link: "08-ai-jailbreaks-redteam",
+        },
+        {
+          text: "09-DeepSeek 新模型实测",
+          link: "09-deepseek-model-cost-analysis",
+        },
+        {
+          text: "10-工信部力挺智能体软件",
+          link: "10-miit-ai-software-agents",
+        },
+        {
+          text: "11-汇丰 RedCoin 上线",
+          link: "11-hsbc-hkd-stablecoin-redcoin",
+        },
+        {
+          text: "12-稳定币收益规则之争",
+          link: "12-us-stablecoin-yield-rule-fight",
+        },
+        {
+          text: "13-BTC Core 拥抱 AI 时代",
+          link: "13-bitcoin-core-ai-vulnerability-disclosure",
+        },
+        {
+          text: "14-Glamsterdam 推迟",
+          link: "14-ethereum-glamsterdam-testnet-delay",
+        },
+        {
+          text: "15-Coinbase×AI Agent",
+          link: "15-coinbase-ai-agents-trading",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
