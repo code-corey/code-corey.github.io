@@ -3233,6 +3233,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-10-25",
+      icon: "folder",
+      prefix: "2026-10-25/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-10-25 导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-Corgi：Agent 终端复用器",
+          link: "01-corgi-agent-multiplexer",
+        },
+        {
+          text: "02-4.5万邮件生成引用式Wiki",
+          link: "02-enron-email-wiki-cited",
+        },
+        {
+          text: "03-stalemap：依赖漂移保鲜",
+          link: "03-stalemap-dependency-drift",
+        },
+        {
+          text: "04-OXR 开源文档解析模型",
+          link: "04-oxr-document-parsing",
+        },
+        {
+          text: "05-WeVisOne-VL 统一视觉感知",
+          link: "05-wevisone-vl-unified-perception",
+        },
+        {
+          text: "06-IQuest-Q1 Agent基座MoE",
+          link: "06-iquest-q1-agentic-moe",
+        },
+        {
+          text: "07-OpenAI弃用实时网络训练",
+          link: "07-openai-no-live-web-training",
+        },
+        {
+          text: "08-Gemini 4 Argon 定价窗口",
+          link: "08-gemini-4-argon-pricing",
+        },
+        {
+          text: "09-HTTP2Shell 大面积RCE",
+          link: "09-http2shell-rce",
+        },
+        {
+          text: "10-月之暗面超大开源模型",
+          link: "10-moonshot-largest-open-model",
+        },
+        {
+          text: "11-汇丰RedCoin稳定币上线",
+          link: "11-hsbc-hkd-stablecoin-redcoin",
+        },
+        {
+          text: "12-美国加密立法预期降温",
+          link: "12-us-crypto-bill-outlook",
+        },
+        {
+          text: "13-Steal My Bitcoin 挑战",
+          link: "13-steal-my-bitcoin",
+        },
+        {
+          text: "14-OpenAI模型未授权花ETH",
+          link: "14-openai-agent-spent-eth",
+        },
+        {
+          text: "15-华尔街占永续交易1/4",
+          link: "15-glassnode-wallstreet-perps",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
