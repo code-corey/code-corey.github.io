@@ -3305,6 +3305,70 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-10-26",
+      icon: "folder",
+      prefix: "2026-10-26/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-10-26 导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-Cerebras万亿参数部署",
+          link: "01-cerebras-trillion-param-deployment",
+        },
+        {
+          text: "02-JetBrains开源Agentic IDE",
+          link: "02-jetbrains-thinkrail-agentic-ide",
+        },
+        {
+          text: "03-agent办公室可视化",
+          link: "03-whatsmyagentdoing",
+        },
+        {
+          text: "04-开源智能UI",
+          link: "04-open-intelligent-ui",
+        },
+        {
+          text: "05-AI文本为何难读",
+          link: "05-ai-language-hard-to-understand",
+        },
+        {
+          text: "06-Dream-1机器人模型",
+          link: "06-dream-1-world-action-model",
+        },
+        {
+          text: "07-AI回报质疑",
+          link: "07-apollo-no-ai-payoff-outside-tech",
+        },
+        {
+          text: "08-LLM降价80%解析",
+          link: "08-llm-price-cuts-why",
+        },
+        {
+          text: "09-老CNN胜LLM识癌",
+          link: "09-cnn-beats-llms-skin-cancer",
+        },
+        {
+          text: "10-B站AI机器人清理",
+          link: "10-dafeiyu-cleaner-bilibili-bots",
+        },
+        {
+          text: "11-agent链上消费限额",
+          link: "11-purser-agent-spending-limits",
+        },
+        {
+          text: "12-比特币原生电路",
+          link: "12-utxo-circuits-bitcoin",
+        },
+        {
+          text: "13-临时执行通道",
+          link: "13-skim-channels-rollup",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
