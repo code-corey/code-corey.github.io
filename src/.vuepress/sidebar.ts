@@ -3369,6 +3369,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-10-27",
+      icon: "folder",
+      prefix: "2026-10-27/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-2026-10-27 今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-GPT-6.1 Terra 发布",
+          link: "01-gpt-6-1-terra",
+        },
+        {
+          text: "02-Anthropic S-1 交底牌",
+          link: "02-anthropic-ipo-s1",
+        },
+        {
+          text: "03-vLLM 工具调用修复",
+          link: "03-vllm-tool-call-accuracy",
+        },
+        {
+          text: "04-Raschka 从零构建推理模型",
+          link: "04-building-reasoning-models",
+        },
+        {
+          text: "05-视频世界模型综述",
+          link: "05-video-world-models-survey",
+        },
+        {
+          text: "06-TWIG 权重表示范式",
+          link: "06-twig-shared-discrete-weights",
+        },
+        {
+          text: "07-开源权重模型安全警示",
+          link: "07-open-weight-safety-behavior",
+        },
+        {
+          text: "08-CVEngine 攻击面引擎",
+          link: "08-cvengine-attack-surface",
+        },
+        {
+          text: "09-Agent 原生函数式语言",
+          link: "09-chaosintelligence-agent-language",
+        },
+        {
+          text: "10-AI 普惠计划进展报告",
+          link: "10-china-ai-inclusion-report",
+        },
+        {
+          text: "11-OCC 力推银行稳定币",
+          link: "11-occ-stablecoin-banks",
+        },
+        {
+          text: "12-汇丰 RedCoin 稳定币",
+          link: "12-hsbc-redcoin-stablecoin",
+        },
+        {
+          text: "13-NBA 携手预测市场",
+          link: "13-nba-prediction-markets",
+        },
+        {
+          text: "14-比特币安全 CTF",
+          link: "14-steal-my-bitcoin-ctf",
+        },
+        {
+          text: "15-加密诈骗跨境执法",
+          link: "15-crypto-fraud-extradition",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
