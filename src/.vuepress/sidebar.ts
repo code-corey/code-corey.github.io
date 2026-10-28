@@ -3441,6 +3441,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-10-28",
+      icon: "folder",
+      prefix: "2026-10-28/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-10-28 导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-AI时代人月神话",
+          link: "01-mythical-man-month-ai",
+        },
+        {
+          text: "02-Hob端侧Agent",
+          link: "02-hob-on-device-agent",
+        },
+        {
+          text: "03-BAMA技能流水线",
+          link: "03-bama-agent-skills-macos",
+        },
+        {
+          text: "04-Kinetograph视频引擎",
+          link: "04-kinetograph-video-engine-agents",
+        },
+        {
+          text: "05-技能与模型匹配",
+          link: "05-skill-adaptation-harness",
+        },
+        {
+          text: "06-AV-FABLE取证基准",
+          link: "06-av-fable-forensics",
+        },
+        {
+          text: "07-Anthropic IPO递表",
+          link: "07-anthropic-ipo-filing",
+        },
+        {
+          text: "08-AI数学证明对轰",
+          link: "08-dueling-proofs-eth",
+        },
+        {
+          text: "09-KV缓存泄漏复盘",
+          link: "09-glm-kv-cache-exposure",
+        },
+        {
+          text: "10-海洋大模型备案",
+          link: "10-ocean-foundation-model",
+        },
+        {
+          text: "11-加拿大稳定币新规",
+          link: "11-canada-stablecoin-rules",
+        },
+        {
+          text: "12-金融业AI问责令",
+          link: "12-fsb-hkma-fca-ai-accountability",
+        },
+        {
+          text: "13-Glamsterdam缺陷修复",
+          link: "13-ethereum-glamsterdam-bug",
+        },
+        {
+          text: "14-Chainlink托管直连",
+          link: "14-chainlink-custodysync",
+        },
+        {
+          text: "15-稳定币三明治",
+          link: "15-mastercard-stablecoin-sandwich",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
