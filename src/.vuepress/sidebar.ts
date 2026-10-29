@@ -3513,6 +3513,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-10-29",
+      icon: "folder",
+      prefix: "2026-10-29/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-2026-10-29 导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-Agent 接管工作后你该知道什么",
+          link: "01-here-be-monsters-agents",
+        },
+        {
+          text: "02-Cursor 发布 Agent SDK",
+          link: "02-cursor-agent-sdk",
+        },
+        {
+          text: "03-Grandet：模型 API 比价 MCP",
+          link: "03-grandet-api-price-mcp",
+        },
+        {
+          text: "04-BLA：AI 逆向防御盾",
+          link: "04-bla-anti-agent-defense",
+        },
+        {
+          text: "05-MPO：长程 Agent 多尺度 RL",
+          link: "05-mpo-long-horizon-agents",
+        },
+        {
+          text: "06-Trinity：递归自我改进框架",
+          link: "06-trinity-recursive-self-improvement",
+        },
+        {
+          text: "07-谷歌发布 Gemini 4 Carbon",
+          link: "07-gemini-4-carbon",
+        },
+        {
+          text: "08-Anthropic S-1：IPO 五要点",
+          link: "08-anthropic-ipo-s1",
+        },
+        {
+          text: "09-50 份报税任务实测 Agent",
+          link: "09-dayjob-tax-agent-eval",
+        },
+        {
+          text: "10-南京立法助推 AI 产业",
+          link: "10-nanjing-ai-regulation",
+        },
+        {
+          text: "11-谷歌预览机构级加密托管",
+          link: "11-google-crypto-custody",
+        },
+        {
+          text: "12-美财长：稳定币与美元霸权",
+          link: "12-us-treasury-stablecoin",
+        },
+        {
+          text: "13-Circle 敦促 SEC 放宽规则",
+          link: "13-circle-sec-stablecoin-rules",
+        },
+        {
+          text: "14-2026 加密损失复盘",
+          link: "14-crypto-losses-2026",
+        },
+        {
+          text: "15-当 AI Agent 付错了钱",
+          link: "15-ai-agent-payment-wrong-payee",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
