@@ -3585,6 +3585,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-10-30",
+      icon: "folder",
+      prefix: "2026-10-30/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-2026-10-30 今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-LLM 的腔调问题",
+          link: "01-llm-voice",
+        },
+        {
+          text: "02-GB 时代的 GPU 调度器",
+          link: "02-grace-blackwell-scheduler",
+        },
+        {
+          text: "03-Grim Prompter 威胁建模",
+          link: "03-grim-prompter",
+        },
+        {
+          text: "04-TokenBar 额度监控",
+          link: "04-tokenbar",
+        },
+        {
+          text: "05-离散视觉 token 语义无损?",
+          link: "05-discrete-visual-tokens",
+        },
+        {
+          text: "06-TAO 智能体服务调度",
+          link: "06-tao-agentic-serving",
+        },
+        {
+          text: "07-Mistral Large 4 开源",
+          link: "07-mistral-large-4-oss",
+        },
+        {
+          text: "08-Gemini 4 Carbon 登顶",
+          link: "08-gemini-4-carbon",
+        },
+        {
+          text: "09-Agent 记录外发调查",
+          link: "09-claude-code-transcripts",
+        },
+        {
+          text: "10-新芯航途 X7 Ultra",
+          link: "10-x7-ultra-chip",
+        },
+        {
+          text: "11-币安疑遭史上最大黑客攻击",
+          link: "11-binance-hack",
+        },
+        {
+          text: "12-Polygon×Solana 进银行",
+          link: "12-polygon-solana-stablecoin",
+        },
+        {
+          text: "13-Visa 稳定币结算 10 倍增",
+          link: "13-visa-stablecoin-settlement",
+        },
+        {
+          text: "14-Refrax 链协调存储",
+          link: "14-refrax-node",
+        },
+        {
+          text: "15-Polymarket 五分钟市场",
+          link: "15-polymarket-5min-markets",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
