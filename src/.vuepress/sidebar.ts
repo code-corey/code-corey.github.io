@@ -3657,6 +3657,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-10-31",
+      icon: "folder",
+      prefix: "2026-10-31/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-今日导读 10-31",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-AI 让 SRE 去技能化",
+          link: "01-sre-deskilling",
+        },
+        {
+          text: "02-YC 实验室：游戏里的 Agent 集群",
+          link: "02-agent-swarms-games",
+        },
+        {
+          text: "03-dsh-Go 端侧 AI 助理",
+          link: "03-dsh-go-mobile-deepseek-harness",
+        },
+        {
+          text: "04-LangChain 官方设计 Agent",
+          link: "04-langchain-design-agent",
+        },
+        {
+          text: "05-A-RSI：模型何时该「换新题」",
+          link: "05-a-rsi-self-improvement",
+        },
+        {
+          text: "06-基准测试的「难度分布」陷阱",
+          link: "06-benchmark-as-empirical-measure",
+        },
+        {
+          text: "07-Anthropic IPO 信用评级隐忧",
+          link: "07-anthropic-ipo-credit-rating",
+        },
+        {
+          text: "08-Liquid AI LFM3 家族发布",
+          link: "08-liquidai-lfm3-family",
+        },
+        {
+          text: "09-Claude Code 扩展后门事件",
+          link: "09-claude-code-extension-backdoor",
+        },
+        {
+          text: "10-深圳 AI 商业秘密保护指引",
+          link: "10-shenzhen-ai-trade-secret-guidance",
+        },
+        {
+          text: "11-币安 63 亿美元史上最大失窃",
+          link: "11-binance-6b-hack",
+        },
+        {
+          text: "12-JPYC 稳定币接入退税场景",
+          link: "12-jpyc-stablecoin-tax-refund",
+        },
+        {
+          text: "13-hypergrad HIP-3 样本",
+          link: "13-hypergrad-hip3-perp-dex",
+        },
+        {
+          text: "14-Solana 升级演练工具",
+          link: "14-solana-upgrade-rehearsal",
+        },
+        {
+          text: "15-ABF-Bench 链上取证基准",
+          link: "15-abf-bench-blockchain-forensics",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
