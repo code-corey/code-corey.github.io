@@ -3729,6 +3729,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-11-01",
+      icon: "folder",
+      prefix: "2026-11-01/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-2026-11-01 今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-思科无限 Token 重写遗留系统",
+          link: "01-cisco-unlimited-ai-tokens",
+        },
+        {
+          text: "02-Prospero 极简编码 Harness",
+          link: "02-prospero-coding-harness",
+        },
+        {
+          text: "03-Mika 端侧手机 AI 助理",
+          link: "03-mika-android-ai-agent",
+        },
+        {
+          text: "04-sapper-v2 AI 攻防军团",
+          link: "04-sapper-v2-pentest-legion",
+        },
+        {
+          text: "05-按需看图加速多模态推理",
+          link: "05-look-only-when-needed-dvlm",
+        },
+        {
+          text: "06-腾讯优图全模态解析器",
+          link: "06-youtu-parsing-omni",
+        },
+        {
+          text: "07-OpenAI 融资目标缩至 200 亿",
+          link: "07-openai-funding-target-20b",
+        },
+        {
+          text: "08-网站 AI 训练偏好机制",
+          link: "08-openai-ai-training-preferences",
+        },
+        {
+          text: "09-一条链接接管 ChatGPT 账号",
+          link: "09-chatgpt-account-takeover",
+        },
+        {
+          text: "10-Apple 智能接入阿里千问",
+          link: "10-apple-qwen-china",
+        },
+        {
+          text: "11-币安已补偿 90% 被盗资产",
+          link: "11-binance-recovery-90pct",
+        },
+        {
+          text: "12-SEC 主席松口加密定性",
+          link: "12-sec-crypto-not-securities",
+        },
+        {
+          text: "13-Vitalik 谈数字极简主义",
+          link: "13-vitalik-digital-minimalism",
+        },
+        {
+          text: "14-Threshold 暂停 tBTC 跨链",
+          link: "14-threshold-tbtc-pause",
+        },
+        {
+          text: "15-预言机滞后套利开源实现",
+          link: "15-aave-oracle-lag-arb",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
