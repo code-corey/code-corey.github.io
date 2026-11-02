@@ -3801,6 +3801,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-11-02",
+      icon: "folder",
+      prefix: "2026-11-02/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-导读 2026-11-02",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-5 个小模型组队击败前沿模型",
+          link: "01-memdoor-multi-model-team",
+        },
+        {
+          text: "02-JS 框架的 AI 成本",
+          link: "02-ai-cost-of-js-frameworks",
+        },
+        {
+          text: "03-微软开源 Agent 成本控制",
+          link: "03-microsoft-tokeneconomizer",
+        },
+        {
+          text: "04-免 ROOT 手机端 Agent",
+          link: "04-dsh-android-deepseek-harness",
+        },
+        {
+          text: "05-柏拉图表征假说被证明",
+          link: "05-platonic-representation-jepa",
+        },
+        {
+          text: "06-多 Token 预测的正确做法",
+          link: "06-multi-token-prediction-done-right",
+        },
+        {
+          text: "07-MCP vs CLI 受控研究",
+          link: "07-mcp-vs-cli-mica",
+        },
+        {
+          text: "08-ChatGPT/Codex 限额合并",
+          link: "08-chatgpt-codex-usage-limits",
+        },
+        {
+          text: "09-百度 Unlimited-OCR-2",
+          link: "09-baidu-unlimited-ocr-2",
+        },
+        {
+          text: "10-多数企业 AI 零回报论",
+          link: "10-ai-zero-financial-payoff",
+        },
+        {
+          text: "11-Prompt Injection 进法庭",
+          link: "11-brazil-court-prompt-injection",
+        },
+        {
+          text: "12-木马用 LLM 挑肥拣瘦",
+          link: "12-volta-llm-victim-ranking",
+        },
+        {
+          text: "13-Nanbeige4.3-33B 发布",
+          link: "13-nanbeige-4-33b",
+        },
+        {
+          text: "14-Vitalik 谈数字极简主义",
+          link: "14-vitalik-digital-minimalism",
+        },
+        {
+          text: "15-跨链资金追踪工具",
+          link: "15-onchain-money-trail-analyzer",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
