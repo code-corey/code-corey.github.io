@@ -3873,6 +3873,70 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-11-03",
+      icon: "folder",
+      prefix: "2026-11-03/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-Minecraft 多智能体实验翻车",
+          link: "01-minecraft-agent-swarms-fail",
+        },
+        {
+          text: "02-Momentic：AI 当测试员",
+          link: "02-momentic-agents-catch-bugs",
+        },
+        {
+          text: "03-uncut 无头 Agent 运行器",
+          link: "03-uncut-headless-agent-harness",
+        },
+        {
+          text: "04-graphmemory 双时态记忆",
+          link: "04-graphmemory-bitemporal-memory",
+        },
+        {
+          text: "05-Astra 权重空间编程",
+          link: "05-astra-weight-space-programming",
+        },
+        {
+          text: "06-陶哲轩谈 AI 时代数学",
+          link: "06-egoless-mathematics-ai-era",
+        },
+        {
+          text: "07-中国首份前沿AI出口管制",
+          link: "07-china-frontier-ai-export-controls",
+        },
+        {
+          text: "08-Anthropic 增长趋平",
+          link: "08-anthropic-growth-flattened",
+        },
+        {
+          text: "09-预训练投毒后门",
+          link: "09-agentic-backdoors-pretraining-poisoning",
+        },
+        {
+          text: "10-LongCat-2.5 原生多模态",
+          link: "10-longcat-25-native-multimodality",
+        },
+        {
+          text: "11-链上被盗资产追踪器",
+          link: "11-stolen-crypto-tracer",
+        },
+        {
+          text: "12-GitWallet 非托管钱包",
+          link: "12-gitwallet-noncustodial-ai-wallet",
+        },
+        {
+          text: "13-memechain 教学链",
+          link: "13-memechain-pow-testnet",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
