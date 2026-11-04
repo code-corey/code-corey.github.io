@@ -3937,6 +3937,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-11-04",
+      icon: "folder",
+      prefix: "2026-11-04/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-2026-11-04 今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-OpenAI 的 Git 规模化实战",
+          link: "01-scaling-git-at-openai",
+        },
+        {
+          text: "02-Revolut 转向自托管 GLM",
+          link: "02-revolut-self-hosted-glm",
+        },
+        {
+          text: "03-dsh-see-now 看屏省token",
+          link: "03-dsh-see-now",
+        },
+        {
+          text: "04-PolyStrata：PC 本地跑大模型",
+          link: "04-polystrata",
+        },
+        {
+          text: "05-CUA-Master：开放世界递归改进",
+          link: "05-cua-master",
+        },
+        {
+          text: "06-CoworkOS：智能体协作框架",
+          link: "06-coworkos",
+        },
+        {
+          text: "07-Anthropic 放缓自我改进 AI",
+          link: "07-anthropic-slow-asi",
+        },
+        {
+          text: "08-Google：关不掉的搜索 AI",
+          link: "08-google-schools-search-ai",
+        },
+        {
+          text: "09-Postman 静默装 AI 插件风波",
+          link: "09-postman-ai-plugins-security",
+        },
+        {
+          text: "10-乌镇峰会：开源模型圈粉",
+          link: "10-wuzhen-open-source",
+        },
+        {
+          text: "11-币安被盗案：假面试攻击链",
+          link: "11-binance-hack-fake-interviews",
+        },
+        {
+          text: "12-中期选举后加密监管走向",
+          link: "12-us-midterm-crypto-regulation",
+        },
+        {
+          text: "13-矿企转型纯 AI 的代价",
+          link: "13-bitcoin-miners-pivot-ai",
+        },
+        {
+          text: "14-Tether 藏有 5 万枚 BTC？",
+          link: "14-tether-btc-reserves",
+        },
+        {
+          text: "15-电子投票背后的密码学",
+          link: "15-trailofbits-evoting-crypto",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
