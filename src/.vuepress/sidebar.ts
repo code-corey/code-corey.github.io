@@ -4009,6 +4009,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-11-05",
+      icon: "folder",
+      prefix: "2026-11-05/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-2026-11-05 今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-RTX Spark：Linux推理仅35%",
+          link: "01-rtx-spark-linux-inference",
+        },
+        {
+          text: "02-NVIDIA开源语义上下文层",
+          link: "02-nvidia-auto-ontology",
+        },
+        {
+          text: "03-agent-autoloop后台接活",
+          link: "03-agent-autoloop",
+        },
+        {
+          text: "04-NextTransformer框架",
+          link: "04-nexttransformer",
+        },
+        {
+          text: "05-生成式AI数学基础小册",
+          link: "05-genai-foundations-primer",
+        },
+        {
+          text: "06-后训练数据公共池缺失论",
+          link: "06-no-posttraining-commons",
+        },
+        {
+          text: "07-腾讯混元Hy4发布",
+          link: "07-tencent-hy4",
+        },
+        {
+          text: "08-OpenAI收购Pierre",
+          link: "08-openai-acquires-pierre",
+        },
+        {
+          text: "09-PHP2Shell与AI技术债",
+          link: "09-php2shell-ai-tech-debt",
+        },
+        {
+          text: "10-国家AI重大专项启动",
+          link: "10-china-ai-national-program",
+        },
+        {
+          text: "11-民主党横扫后的加密监管",
+          link: "11-dems-sweep-crypto-rules",
+        },
+        {
+          text: "12-Yellow Card进巴西",
+          link: "12-yellow-card-brazil",
+        },
+        {
+          text: "13-被盗加密资产追踪工具",
+          link: "13-stolen-crypto-tracer",
+        },
+        {
+          text: "14-x402结算的Agent续跑",
+          link: "14-relayworks-x402-agents",
+        },
+        {
+          text: "15-RLUSD增长在以太坊",
+          link: "15-rlusd-ethereum-growth",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
