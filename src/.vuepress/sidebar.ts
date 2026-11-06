@@ -4081,6 +4081,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-11-06",
+      icon: "folder",
+      prefix: "2026-11-06/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-2026-11-06 今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-HN Agent 配置大调查",
+          link: "01-hn-agentic-setups",
+        },
+        {
+          text: "02-多智能体架构模式精讲",
+          link: "02-multi-agent-architecture-patterns",
+        },
+        {
+          text: "03-skein 蜂群编排框架",
+          link: "03-skein-fail-closed-swarm",
+        },
+        {
+          text: "04-poki 智能体操控 iPhone",
+          link: "04-poki-iphone-agent-mcp",
+        },
+        {
+          text: "05-多轮 RL 的真实增益",
+          link: "05-multi-turn-rl-agents",
+        },
+        {
+          text: "06-FrontierPhysics 科研基准",
+          link: "06-frontierphysics-agent-benchmark",
+        },
+        {
+          text: "07-OpenAI 发布 GPT-6 Cyber",
+          link: "07-gpt6-cyber-launch",
+        },
+        {
+          text: "08-Ripple-65B 开源编码模型",
+          link: "08-ripple-65b-open-coding",
+        },
+        {
+          text: "09-Claude Code 邮箱外泄事件",
+          link: "09-claude-code-email-leak",
+        },
+        {
+          text: "10-算力网金融支持加码",
+          link: "10-helifeng-compute-finance",
+        },
+        {
+          text: "11-乌克兰央行反对加密法案",
+          link: "11-ukraine-cb-crypto-bill",
+        },
+        {
+          text: "12-希腊加密税框架落地",
+          link: "12-greece-crypto-tax",
+        },
+        {
+          text: "13-block-roll 非托管存储",
+          link: "13-block-roll-stellar-storage",
+        },
+        {
+          text: "14-npm 攻击用以太坊藏毒",
+          link: "14-polinrider-npm-eth-c2",
+        },
+        {
+          text: "15-谷歌或入股 TeraWulf 项目",
+          link: "15-terawulf-google-anthropic",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
