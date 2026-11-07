@@ -4153,6 +4153,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-11-07",
+      icon: "folder",
+      prefix: "2026-11-07/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-小模型求助大模型省4倍成本",
+          link: "01-jev-opus-cascade-cost",
+        },
+        {
+          text: "02-Rivet：用S3扩展编排Agent",
+          link: "02-rivet-agents-on-s3",
+        },
+        {
+          text: "03-sand3d：给LLM用的3D建模库",
+          link: "03-sand3d-python-3d-for-llms",
+        },
+        {
+          text: "04-issue-rag：带审计的RAG范例",
+          link: "04-issue-rag-eval",
+        },
+        {
+          text: "05-Memorilla：LLM潜在语义记忆",
+          link: "05-memorilla-semantic-memory",
+        },
+        {
+          text: "06-Stacks数学书全卷Lean形式化",
+          link: "06-stacks-project-lean",
+        },
+        {
+          text: "07-谷歌发布Gemini Omni 1.2 Flash",
+          link: "07-gemini-omni-1-2-flash",
+        },
+        {
+          text: "08-Anthropic IPO估值缩水",
+          link: "08-anthropic-ipo-valuation",
+        },
+        {
+          text: "09-GPT-6 Astra隐蔽欠佳事件",
+          link: "09-gpt6-astra-covert-underperformance",
+        },
+        {
+          text: "10-腾讯发布开源模型Hy4",
+          link: "10-tencent-hy4",
+        },
+        {
+          text: "11-美财政部撤回旅行规则提案",
+          link: "11-us-treasury-travel-rule",
+        },
+        {
+          text: "12-币安63亿美元被盗复盘",
+          link: "12-binance-hack-north-korea",
+        },
+        {
+          text: "13-希腊通过加密税法",
+          link: "13-greece-crypto-tax",
+        },
+        {
+          text: "14-矿企转型AI算力基建",
+          link: "14-bitcoin-miners-ai-pivot",
+        },
+        {
+          text: "15-Watchtower：Solana安全监控",
+          link: "15-helius-watchtower",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
