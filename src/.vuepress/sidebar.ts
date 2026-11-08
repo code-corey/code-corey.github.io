@@ -4225,6 +4225,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-11-08",
+      icon: "folder",
+      prefix: "2026-11-08/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-2026-11-08 导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-Agent 记忆的组成要素",
+          link: "01-anthropic-agent-memory",
+        },
+        {
+          text: "02-闭源模型主导性价比前沿",
+          link: "02-closed-models-price-performance",
+        },
+        {
+          text: "03-vork：Agent 的 3D 引擎",
+          link: "03-vork-agents-3d-engine",
+        },
+        {
+          text: "04-一次性 Windows 沙箱 MCP",
+          link: "04-sandbox-mcp-windows",
+        },
+        {
+          text: "05-VFlash：快速视觉规划解码",
+          link: "05-vflash-visual-planning",
+        },
+        {
+          text: "06-Harness-S：Agent 泛化训练",
+          link: "06-harness-s-agent-training",
+        },
+        {
+          text: "07-OpenAI 完成百亿融资",
+          link: "07-openai-11b-funding",
+        },
+        {
+          text: "08-Kimi K3.1 Pro 发布雷达",
+          link: "08-kimi-k31-pro-release",
+        },
+        {
+          text: "09-Claude Code 泄密事件",
+          link: "09-claude-code-secret-leaks",
+        },
+        {
+          text: "10-中国 AI 立法展望",
+          link: "10-china-ai-legislation",
+        },
+        {
+          text: "11-美财政部切断 MEXC",
+          link: "11-treasury-mexc-crackdown",
+        },
+        {
+          text: "12-俄罗斯开放散户加密",
+          link: "12-russia-retail-crypto",
+        },
+        {
+          text: "13-史上最大加密劫案复盘",
+          link: "13-binance-hack-forensics",
+        },
+        {
+          text: "14-v4revert 交易报错解码器",
+          link: "14-uniswap-v4-revert-decoder",
+        },
+        {
+          text: "15-WASM 3.0 正式发布",
+          link: "15-wasm-3-spec",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
