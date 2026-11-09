@@ -4297,6 +4297,82 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-11-09",
+      icon: "folder",
+      prefix: "2026-11-09/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-11-09 今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-高盛撤回 Claude Code",
+          link: "01-goldman-pulls-claude-code",
+        },
+        {
+          text: "02-从 Claude Code 迁移到 Pi",
+          link: "02-goodbye-claude-hello-pi",
+        },
+        {
+          text: "03-64GB 内存跑 284B 大模型",
+          link: "03-llama-modchip-284b-cpu",
+        },
+        {
+          text: "04-RustXNG：Agent 搜索地基",
+          link: "04-rustxng-grounding-engine",
+        },
+        {
+          text: "05-CoworkOS 人机协作 Harness",
+          link: "05-coworkos-human-in-loop",
+        },
+        {
+          text: "06-Agent 决策解耦新架构",
+          link: "06-dpdm-agent-decision",
+        },
+        {
+          text: "07-潜空间压缩工具输出",
+          link: "07-latent-context-compression",
+        },
+        {
+          text: "08-Anthropic 34亿美元能源单",
+          link: "08-anthropic-power-deal",
+        },
+        {
+          text: "09-DeepSeek Agent 日活 154 万",
+          link: "09-deepseek-agent-platform",
+        },
+        {
+          text: "10-MaxxBench 质疑评测真实性",
+          link: "10-maxxbench-benchmark-audit",
+        },
+        {
+          text: "11-Qwen4 跑分被曝超 Opus",
+          link: "11-qwen4-benchmark-leak",
+        },
+        {
+          text: "12-CLARITY 法案重写博弈",
+          link: "12-clarity-act-rewrite",
+        },
+        {
+          text: "13-币安收缩欧洲服务",
+          link: "13-binance-eu-restrictions",
+        },
+        {
+          text: "14-链上的英伟达永续合约",
+          link: "14-hyperliquid-nvda-perps",
+        },
+        {
+          text: "15-Multicall 回滚解码工具",
+          link: "15-multicall-error-decoder",
+        },
+        {
+          text: "16-Walawe：Agent 链上钱包",
+          link: "16-walawe-agent-wallet",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
