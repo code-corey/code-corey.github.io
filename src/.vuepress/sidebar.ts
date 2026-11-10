@@ -4373,6 +4373,74 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-11-10",
+      icon: "folder",
+      prefix: "2026-11-10/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-2026-11-10 导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-Agent记忆呼唤开放标准",
+          link: "01-agent-memory-open-standard",
+        },
+        {
+          text: "02-H100租金差4.5倍",
+          link: "02-h100-pricing-gap",
+        },
+        {
+          text: "03-AI编程一年后的失控",
+          link: "03-ai-mandate-maintainability",
+        },
+        {
+          text: "04-AnyModelBot多模型Bot",
+          link: "04-anymodelbot",
+        },
+        {
+          text: "05-WebsiteBench浏览器基准",
+          link: "05-websitebench",
+        },
+        {
+          text: "06-E-means聚类加速10倍",
+          link: "06-e-means-kmeans",
+        },
+        {
+          text: "07-Claude Fable 5.2发布",
+          link: "07-claude-fable-5-2",
+        },
+        {
+          text: "08-Meta端侧小模型Muse Ember",
+          link: "08-muse-ember",
+        },
+        {
+          text: "09-OpenAI融资110亿美元",
+          link: "09-openai-raise-11b",
+        },
+        {
+          text: "10-Gemini人工审阅争议",
+          link: "10-gemini-human-annotators",
+        },
+        {
+          text: "11-ChatGPT转发SSH凭据",
+          link: "11-chatgpt-ssh-agent",
+        },
+        {
+          text: "12-全链哨兵安全Agent",
+          link: "12-full-chain-sentinel",
+        },
+        {
+          text: "13-以太坊基金会涉诉",
+          link: "13-ethereum-foundation-lawsuit",
+        },
+        {
+          text: "14-加拿大RTR支付上线",
+          link: "14-payments-canada-rtr",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
