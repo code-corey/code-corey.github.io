@@ -4441,6 +4441,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-11-11",
+      icon: "folder",
+      prefix: "2026-11-11/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-2026-11-11 导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-亚马逊Strands替代Claude",
+          link: "01-strands-decider",
+        },
+        {
+          text: "02-纠正编码Agent的老JS",
+          link: "02-modern-web-guidance",
+        },
+        {
+          text: "03-trnrt:Trainium推理引擎",
+          link: "03-trnrt-trainium-inference",
+        },
+        {
+          text: "04-STE80文本去AI味",
+          link: "04-ste80-humanizer",
+        },
+        {
+          text: "05-Sage-Taiyi元认知架构",
+          link: "05-sage-taiyi-metacognition",
+        },
+        {
+          text: "06-Reframe视觉智能体蒸馏",
+          link: "06-reframe-visual-distillation",
+        },
+        {
+          text: "07-Anthropic IPO定价出炉",
+          link: "07-anthropic-ipo",
+        },
+        {
+          text: "08-Gemini 4 Carbon发布",
+          link: "08-gemini-4-carbon",
+        },
+        {
+          text: "09-Fireworks供应链事件",
+          link: "09-fireworks-notion-breach",
+        },
+        {
+          text: "10-谛听地震大模型",
+          link: "10-diting-earthquake-model",
+        },
+        {
+          text: "11-华尔街银行自建稳定币",
+          link: "11-goldman-citi-stablecoin",
+        },
+        {
+          text: "12-加拿大稳定币发行新规",
+          link: "12-canada-stablecoin-rule",
+        },
+        {
+          text: "13-波兰加密冻结权法案",
+          link: "13-poland-crypto-freeze",
+        },
+        {
+          text: "14-上市公司比特币抛售潮",
+          link: "14-dat-bitcoin-selloff",
+        },
+        {
+          text: "15-solana-vigil节点体检",
+          link: "15-solana-vigil",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
