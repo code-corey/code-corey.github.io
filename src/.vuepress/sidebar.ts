@@ -4513,6 +4513,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-11-12",
+      icon: "folder",
+      prefix: "2026-11-12/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-AWS 官方模拟器发布",
+          link: "01-aws-emulator-agents",
+        },
+        {
+          text: "02-AI 智能体发现玛雅遗址",
+          link: "02-ai-agents-maya-site",
+        },
+        {
+          text: "03-lot-map 可视化智能体",
+          link: "03-lot-map-claude-code-observability",
+        },
+        {
+          text: "04-qwenputer 权重即计算机",
+          link: "04-qwenputer-cpu-in-weights",
+        },
+        {
+          text: "05-Tree-Ising 权重修复",
+          link: "05-tree-ising-bit-level-llm-repair",
+        },
+        {
+          text: "06-WikiTrace 记忆退化",
+          link: "06-wikitrace-evidence-linked-memory",
+        },
+        {
+          text: "07-Gemini 决策 API 发布",
+          link: "07-gemini-decisions-api",
+        },
+        {
+          text: "08-Anthropic IPO 算力互锁",
+          link: "08-anthropic-ipo-compute-alliance",
+        },
+        {
+          text: "09-AI 代码脆弱性之辩",
+          link: "09-ai-fragile-codebase",
+        },
+        {
+          text: "10-双11 Token 价格战",
+          link: "10-china-llm-double11-token-price-war",
+        },
+        {
+          text: "11-华尔街稳定币合资",
+          link: "11-wall-street-stablecoin-consortium",
+        },
+        {
+          text: "12-俄罗斯放行加密交易",
+          link: "12-russia-central-bank-crypto-trading",
+        },
+        {
+          text: "13-三明治攻击复盘",
+          link: "13-elysium-sandwich-attack-report",
+        },
+        {
+          text: "14-Orrery P2P 推理",
+          link: "14-orrery-p2p-ai-inference-solana",
+        },
+        {
+          text: "15-稳定币供给收缩复盘",
+          link: "15-stablecoin-supply-drain-data",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
