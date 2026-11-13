@@ -4585,6 +4585,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-11-13",
+      icon: "folder",
+      prefix: "2026-11-13/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-2026-11-13 导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-Gemini 4 Hydrogen 发布",
+          link: "01-gemini-4-hydrogen",
+        },
+        {
+          text: "02-Anthropic IPO 与黄仁勋离任",
+          link: "02-anthropic-ipo-nvidia-exit",
+        },
+        {
+          text: "03-Atuin Threads 会话同步",
+          link: "03-atuin-threads-agent-sessions",
+        },
+        {
+          text: "04-Apple RAG 检索提速研究",
+          link: "04-apple-faster-rag-retrieval",
+        },
+        {
+          text: "05-agentes-chat：AI 员工进 IM",
+          link: "05-agentes-chat",
+        },
+        {
+          text: "06-华为 MACaQ 量化开源",
+          link: "06-huawei-macaq-quantization",
+        },
+        {
+          text: "07-Evolving Infra 推理服务",
+          link: "07-evolving-infra-agent-serving",
+        },
+        {
+          text: "08-SteerDistill 量化蒸馏",
+          link: "08-steerdistill-agent-quantization",
+        },
+        {
+          text: "09-GitHub Actions 加固",
+          link: "09-lock-github-actions",
+        },
+        {
+          text: "10-国产 AI 芯片份额猛增",
+          link: "10-china-ai-chips-share",
+        },
+        {
+          text: "11-币安 63 亿被盗资产追回",
+          link: "11-binance-hack-recovery-freeze",
+        },
+        {
+          text: "12-伊利诺伊加密税遭挑战",
+          link: "12-illinois-crypto-tax-lawsuit",
+        },
+        {
+          text: "13-以太坊抗量子路线图",
+          link: "13-ethereum-quantum-defense",
+        },
+        {
+          text: "14-Bitcoin Core Tor 漏洞",
+          link: "14-bitcoin-core-tor-vulnerability",
+        },
+        {
+          text: "15-Visa 接入 WU 稳定币",
+          link: "15-visa-western-union-usdpt",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
