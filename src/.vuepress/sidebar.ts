@@ -4657,6 +4657,70 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-11-14",
+      icon: "folder",
+      prefix: "2026-11-14/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-2026-11-14 导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-小设备跑 LLM：smolmaxxing",
+          link: "01-smolmaxxing-small-device-llm",
+        },
+        {
+          text: "02-AgentRun：托管 Agent 运行时",
+          link: "02-agentrun-managed-agents",
+        },
+        {
+          text: "03-Google A2UI 1.0 发布",
+          link: "03-google-a2ui-1-0",
+        },
+        {
+          text: "04-Vercel Agent UI 行为库",
+          link: "04-vercel-labs-ui-agent-ui",
+        },
+        {
+          text: "05-yogurt：本地 AI 会议记录",
+          link: "05-yogurt-local-meeting-notes",
+        },
+        {
+          text: "06-AI 解读哥德尔笔记本",
+          link: "06-ai-unlocks-godel-notebooks",
+        },
+        {
+          text: "07-晶圆与内存过剩警报",
+          link: "07-huang-wafer-avalanche",
+        },
+        {
+          text: "08-Edge0-145B 本地前沿模型",
+          link: "08-edge0-145b-local-frontier",
+        },
+        {
+          text: "09-Claude 全线故障复盘",
+          link: "09-claude-global-outage",
+        },
+        {
+          text: "10-中国模型 GPU 指纹",
+          link: "10-chinese-model-gpu-fingerprint",
+        },
+        {
+          text: "11-假视频会议盗 4 亿美元",
+          link: "11-nk-deepfake-crypto-heist",
+        },
+        {
+          text: "12-Brave 接入 x402 支付",
+          link: "12-brave-x402-agentic-payments",
+        },
+        {
+          text: "13-x402-mcp-lab 试验台",
+          link: "13-x402-mcp-lab",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
