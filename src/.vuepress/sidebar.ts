@@ -4721,6 +4721,74 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-11-15",
+      icon: "folder",
+      prefix: "2026-11-15/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-AI 简报 2026-11-15",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-ggml v1.0.0 正式发布",
+          link: "01-ggml-v1-engine",
+        },
+        {
+          text: "02-Claude Code 支持并行工作者",
+          link: "02-claude-code-parallel-workers",
+        },
+        {
+          text: "03-Agweb：Agent 浏览器",
+          link: "03-agweb-browser-for-agents",
+        },
+        {
+          text: "04-gpucanvas：GPU 无限画布",
+          link: "04-gpucanvas",
+        },
+        {
+          text: "05-歸藏 Game Skill",
+          link: "05-guizang-game-skill",
+        },
+        {
+          text: "06-reveric：AI 小说创作台",
+          link: "06-reveric",
+        },
+        {
+          text: "07-英伟达循环融资争议",
+          link: "07-nvidia-circular-financing",
+        },
+        {
+          text: "08-Qwen3.8-27B 量化 v3.1",
+          link: "08-qwen38-27b-unsloth-quants",
+        },
+        {
+          text: "09-Perplexity Decider v1.3",
+          link: "09-perplexity-decider-v13",
+        },
+        {
+          text: "10-PyPI 页面安全信号改版",
+          link: "10-pypi-security-signals",
+        },
+        {
+          text: "11-广告系统成监控工具",
+          link: "11-citizenlab-ad-surveillance",
+        },
+        {
+          text: "12-GLM-5.3 双机 607 tok/s",
+          link: "12-glm53-vllm-serving",
+        },
+        {
+          text: "13-200 行 JAX 写 DeepSeek V3",
+          link: "13-deepseek-v3-jax",
+        },
+        {
+          text: "14-FBI 没收币安被盗币 12 亿",
+          link: "14-fbi-binance-seizure",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
