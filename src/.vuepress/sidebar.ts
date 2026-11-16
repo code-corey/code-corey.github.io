@@ -4789,6 +4789,70 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-11-16",
+      icon: "folder",
+      prefix: "2026-11-16/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-2026-11-16 导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-Claude 错觉与精英自大",
+          link: "01-claude-delusion",
+        },
+        {
+          text: "02-Agent 会挑可魔改的设备",
+          link: "02-agent-picks-hackable-hardware",
+        },
+        {
+          text: "03-InferSSD 用 SSD 跑超大 MoE",
+          link: "03-inferssd-moe-from-ssd",
+        },
+        {
+          text: "04-现代 LLM 位置编码全解",
+          link: "04-positional-embeddings",
+        },
+        {
+          text: "05-AI 代码该不该强制开源",
+          link: "05-ai-code-should-be-open-source",
+        },
+        {
+          text: "06-DRAM 垄断案进入实质审理",
+          link: "06-dram-price-fixing-trial",
+        },
+        {
+          text: "07-意大利罚 Meta 8.05 亿欧",
+          link: "07-italy-meta-photo-privacy-fine",
+        },
+        {
+          text: "08-EFF：科技公司改写隐私定义",
+          link: "08-eff-privacy-concept-shift",
+        },
+        {
+          text: "09-Bitly 旧短链劫持事件",
+          link: "09-bitly-link-hijack",
+        },
+        {
+          text: "10-微软云故障致氯气中毒",
+          link: "10-m365-outage-chlorine-gas",
+        },
+        {
+          text: "11-NamiAgent 中文 Agent 教程",
+          link: "11-namiagent-agent-tutorial",
+        },
+        {
+          text: "12-Lean4 形式化证明代币",
+          link: "12-proven-tokens-lean4-proofs",
+        },
+        {
+          text: "13-手写去中心化通讯协议",
+          link: "13-federated-messenger-protocol",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
