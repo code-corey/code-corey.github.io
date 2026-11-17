@@ -4853,6 +4853,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-11-17",
+      icon: "folder",
+      prefix: "2026-11-17/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-今日导读 11-17",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-Coral：Agent 自写工具",
+          link: "01-coral-agent-tool-gateway",
+        },
+        {
+          text: "02-OpenCode Browse",
+          link: "02-opencode-browse",
+        },
+        {
+          text: "03-CrommaCode 观战 IDE",
+          link: "03-crommacode-gamified-agent-ide",
+        },
+        {
+          text: "04-Alloy 物理引擎",
+          link: "04-alloy-physics-engine",
+        },
+        {
+          text: "05-MIRIX-2.0 记忆系统",
+          link: "05-mirix2-agent-memory",
+        },
+        {
+          text: "06-MMFlash 投机解码",
+          link: "06-mmflash-speculative-decoding",
+        },
+        {
+          text: "07-Qwen4-Max 发布",
+          link: "07-qwen4-max-release",
+        },
+        {
+          text: "08-Anthropic IPO",
+          link: "08-anthropic-ipo",
+        },
+        {
+          text: "09-uBlock 通用 XSS",
+          link: "09-ublock-origin-uxss",
+        },
+        {
+          text: "10-万拓气象大模型",
+          link: "10-wantuo-weather-model",
+        },
+        {
+          text: "11-德国加密冻结法案",
+          link: "11-germany-crypto-freeze",
+        },
+        {
+          text: "12-香港加密发牌",
+          link: "12-hongkong-crypto-licensing",
+        },
+        {
+          text: "13-Lighter 密钥泄露事件",
+          link: "13-lighter-api-key-incident",
+        },
+        {
+          text: "14-Solana 摘掉测试版",
+          link: "14-solana-drops-beta",
+        },
+        {
+          text: "15-稳定币市场萎缩",
+          link: "15-stablecoin-contraction",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
