@@ -4925,6 +4925,70 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-11-18",
+      icon: "folder",
+      prefix: "2026-11-18/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-GPT-6.2 Astra/Sol 发布",
+          link: "01-gpt-6-2-astra-sol",
+        },
+        {
+          text: "02-微软 MAI Code 2 发布",
+          link: "02-mai-code-2",
+        },
+        {
+          text: "03-Claude 3天适配 AMD GPU",
+          link: "03-claude-mythos-amd-gpu",
+        },
+        {
+          text: "04-Claude Code 验证方法论",
+          link: "04-claude-code-verification",
+        },
+        {
+          text: "05-lend：凭证隔离跑 Agent",
+          link: "05-agents-without-credentials",
+        },
+        {
+          text: "06-Decision Models 实践",
+          link: "06-not-everything-needs-an-llm",
+        },
+        {
+          text: "07-rust-anything",
+          link: "07-rust-anything",
+        },
+        {
+          text: "08-LLM 推理优化技能",
+          link: "08-inference-optimisation-skill",
+        },
+        {
+          text: "09-Win11 编码 Agent 遥测",
+          link: "09-windows-coding-agent-telemetry",
+        },
+        {
+          text: "10-百度小米警告回报落差",
+          link: "10-baidu-xiaomi-ai-hype",
+        },
+        {
+          text: "11-OPTIMJACK 加密窃取事件",
+          link: "11-optimjack-crypto-skimmer",
+        },
+        {
+          text: "12-BlockRazor Solana 文档",
+          link: "12-blockrazor-solana-docs",
+        },
+        {
+          text: "13-Agent 钱包熔断 Shield",
+          link: "13-burnrate-agent-wallet-shield",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
