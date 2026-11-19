@@ -4989,6 +4989,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-11-19",
+      icon: "folder",
+      prefix: "2026-11-19/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-2026-11-19 每日AI简报",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-哈佛：AI编码瓶颈转向评审",
+          link: "01-harvard-ai-agents-code-review-bottleneck",
+        },
+        {
+          text: "02-能量型推理器385倍效率",
+          link: "02-energy-based-reasoners-385x-inference",
+        },
+        {
+          text: "03-SoduWork多智能体引擎",
+          link: "03-soduwork-ai-native-agent-engine",
+        },
+        {
+          text: "04-AI编码工作流三级评审",
+          link: "04-my-ai-coding-workflow-review-pipeline",
+        },
+        {
+          text: "05-TeleChat Xing4全栈国产",
+          link: "05-telechat-xing4-ascend-agentic-frontier",
+        },
+        {
+          text: "06-AURA2.0主动开口的AI",
+          link: "06-aura2-streaming-video-model-initiated",
+        },
+        {
+          text: "07-谷歌Gemini 4 Neon发布",
+          link: "07-gemini-4-neon",
+        },
+        {
+          text: "08-微软Ignite七款新模型",
+          link: "08-microsoft-ignite-seven-models",
+        },
+        {
+          text: "09-AI文本冲击同行评审",
+          link: "09-peer-review-ai-generated-text",
+        },
+        {
+          text: "10-美拟登记中国AI模型",
+          link: "10-us-registration-chinese-ai-models",
+        },
+        {
+          text: "11-现代汽车链上AI商业",
+          link: "11-hyundai-kinexys-ai-agent-commerce",
+        },
+        {
+          text: "12-以太坊无使用条款裁定",
+          link: "12-ethereum-no-terms-of-use-ruling",
+        },
+        {
+          text: "13-Circle×DBS全天候USDC",
+          link: "13-circle-dbs-24-7-usdc-minting",
+        },
+        {
+          text: "14-香港金管局AI链上监管",
+          link: "14-hkma-ai-agents-track-suspicious-transactions",
+        },
+        {
+          text: "15-Urd区块链分片协议",
+          link: "15-urd-pipelined-cross-shard-protocol",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
