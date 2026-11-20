@@ -5061,6 +5061,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-11-20",
+      icon: "folder",
+      prefix: "2026-11-20/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-2026-11-20 今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-Cerebras 分离式推理",
+          link: "01-cerebras-disaggregated-inference",
+        },
+        {
+          text: "02-Mastra 开源软件工厂",
+          link: "02-mastra-factory",
+        },
+        {
+          text: "03-32 个营销 Agent 技能",
+          link: "03-boring-marketing-skills",
+        },
+        {
+          text: "04-Papilot AI 论文编辑器",
+          link: "04-papilot-latex-editor",
+        },
+        {
+          text: "05-CurvDelta 微调不遗忘",
+          link: "05-curvdelta-fine-tuning",
+        },
+        {
+          text: "06-AnyS1 降本提效",
+          link: "06-anys1-agent-decisions",
+        },
+        {
+          text: "07-Anthropic 破纪录 IPO",
+          link: "07-anthropic-ipo",
+        },
+        {
+          text: "08-Genie 4 世界模型开放",
+          link: "08-genie-4-world-model",
+        },
+        {
+          text: "09-AI 护栏实战拆解",
+          link: "09-ai-safeguards-bypass",
+        },
+        {
+          text: "10-智能工厂名单公布",
+          link: "10-china-smart-factories",
+        },
+        {
+          text: "11-朝鲜黑客利用 Sky",
+          link: "11-sky-stablecoin-nk-hack",
+        },
+        {
+          text: "12-CLARITY 法案搁浅",
+          link: "12-clarity-act-dead-2027",
+        },
+        {
+          text: "13-汇丰以太坊基金",
+          link: "13-hsbc-ethereum-mmf",
+        },
+        {
+          text: "14-渣打代币化存款",
+          link: "14-scb-tokenized-deposits",
+        },
+        {
+          text: "15-矿工转型 AI 阵痛",
+          link: "15-miner-ai-pivot",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
