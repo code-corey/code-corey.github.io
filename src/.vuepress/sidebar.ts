@@ -5133,6 +5133,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-11-21",
+      icon: "folder",
+      prefix: "2026-11-21/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-简报 2026-11-21",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-AI设计CPU架构Frostbite",
+          link: "01-frostbite-ai-cpu-architecture",
+        },
+        {
+          text: "02-停写代码评审力也退化",
+          link: "02-stop-writing-code-review-decline",
+        },
+        {
+          text: "03-Blender AI MCP插件",
+          link: "03-blender-ai-mcp-addon",
+        },
+        {
+          text: "04-Antigravity省token插件",
+          link: "04-agy-fast-mcp-accelerator",
+        },
+        {
+          text: "05-HiUni统一理解生成架构",
+          link: "05-hiuni-unified-multimodal",
+        },
+        {
+          text: "06-LightningMoBA长文提效",
+          link: "06-lightningmoba-moba-acceleration",
+        },
+        {
+          text: "07-Inkling 2 Mini发布",
+          link: "07-inkling-2-mini",
+        },
+        {
+          text: "08-Anthropic IPO与AI抛售",
+          link: "08-anthropic-ipo-day2-selloff",
+        },
+        {
+          text: "09-Gemini 4 Neon登顶MEI",
+          link: "09-gemini-4-neon-mei",
+        },
+        {
+          text: "10-江苏AI+金融三年方案",
+          link: "10-jiangsu-ai-finance-plan",
+        },
+        {
+          text: "11-香港证监会纳管加密托管",
+          link: "11-hk-sfc-crypto-managers-custodians",
+        },
+        {
+          text: "12-美国稳定币规则抵白宫",
+          link: "12-us-stablecoin-rulebook-white-house",
+        },
+        {
+          text: "13-以太坊大升级推迟至2027",
+          link: "13-ethereum-upgrade-delayed-2027",
+        },
+        {
+          text: "14-BTC钱包漏洞失窃1.06亿",
+          link: "14-bitcoin-wallet-bug-106m",
+        },
+        {
+          text: "15-Fairmint代币化股票平台",
+          link: "15-fairmint-tokenized-equity",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
