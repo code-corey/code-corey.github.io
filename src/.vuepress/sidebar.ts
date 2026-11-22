@@ -5205,6 +5205,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-11-22",
+      icon: "folder",
+      prefix: "2026-11-22/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-11-22 今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-OpenComputer：开源版Devin",
+          link: "01-opencomputer",
+        },
+        {
+          text: "02-ClawDOS：DOS上的编码Agent",
+          link: "02-clawdos",
+        },
+        {
+          text: "03-Songe：闲置算力训本地模型",
+          link: "03-songe",
+        },
+        {
+          text: "04-PiBot：桌面多智能体团队",
+          link: "04-pibot",
+        },
+        {
+          text: "05-LightningMoBA长上下文提速",
+          link: "05-lightningmoba",
+        },
+        {
+          text: "06-LLM能改写自己的权重",
+          link: "06-llm-self-rewriting",
+        },
+        {
+          text: "07-Inkling-2-Mini开源发布",
+          link: "07-inkling-2-mini",
+        },
+        {
+          text: "08-Anthropic IPO与4万亿蒸发",
+          link: "08-anthropic-ipo-ai-wipeout",
+        },
+        {
+          text: "09-Signal：限制Agent抓数据",
+          link: "09-signal-agent-privacy",
+        },
+        {
+          text: "10-国产大模型下载破100亿",
+          link: "10-cn-opensource-10b",
+        },
+        {
+          text: "11-香港拟修订虚拟资产法例",
+          link: "11-hk-vasp-amendment",
+        },
+        {
+          text: "12-俄罗斯央行放行加密交易",
+          link: "12-russia-crypto-trading",
+        },
+        {
+          text: "13-中国关联稳定币支付+55%",
+          link: "13-chainalysis-stablecoin",
+        },
+        {
+          text: "14-Bitcoin Core中危漏洞修复",
+          link: "14-bitcoin-core-vuln",
+        },
+        {
+          text: "15-Circle×DBS拓展USDC亚洲",
+          link: "15-circle-dbs-usdc",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
