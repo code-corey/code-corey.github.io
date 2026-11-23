@@ -5277,6 +5277,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-11-23",
+      icon: "folder",
+      prefix: "2026-11-23/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-简报 2026-11-23",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-Pandex Agent 合规层",
+          link: "01-pandex-eu-agent-law",
+        },
+        {
+          text: "02-本地 AI 部署指南",
+          link: "02-local-ai-guide-inkling-qwen-unsloth",
+        },
+        {
+          text: "03-Fast-Anything",
+          link: "03-fast-anything",
+        },
+        {
+          text: "04-Open Artifact",
+          link: "04-open-artifact",
+        },
+        {
+          text: "05-HiUni 统一多模态",
+          link: "05-hiuni-unified-multimodal",
+        },
+        {
+          text: "06-RL后训练=激活转向",
+          link: "06-rl-post-training-activation-steering",
+        },
+        {
+          text: "07-Inkling-2 系列",
+          link: "07-inkling-2-model-family",
+        },
+        {
+          text: "08-OpenAI能力上限倡议",
+          link: "08-openai-log-perplexity-limits",
+        },
+        {
+          text: "09-OpenRouter事故复盘",
+          link: "09-openrouter-inference-incidents",
+        },
+        {
+          text: "10-GLM-5.4 下周先发",
+          link: "10-glm-5-4-next-week",
+        },
+        {
+          text: "11-美稳定币州牌照之争",
+          link: "11-us-stablecoin-state-licensing",
+        },
+        {
+          text: "12-俄罗斯放开加密交易",
+          link: "12-russia-crypto-trading-legalized",
+        },
+        {
+          text: "13-PYUSD0 登陆 Aptos",
+          link: "13-paypal-pyusd0-aptos",
+        },
+        {
+          text: "14-比特币抗量子升级",
+          link: "14-bitcoin-quantum-upgrade",
+        },
+        {
+          text: "15-开放社交网络联盟",
+          link: "15-open-social-web-alliance",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
