@@ -5349,6 +5349,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-11-24",
+      icon: "folder",
+      prefix: "2026-11-24/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-11-24 今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-本地 AI 三件套入门实战",
+          link: "01-local-ai-guide-inkling-qwen-unsloth",
+        },
+        {
+          text: "02-扮演 LLM 子智能体的游戏",
+          link: "02-llm-subagent-game",
+        },
+        {
+          text: "03-Fast-Anything 性能热点重写",
+          link: "03-fast-anything",
+        },
+        {
+          text: "04-open-diagram 架构图积木",
+          link: "04-open-diagram",
+        },
+        {
+          text: "05-cmHC 超连接流混合研究",
+          link: "05-cmhc-hyper-connections",
+        },
+        {
+          text: "06-Clover-35B 扩散语言模型",
+          link: "06-clover-35b-diffusion-lm",
+        },
+        {
+          text: "07-GLM-5.4 官方发布",
+          link: "07-glm-5.4-loop-transformer",
+        },
+        {
+          text: "08-Anthropic 9000亿支出与债务风险",
+          link: "08-anthropic-900b-capex-debt",
+        },
+        {
+          text: "09-推理供应商数据事故复盘",
+          link: "09-openrouter-inference-data-incidents",
+        },
+        {
+          text: "10-美中AI军事人类参与共识",
+          link: "10-us-china-ai-human-control",
+        },
+        {
+          text: "11-CFTC 认可加密资产财务地位",
+          link: "11-cftc-crypto-financial-requirements",
+        },
+        {
+          text: "12-英国 FCA 禁交易所自营做市",
+          link: "12-uk-fca-market-making-ban",
+        },
+        {
+          text: "13-Binance 被盗资金链上追踪",
+          link: "13-binance-hack-mixer-laundering",
+        },
+        {
+          text: "14-JPM×现代卡链上AI支付",
+          link: "14-jpmorgan-hyundai-ai-blockchain-payments",
+        },
+        {
+          text: "15-720亿美元ETH量子威胁",
+          link: "15-ethereum-72b-quantum-risk",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
