@@ -5421,6 +5421,82 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-11-25",
+      icon: "folder",
+      prefix: "2026-11-25/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-今日导读11-25",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-LLM Agent效忠母公司",
+          link: "01-llm-agents-parent-companies",
+        },
+        {
+          text: "02-Declare:AI友好UI语言",
+          link: "02-declare-ui-language",
+        },
+        {
+          text: "03-NariQ:27B压进10GB",
+          link: "03-nariq-27b-10gb",
+        },
+        {
+          text: "04-GPUI独立成仓",
+          link: "04-gpui-standalone",
+        },
+        {
+          text: "05-Anthropic证明VP≠VNP",
+          link: "05-vp-vnp-anthropic",
+        },
+        {
+          text: "06-矩阵乘法指数降至2.25",
+          link: "06-matrix-multiplication-exponent",
+        },
+        {
+          text: "07-GPT-6蛋白质设计能力",
+          link: "07-gpt6-protein-design",
+        },
+        {
+          text: "08-Tidal封禁AI音乐",
+          link: "08-tidal-bans-ai-music",
+        },
+        {
+          text: "09-LLM检测概念注入",
+          link: "09-latent-introspection-injection",
+        },
+        {
+          text: "10-中国牵头GenAI治理标准",
+          link: "10-china-genai-governance-standard",
+        },
+        {
+          text: "11-Polymarket内幕交易调查",
+          link: "11-polymarket-insider-trading",
+        },
+        {
+          text: "12-韩国稳定币规则草案",
+          link: "12-korea-stablecoin-bill",
+        },
+        {
+          text: "13-CFTC加密储备指引",
+          link: "13-cftc-crypto-reserves",
+        },
+        {
+          text: "14-币安被盗63亿美元",
+          link: "14-binance-hack-aftermath",
+        },
+        {
+          text: "15-L402:AI爬虫付费墙",
+          link: "15-l402-pay-or-pow",
+        },
+        {
+          text: "16-Versine:Agent收付款MCP",
+          link: "16-versine-mcp-payments",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
