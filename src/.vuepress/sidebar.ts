@@ -5497,6 +5497,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-11-26",
+      icon: "folder",
+      prefix: "2026-11-26/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-11-26 AI 简报导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-5600个Lambda跑Qwen复盘",
+          link: "01-qwen-on-aws-lambdas",
+        },
+        {
+          text: "02-Anthropic API迁移Rust",
+          link: "02-anthropic-messages-api-rust",
+        },
+        {
+          text: "03-20个AI测试员测20台手机",
+          link: "03-mobile-agent-testers",
+        },
+        {
+          text: "04-Rust漏洞扫描器safe-anything",
+          link: "04-safe-anything",
+        },
+        {
+          text: "05-懒惰Agent的信念训练法",
+          link: "05-lazy-agents-verifiable-beliefs",
+        },
+        {
+          text: "06-Pixel as Code视觉创作",
+          link: "06-nemotron-pixel-as-code",
+        },
+        {
+          text: "07-GPT-6蛋白质设计能力",
+          link: "07-gpt6-protein-design",
+        },
+        {
+          text: "08-Anthropic破发冲击波",
+          link: "08-anthropic-ipo-rout",
+        },
+        {
+          text: "09-被指控蒸馏如何自证",
+          link: "09-anthropic-distillation-accusation",
+        },
+        {
+          text: "10-墨芯稀疏计算芯片",
+          link: "10-inkcore-sparse-computing",
+        },
+        {
+          text: "11-香港CMU数字资产平台",
+          link: "11-hk-cmu-digital-asset-platform",
+        },
+        {
+          text: "12-韩国稳定币草案",
+          link: "12-korea-stablecoin-draft",
+        },
+        {
+          text: "13-AI花钱护栏cyphos-guard",
+          link: "13-cyphos-guard",
+        },
+        {
+          text: "14-8位单片机比特币矿机",
+          link: "14-megaminer-avr-miner",
+        },
+        {
+          text: "15-矿企AI转型失速",
+          link: "15-bitcoin-miners-ai-pivot",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
