@@ -5569,6 +5569,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-11-27",
+      icon: "folder",
+      prefix: "2026-11-27/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-11-27 今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-谷歌官方 MCP 服务器与权限边界",
+          link: "01-google-mcp-agents-gmail-no-send",
+        },
+        {
+          text: "02-Moat：OpenRouter 替代网关",
+          link: "02-moat-openrouter-replacement",
+        },
+        {
+          text: "03-openset-llm 纯CPU本地推理",
+          link: "03-openset-llm-cpu-inference",
+        },
+        {
+          text: "04-Persistent-Agent 常驻Agent",
+          link: "04-persistent-agent-enterprise",
+        },
+        {
+          text: "05-MoLT 混合循环Transformer",
+          link: "05-mixture-of-loops-transformer",
+        },
+        {
+          text: "06-模型自管上下文实验",
+          link: "06-model-driven-context-management",
+        },
+        {
+          text: "07-百度 ERNIE-5.5 Flash 预览",
+          link: "07-baidu-ernie-5.5-flash-preview",
+        },
+        {
+          text: "08-GPT-6.2 配额收紧事件",
+          link: "08-openai-gpt-6-2-quota-cut",
+        },
+        {
+          text: "09-NYT 摄影师缓升 Photoshop",
+          link: "09-nyt-photoshop-ai-provenance",
+        },
+        {
+          text: "10-离岸算力与出口管制博弈",
+          link: "10-china-ai-chips-malaysia-datacenter",
+        },
+        {
+          text: "11-英国FCA DeFi严监管",
+          link: "11-uk-fca-defi-rules",
+        },
+        {
+          text: "12-乌克兰加密税法落地",
+          link: "12-ukraine-crypto-tax-law",
+        },
+        {
+          text: "13-Stripe×Deel 稳定币卡",
+          link: "13-stripe-deel-stablecoin-card",
+        },
+        {
+          text: "14-汇丰港元稳定币10万用户",
+          link: "14-hsbc-redcoin-hkd-stablecoin",
+        },
+        {
+          text: "15-比特币钱包IP泄漏",
+          link: "15-bitcoin-core-wallet-ip-leak",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
