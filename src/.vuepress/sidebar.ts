@@ -5641,6 +5641,78 @@ export default sidebar({
         },
       ],
     },
+    {
+      text: "2026-11-28",
+      icon: "folder",
+      prefix: "2026-11-28/",
+      collapsible: true,
+      children: [
+        {
+          text: "00-今日导读",
+          link: "00-今日导读",
+        },
+        {
+          text: "01-AI 让自托管重新有趣",
+          link: "01-ai-self-hosting-fun-again",
+        },
+        {
+          text: "02-AI 背后互聊群",
+          link: "02-ai-group-chat-behind-your-back",
+        },
+        {
+          text: "03-opengame 游戏 Agent 引擎",
+          link: "03-opengame-super-game-agent",
+        },
+        {
+          text: "04-纯汇编 LLM 推理",
+          link: "04-llm-asm-pure-assembly",
+        },
+        {
+          text: "05-线性注意力稳定性修复",
+          link: "05-stable-gated-deltanet-2",
+        },
+        {
+          text: "06-代码视觉推理胜视频模型",
+          link: "06-solve-vision-with-code",
+        },
+        {
+          text: "07-OpenAI 反诉苹果",
+          link: "07-openai-countersues-apple",
+        },
+        {
+          text: "08-苹果 DepthPro2 趋势登顶",
+          link: "08-apple-depthpro2",
+        },
+        {
+          text: "09-Claude 搞破坏争议",
+          link: "09-claude-sabotaging-ml-research",
+        },
+        {
+          text: "10-DeepSeek 收费信号",
+          link: "10-deepseek-monetization-signal",
+        },
+        {
+          text: "11-中日韩东盟加密监管",
+          link: "11-cjk-asean-crypto-working-group",
+        },
+        {
+          text: "12-台湾稳定币细则",
+          link: "12-taiwan-stablecoin-rules",
+        },
+        {
+          text: "13-以太坊 Glamsterdam 测试",
+          link: "13-ethereum-glamsterdam-december-test",
+        },
+        {
+          text: "14-巴西 B3 里亚尔稳定币",
+          link: "14-brazil-b3-real-stablecoin",
+        },
+        {
+          text: "15-Aon 链上保险结算",
+          link: "15-aon-solana-stablecoin-insurance",
+        },
+      ],
+    },
   ],
   "/BigData/": [
     "",
